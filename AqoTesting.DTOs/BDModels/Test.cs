@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AqoTesting.DTOs.BDModels
 {
-    class Test
+    public class Test
     {
         public int Id { get; set; }
         public string Title { get; set; }

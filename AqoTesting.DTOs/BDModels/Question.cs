@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AqoTesting.DTOs.BDModels
 {
-    class Question
+    public class Question
     {
         public int Id { get; set; }
         public int SectionId { get; set; }

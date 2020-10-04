@@ -13,6 +13,7 @@ namespace AqoTestingServer
     {
         public static void Main(string[] args)
         {
+            new AqoTesting.DAL.DBCreator().Init();
             CreateHostBuilder(args).Build().Run();
         }
 

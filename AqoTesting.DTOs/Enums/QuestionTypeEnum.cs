@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AqoTesting.DTOs.Enums
 {
-    enum QuestionTypeEnum : byte
+    public enum QuestionTypeEnum : byte
     {
         Info = 0,
         MultipleResponse = 1,
