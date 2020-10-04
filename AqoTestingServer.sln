@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AqoTestingWebApi", "AqoTestingServer\AqoTestingWebApi.csproj", "{B97D8F9A-44A2-4E5E-857F-E78626BE5044}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AqoTesting.WebApi", "AqoTesting.WebApi\AqoTesting.WebApi.csproj", "{B97D8F9A-44A2-4E5E-857F-E78626BE5044}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AqoTesting.Services", "AqoTesting.Services\AqoTesting.Services.csproj", "{B1474BED-5CB1-4115-8A0B-399B1FCD7401}"
 EndProject
