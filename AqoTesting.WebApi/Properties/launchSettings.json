@@ -19,7 +19,6 @@
     },
     "AqoTestingServer": {
       "commandName": "Project",
-      "launchBrowser": true,
       "launchUrl": "value",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
