@@ -22,7 +22,7 @@ namespace AqoTesting.DAL
 
         public static MySqlCommand CreateQuery(string queryString)
         {
-            var query = new MySqlCommand(queryString) { Connection = connection };
+            var query = new MySqlCommand(queryString, connection);
             return query;
         }
 
@@ -30,6 +30,17 @@ namespace AqoTesting.DAL
         {
             var query = CreateQuery(queryString);
             return query.ExecuteNonQuery();
+        }
+
+        public static int Insert(string strSQL, object[,] parameterValue)
+        {
+            MySqlCommand cmd = CreateQuery(strSQL);
+            for (int i = 0; i < (parameterValue.Length / 2); i++)
+            {
+                cmd.Parameters.AddWithValue((string)parameterValue[i, 0], parameterValue[i, 1]);
+            }
+
+            return cmd.ExecuteNonQuery();
         }
 
         public static bool IsTableExist(string tableName)
