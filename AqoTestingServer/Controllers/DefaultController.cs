@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using AqoTestingServer.DTO;
+using AqoTesting.DTOs;
 
 namespace AqoTestingServer.Controllers
 {
@@ -23,7 +23,6 @@ namespace AqoTestingServer.Controllers
         public ResponseObject GetApi()
         {
             return new ResponseObject {
-                Success = true
             };
         }
 
@@ -32,7 +31,6 @@ namespace AqoTestingServer.Controllers
         {
             return new ResponseObject
             {
-                Success = true,
                 Data = "Мяу..."
             };
         }

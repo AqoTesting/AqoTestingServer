@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace AqoTestingServer.DTO
+namespace AqoTesting.DTOs
 {
     public class ResponseObject
     {
-        public bool Success { get; set; }
+        public bool Success { get; set; } = true;
         public dynamic Data { get; set; }
     }
 }

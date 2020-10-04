@@ -46,6 +46,8 @@ namespace AqoTestingServer
             {
                 endpoints.MapControllers();
             });
+
+
         }
     }
 }
