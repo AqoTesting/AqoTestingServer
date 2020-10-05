@@ -15,8 +15,8 @@ namespace AqoTestingServer
         public static void Main(string[] args)
         {
             new AqoTesting.DAL.DBCreator().Init();
-            CreateHostBuilder(args).Build().Run();
             new Dev_CreateTest().CreateTest();
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -61,7 +61,15 @@ namespace AqoTesting.DAL.Dev_Tests
                 Questions = new Question[] { question1, question2 }
             };
 
-            BaseIOController.AddFullTestObject(fullTest);
+            BaseIOController.InsertFullTestObject(fullTest);
+
+            BaseIOController.InsertUserObject(new User
+            {
+                Id = 11,
+                Login = "TestDevUserLogin",
+                Name = "TestDevName",
+                RegistrationDate = DateTime.Now
+            });
         }
     }
 }

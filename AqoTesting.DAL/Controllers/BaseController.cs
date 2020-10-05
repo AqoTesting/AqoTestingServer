@@ -26,21 +26,26 @@ namespace AqoTesting.DAL
             return query;
         }
 
+        public static MySqlCommand CreateQuery(string queryString, object[,] parameterValue)
+        {
+            var query = new MySqlCommand(queryString, connection);
+            for (int i = 0; i < (parameterValue.Length / 2); i++)
+            {
+                query.Parameters.AddWithValue((string)parameterValue[i, 0], parameterValue[i, 1]);
+            }
+            return query;
+        }
+
         public static int ExecuteQuery(string queryString)
         {
             var query = CreateQuery(queryString);
             return query.ExecuteNonQuery();
         }
 
-        public static int Insert(string strSQL, object[,] parameterValue)
+        public static int ExecuteQuery(string queryString, object[,] parameterValue)
         {
-            MySqlCommand cmd = CreateQuery(strSQL);
-            for (int i = 0; i < (parameterValue.Length / 2); i++)
-            {
-                cmd.Parameters.AddWithValue((string)parameterValue[i, 0], parameterValue[i, 1]);
-            }
-
-            return cmd.ExecuteNonQuery();
+            var query = CreateQuery(queryString, parameterValue);
+            return query.ExecuteNonQuery();
         }
 
         public static bool IsTableExist(string tableName)
