@@ -4,6 +4,7 @@ using AqoTesting.DTOs.Enums;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
@@ -77,18 +78,7 @@ namespace AqoTesting.DAL.Controllers
             {
                 using DbDataReader reader = query.ExecuteReader();
                 reader.Read();
-                User user = new User
-                {
-                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                    Login = reader.GetString(reader.GetOrdinal("Login")),
-                    Name = reader.GetStringOrNull(reader.GetOrdinal("Name")),
-                    RegistrationDate = reader.GetDateTime(reader.GetOrdinal("RegistrationDate"))
-                };
-                //Console.WriteLine(user.Id);
-                //Console.WriteLine(user.Login);
-                //Console.WriteLine(user.Name);
-                //Console.WriteLine(user.RegistrationDate);
-                return user;
+                return ReadTypeHelper.ReadUserInfo(reader);
             }
         }
 
@@ -101,18 +91,25 @@ namespace AqoTesting.DAL.Controllers
             {
                 using DbDataReader reader = query.ExecuteReader();
                 reader.Read();
-                Test test = new Test
-                {
-                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                    Title = reader.GetString(reader.GetOrdinal("Title")),
-                    UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
-                    CreationDate = reader.GetDateTime(reader.GetOrdinal("CreationDate")),
-                    ActivationDate = reader.GetDateTimeOrNull(reader.GetOrdinal("ActivationDate")),
-                    DeactivationDate = reader.GetDateTimeOrNull(reader.GetOrdinal("DeactivationDate")),
-                    Shuffle = reader.GetBoolean(reader.GetOrdinal("Title")),
-                };
-                return test;
+                return ReadTypeHelper.ReadTestInfo(reader);
             }
+        }
+
+        public static Test[] GetTestsByUserId(int userId)
+        {
+            var tests = new List<Test>();
+            var query = BaseController.CreateQuery("SELECT * FROM tests where UserId = ?UserId;", new object[,] { { "UserId", userId } });
+            using (DbDataReader reader = query.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        tests.Add(ReadTypeHelper.ReadTestInfo(reader));
+                    }
+                }
+            }
+            return tests.ToArray();
         }
 
         public static Section GetSectionById(int sectionId)
@@ -124,13 +121,54 @@ namespace AqoTesting.DAL.Controllers
             {
                 using DbDataReader reader = query.ExecuteReader();
                 reader.Read();
-                Section section = new Section
-                {
-                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                    TestId = reader.GetInt32(reader.GetOrdinal("TestId")),
-                };
-                return section;
+                return ReadTypeHelper.ReadSectionInfo(reader);
             }
+        }
+
+        public static Section[] GetSectionsByTestId(int testId)
+        {
+            var sections = new List<Section>();
+            var query = BaseController.CreateQuery("SELECT * FROM sections where TestId = ?TestId;", new object[,] { { "TestId", testId } });
+            using (DbDataReader reader = query.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        sections.Add(ReadTypeHelper.ReadSectionInfo(reader));
+                    }
+                }
+            }
+            return sections.ToArray();
+        }
+
+        public static SectionWithQuestions[] GetSectionsWithQuestionsByTestId(int testId)
+        {
+            var sections = new List<SectionWithQuestions>();
+            var query = BaseController.CreateQuery("SELECT * FROM sections where TestId = ?TestId;", new object[,] { { "TestId", testId } });
+            using (DbDataReader reader = query.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var section = ReadTypeHelper.ReadSectionInfo(reader);
+                        sections.Add(new SectionWithQuestions
+                        {
+                            Id = section.Id,
+                            TestId = testId,
+                            //Questions = GetQuestionsBySectionId(section.Id) //невозможно открыть 2 ридера
+                        });
+                    }
+                }
+            }
+
+            foreach (var section in sections)
+            {
+                section.Questions = GetQuestionsBySectionId(section.Id);
+            }
+
+            return sections.ToArray();
         }
 
         public static Question GetQuestionById(int questionId)
@@ -142,16 +180,39 @@ namespace AqoTesting.DAL.Controllers
             {
                 using DbDataReader reader = query.ExecuteReader();
                 reader.Read();
-                Question question = new Question
+                return ReadTypeHelper.ReadQuestionInfo(reader);
+            }
+        }
+
+        public static Question[] GetQuestionsBySectionId(int sectionId)
+        {
+            var questions = new List<Question>();
+            var query = BaseController.CreateQuery("SELECT * FROM questions where SectionId = ?SectionId;", new object[,] { { "SectionId", sectionId } });
+            using (DbDataReader reader = query.ExecuteReader())
+            {
+                if (reader.HasRows)
                 {
-                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                    SectionId = reader.GetInt32(reader.GetOrdinal("SectionId")),
-                    Type = (QuestionTypeEnum) reader.GetInt32(reader.GetOrdinal("Type")),
-                    Text = reader.GetStringOrNull(reader.GetOrdinal("Text")),
-                    OptionsJson = reader.GetString(reader.GetOrdinal("OptionsJson")),
-                    Shuffle = reader.GetBoolean(reader.GetOrdinal("Shuffle")),
+                    while (reader.Read())
+                    {
+                        questions.Add(ReadTypeHelper.ReadQuestionInfo(reader));
+                    }
+                }
+            }
+            return questions.ToArray();
+        }
+
+        public static FullTestWithFullSections? GetFullTestById(int testId)
+        {
+            if (BaseController.IsRowWithIdExist("tests", testId))
+            {
+                return new FullTestWithFullSections
+                {
+                    Test = GetTestById(testId),
+                    Sections = GetSectionsWithQuestionsByTestId(testId)
                 };
-                return question;
+            } else
+            {
+                return null;
             }
         }
 
