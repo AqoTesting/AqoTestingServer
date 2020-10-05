@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AqoTesting.DAL.Controllers;
 using AqoTesting.DAL.Dev_Tests;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +17,7 @@ namespace AqoTestingServer
         {
             new AqoTesting.DAL.Utils.DBCreator().Init();
             new Dev_CreateTest().CreateTest();
+            BaseIOController.GetUserById(11);
             CreateHostBuilder(args).Build().Run();
         }
 

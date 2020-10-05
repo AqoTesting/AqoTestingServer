@@ -16,7 +16,8 @@ namespace AqoTesting.DAL.Dev_Tests
                 {
                     Id = 11,
                     Login = "Test Dev User",
-                    Name = "DevFirstName DevLastName"
+                    Name = "DevFirstName DevLastName",
+                    RegistrationDate = DateTime.Now
                 };
 
                 Test test = new Test
@@ -64,14 +65,7 @@ namespace AqoTesting.DAL.Dev_Tests
                 };
 
                 BaseIOController.InsertFullTestObject(fullTest);
-
-                BaseIOController.InsertUserObject(new User
-                {
-                    Id = 11,
-                    Login = "TestDevUserLogin",
-                    Name = "TestDevName",
-                    RegistrationDate = DateTime.Now
-                });
+                BaseIOController.InsertUserObject(user);
             }
         }
     }

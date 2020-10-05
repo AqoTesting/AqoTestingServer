@@ -1,12 +1,16 @@
-﻿using AqoTesting.DTOs.BDModels;
+﻿using AqoTesting.DAL.Utils;
+using AqoTesting.DTOs.BDModels;
+using AqoTesting.DTOs.Enums;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
 using System.Text;
 
 namespace AqoTesting.DAL.Controllers
 {
-    static class BaseIOController
+    public static class BaseIOController
     {
         public static void InsertFullTestObject(FullTest fulltest)
         {
@@ -61,5 +65,96 @@ namespace AqoTesting.DAL.Controllers
             };
             BaseController.ExecuteQuery(sqlStr, sqlParams);
         }
+
+        #region readFromDB
+
+        public static User GetUserById(int userId)
+        {
+            var query = BaseController.GetRowById("users", userId);
+            if (query == null)
+                return null;
+            else
+            {
+                using DbDataReader reader = query.ExecuteReader();
+                reader.Read();
+                User user = new User
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Login = reader.GetString(reader.GetOrdinal("Login")),
+                    Name = reader.GetStringOrNull(reader.GetOrdinal("Name")),
+                    RegistrationDate = reader.GetDateTime(reader.GetOrdinal("RegistrationDate"))
+                };
+                //Console.WriteLine(user.Id);
+                //Console.WriteLine(user.Login);
+                //Console.WriteLine(user.Name);
+                //Console.WriteLine(user.RegistrationDate);
+                return user;
+            }
+        }
+
+        public static Test GetTestById(int testId)
+        {
+            var query = BaseController.GetRowById("tests", testId);
+            if (query == null)
+                return null;
+            else
+            {
+                using DbDataReader reader = query.ExecuteReader();
+                reader.Read();
+                Test test = new Test
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Title = reader.GetString(reader.GetOrdinal("Title")),
+                    UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
+                    CreationDate = reader.GetDateTime(reader.GetOrdinal("CreationDate")),
+                    ActivationDate = reader.GetDateTimeOrNull(reader.GetOrdinal("ActivationDate")),
+                    DeactivationDate = reader.GetDateTimeOrNull(reader.GetOrdinal("DeactivationDate")),
+                    Shuffle = reader.GetBoolean(reader.GetOrdinal("Title")),
+                };
+                return test;
+            }
+        }
+
+        public static Section GetSectionById(int sectionId)
+        {
+            var query = BaseController.GetRowById("sections", sectionId);
+            if (query == null)
+                return null;
+            else
+            {
+                using DbDataReader reader = query.ExecuteReader();
+                reader.Read();
+                Section section = new Section
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    TestId = reader.GetInt32(reader.GetOrdinal("TestId")),
+                };
+                return section;
+            }
+        }
+
+        public static Question GetQuestionById(int questionId)
+        {
+            var query = BaseController.GetRowById("questions", questionId);
+            if (query == null)
+                return null;
+            else
+            {
+                using DbDataReader reader = query.ExecuteReader();
+                reader.Read();
+                Question question = new Question
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    SectionId = reader.GetInt32(reader.GetOrdinal("SectionId")),
+                    Type = (QuestionTypeEnum) reader.GetInt32(reader.GetOrdinal("Type")),
+                    Text = reader.GetStringOrNull(reader.GetOrdinal("Text")),
+                    OptionsJson = reader.GetString(reader.GetOrdinal("OptionsJson")),
+                    Shuffle = reader.GetBoolean(reader.GetOrdinal("Shuffle")),
+                };
+                return question;
+            }
+        }
+
+        #endregion
     }
 }

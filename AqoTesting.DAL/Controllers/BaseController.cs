@@ -60,12 +60,20 @@ namespace AqoTesting.DAL
 
         public static bool IsRowWithIdExist(string tableName, int id)
         {
-            var query = CreateQuery($"(Select 1 From {tableName} where Id = {id}) union (select 0) limit 1");
+            var query = CreateQuery($"(Select 1 From {tableName} where Id = ?Id) union (select 0) limit 1", new object[,] {{ "Id", id } });
             using (DbDataReader reader = query.ExecuteReader())
             {
                 reader.Read();
                 return reader.GetBoolean(0);
             }
+        }
+
+        public static MySqlCommand GetRowById(string tableName, int id)
+        {
+            if (IsRowWithIdExist(tableName, id))
+                return CreateQuery($"select * from {tableName} where Id = ?Id", new object[,] { { "Id", id } });
+            else
+                return null;
         }
     }
 }
