@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AqoTesting.DAL
+namespace AqoTesting.DAL.Utils
 {
     public class DBCreator
     {

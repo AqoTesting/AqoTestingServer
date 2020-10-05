@@ -57,5 +57,15 @@ namespace AqoTesting.DAL
                 return reader.GetBoolean(0);
             }
         }
+
+        public static bool IsRowWithIdExist(string tableName, int id)
+        {
+            var query = CreateQuery($"(Select 1 From {tableName} where Id = {id}) union (select 0) limit 1");
+            using (DbDataReader reader = query.ExecuteReader())
+            {
+                reader.Read();
+                return reader.GetBoolean(0);
+            }
+        }
     }
 }
