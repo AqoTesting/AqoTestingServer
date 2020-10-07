@@ -28,6 +28,7 @@ namespace AqoTestingServer
                 prepareDB.CreateMainDatabase();
                 var testIO = new TestIO();
                 testIO.AddTests();
+                Console.WriteLine(testIO.GetUserById(1));
             }
 
             CreateHostBuilder(args).Build().Run();

@@ -1,5 +1,6 @@
 ﻿using AqoTesting.DAL.Controllers;
 using AqoTesting.DTOs.BDModels;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,13 +27,11 @@ namespace AqoTesting.DAL.Tests
                         new Section
                         {
                             Id = 1,
-                            TestId = 1,
                             Questions = new Question[]
                             {
                                 new Question
                                 {
                                     Id = 1,
-                                    SectionId = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (DTOs.Enums.QuestionTypeEnum) 1,
@@ -41,7 +40,6 @@ namespace AqoTesting.DAL.Tests
                                 new Question
                                 {
                                     Id = 2,
-                                    SectionId = 1,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
                                     Type = (DTOs.Enums.QuestionTypeEnum) 1,
@@ -52,13 +50,11 @@ namespace AqoTesting.DAL.Tests
                         new Section
                         {
                             Id = 2,
-                            TestId = 1,
                             Questions = new Question[]
                             {
                                 new Question
                                 {
                                     Id = 1,
-                                    SectionId = 2,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (DTOs.Enums.QuestionTypeEnum) 1,
@@ -67,7 +63,6 @@ namespace AqoTesting.DAL.Tests
                                 new Question
                                 {
                                     Id = 2,
-                                    SectionId = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
                                     Type = (DTOs.Enums.QuestionTypeEnum) 1,
@@ -91,13 +86,11 @@ namespace AqoTesting.DAL.Tests
                         new Section
                         {
                             Id = 1,
-                            TestId = 2,
                             Questions = new Question[]
                             {
                                 new Question
                                 {
                                     Id = 1,
-                                    SectionId = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (DTOs.Enums.QuestionTypeEnum) 1,
@@ -106,7 +99,6 @@ namespace AqoTesting.DAL.Tests
                                 new Question
                                 {
                                     Id = 2,
-                                    SectionId = 1,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
                                     Type = (DTOs.Enums.QuestionTypeEnum) 1,
@@ -117,13 +109,11 @@ namespace AqoTesting.DAL.Tests
                         new Section
                         {
                             Id = 2,
-                            TestId = 2,
                             Questions = new Question[]
                             {
                                 new Question
                                 {
                                     Id = 1,
-                                    SectionId = 2,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (DTOs.Enums.QuestionTypeEnum) 1,
@@ -132,7 +122,6 @@ namespace AqoTesting.DAL.Tests
                                 new Question
                                 {
                                     Id = 2,
-                                    SectionId = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
                                     Type = (DTOs.Enums.QuestionTypeEnum) 1,
@@ -144,8 +133,46 @@ namespace AqoTesting.DAL.Tests
                 }
             };
 
+            MongoController.mainDatabase.GetCollection<Test>("tests").InsertMany(tests);
+        }
+
+        public Test GetTestById(int testId)
+        {
             var collection = MongoController.mainDatabase.GetCollection<Test>("tests");
-            collection.InsertMany(tests);
+            var entity = collection.Find(Builders<Test>.Filter.Eq("id", testId));
+            var test = entity.SingleOrDefault();
+            return test;
+        }
+
+        public void AddUsers()
+        {
+            var users = new User[]
+            {
+                new User
+                {
+                    Id = 1,
+                    Login = "Test Dev Login 1",
+                    Name = "Test Dev Name 1",
+                    RegistrationDate = DateTime.Now
+                },
+                new User
+                {
+                    Id = 2,
+                    Login = "Test Dev Login 2",
+                    Name = "Test Dev Name 2",
+                    RegistrationDate = DateTime.Now
+                }
+            };
+
+            MongoController.mainDatabase.GetCollection<User>("users").InsertMany(users);
+        }
+
+        public User GetUserById(int userId)
+        {
+            var collection = MongoController.mainDatabase.GetCollection<User>("users");
+            var entity = collection.Find(Builders<User>.Filter.Eq("id", userId));
+            var user = entity.SingleOrDefault();
+            return user;
         }
     }
 }
