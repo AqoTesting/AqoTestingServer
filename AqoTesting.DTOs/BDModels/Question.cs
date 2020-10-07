@@ -5,10 +5,10 @@ using System.Text;
 
 namespace AqoTesting.DTOs.BDModels
 {
-    public class Question
+    public struct Question
     {
         public int Id { get; set; }
-        public int SectionId { get; set; }
+        //public int SectionId { get; set; }
         public QuestionTypeEnum Type { get; set; }
         public string? Text { get; set; }
         public bool Shuffle { get; set; }

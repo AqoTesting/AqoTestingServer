@@ -4,9 +4,10 @@ using System.Text;
 
 namespace AqoTesting.DTOs.BDModels
 {
-    public class Section
+    public struct Section
     {
         public int Id { get; set; }
-        public int TestId { get; set; }
+        //public int TestId { get; set; }
+        public Question[] Questions { get; set; }
     }
 }
