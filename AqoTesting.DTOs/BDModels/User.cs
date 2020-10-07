@@ -2,7 +2,7 @@
 
 namespace AqoTesting.DTOs.BDModels
 {
-    public class User
+    public struct User
     {
         public int Id { get; set; }
         public string Login { get; set; }

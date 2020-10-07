@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AqoTesting.DAL.Controllers;
-using AqoTesting.DAL.Dev_Tests;
+using AqoTesting.DAL.Tests;
+using AqoTesting.DAL.Utils;
 using AqoTesting.DTOs.BDModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -16,15 +17,19 @@ namespace AqoTestingServer
     {
         public static void Main(string[] args)
         {
-            //new AqoTesting.DAL.Utils.DBCreator().Init();
-            //new Dev_CreateTest().CreateTest();
-            //BaseIOController.GetUserById(11);
-            //var fullTest = BaseIOController.GetFullTestById(10).GetValueOrDefault();
-            //Console.WriteLine(fullTest.Sections.Length);
-            //foreach (var section in fullTest.Sections)
-            //{
-            //    Console.WriteLine(section.Questions.Length);
-            //}
+            MongoController.ConnectToDB(null, null, "localhost", null, null, null);
+            MongoController.client.DropDatabase("mainAQObase");
+
+            PrepareDB prepareDB = new PrepareDB();
+            var isMainDatabaseExist = prepareDB.CheckMainDatabaseExist();
+            if (!isMainDatabaseExist)
+            {
+                Console.WriteLine("Creating");
+                prepareDB.CreateMainDatabase();
+                var testIO = new TestIO();
+                testIO.AddTests();
+            }
+
             CreateHostBuilder(args).Build().Run();
         }
 
