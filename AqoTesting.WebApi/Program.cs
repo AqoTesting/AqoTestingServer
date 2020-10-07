@@ -16,15 +16,15 @@ namespace AqoTestingServer
     {
         public static void Main(string[] args)
         {
-            new AqoTesting.DAL.Utils.DBCreator().Init();
-            new Dev_CreateTest().CreateTest();
-            BaseIOController.GetUserById(11);
-            var fullTest = BaseIOController.GetFullTestById(10).GetValueOrDefault();
-            Console.WriteLine(fullTest.Sections.Length);
-            foreach (var section in fullTest.Sections)
-            {
-                Console.WriteLine(section.Questions.Length);
-            }
+            //new AqoTesting.DAL.Utils.DBCreator().Init();
+            //new Dev_CreateTest().CreateTest();
+            //BaseIOController.GetUserById(11);
+            //var fullTest = BaseIOController.GetFullTestById(10).GetValueOrDefault();
+            //Console.WriteLine(fullTest.Sections.Length);
+            //foreach (var section in fullTest.Sections)
+            //{
+            //    Console.WriteLine(section.Questions.Length);
+            //}
             CreateHostBuilder(args).Build().Run();
         }
 
