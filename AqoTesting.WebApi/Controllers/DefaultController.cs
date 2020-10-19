@@ -30,7 +30,7 @@ namespace AqoTestingServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            return this.ResultResponse<bool>(OperationErrorMessages.NoError, true);
+            return this.ResultResponse<object>(OperationErrorMessages.NoError); // Получим null
         }
 
         [HttpGet("/meow")]
