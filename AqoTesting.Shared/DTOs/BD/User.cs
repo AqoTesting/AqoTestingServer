@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AqoTesting.Core.DTOs.BD
+namespace AqoTesting.Shared.DTOs.BD
 {
     public struct User
     {

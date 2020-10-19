@@ -1,11 +1,11 @@
-﻿using AqoTesting.Core.DTOs.API;
-using AqoTesting.Core.Interfaces;
+﻿using AqoTesting.Shared.DTOs.API;
+using AqoTesting.Shared.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AqoTesting.Services
+namespace AqoTesting.Core.Services
 {
     public class ExampleService : ServiceBase, IExampleService
     {

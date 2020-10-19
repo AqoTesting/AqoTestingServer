@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AqoTesting.Services
+namespace AqoTesting.Core.Services
 {
     public abstract class ServiceBase : IDisposable
     {

@@ -5,14 +5,14 @@ VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AqoTesting.WebApi", "AqoTesting.WebApi\AqoTesting.WebApi.csproj", "{B97D8F9A-44A2-4E5E-857F-E78626BE5044}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AqoTesting.Services", "AqoTesting.Services\AqoTesting.Services.csproj", "{B1474BED-5CB1-4115-8A0B-399B1FCD7401}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AqoTesting.Core", "AqoTesting.Core\AqoTesting.Core.csproj", "{B1474BED-5CB1-4115-8A0B-399B1FCD7401}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AqoTesting.Domain", "AqoTesting.Domain\AqoTesting.Domain.csproj", "{42D13B66-C2BD-4BB6-A04F-32D79F755CCC}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8529824D-9DFF-4D62-B512-C6D4A641D692} = {8529824D-9DFF-4D62-B512-C6D4A641D692}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AqoTesting.Core", "AqoTesting.Core\AqoTesting.Core.csproj", "{8529824D-9DFF-4D62-B512-C6D4A641D692}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AqoTesting.Shared", "AqoTesting.Shared\AqoTesting.Shared.csproj", "{8529824D-9DFF-4D62-B512-C6D4A641D692}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

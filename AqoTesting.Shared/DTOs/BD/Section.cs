@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AqoTesting.Core.DTOs.BD
+namespace AqoTesting.Shared.DTOs.BD
 {
     public struct Section
     {

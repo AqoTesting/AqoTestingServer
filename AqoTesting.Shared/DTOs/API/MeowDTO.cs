@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AqoTesting.Core.DTOs.API
+namespace AqoTesting.Shared.DTOs.API
 {
     public class MeowDTO
     {

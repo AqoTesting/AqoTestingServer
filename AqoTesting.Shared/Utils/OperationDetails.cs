@@ -1,9 +1,9 @@
-﻿using AqoTesting.Core.Enums;
+﻿using AqoTesting.Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AqoTesting.Core.Utils
+namespace AqoTesting.Shared.Utils
 {
     public class OperationDetails
     {

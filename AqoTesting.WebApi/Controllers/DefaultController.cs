@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using AqoTesting.Core.Models;
-using AqoTesting.Core.Enums;
-using AqoTesting.Core.DTOs.API;
-using AqoTesting.Core.Interfaces;
+using AqoTesting.Shared.Models;
+using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.DTOs.API;
+using AqoTesting.Shared.Interfaces;
 
 namespace AqoTestingServer.Controllers
 {

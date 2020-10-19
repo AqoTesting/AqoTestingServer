@@ -1,12 +1,12 @@
-﻿using AqoTesting.Core.Enums;
-using AqoTesting.Core.Utils;
+﻿using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 
-namespace AqoTesting.Core.Models
+namespace AqoTesting.Shared.Models
 {
     public class ResultResponse<TData>
     {
