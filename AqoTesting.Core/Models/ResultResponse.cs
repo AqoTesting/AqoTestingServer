@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace AqoTesting.Core.Models
 {
-    public class ResultResponse
+    public class ResultResponse<DataType>
     {
         public bool Succeeded { get; set; } = true;
         public OperationErrorMessages ErrorMessageCode { get; set; }  = OperationErrorMessages.NoError;
-        public object? Data { get; set; }
+        public DataType Data { get; set; } = default;
         public IActionResult GetObjectResult(ControllerBase? controller = null)
         {
             /*switch (ErrorMessageCode)
@@ -26,10 +26,10 @@ namespace AqoTesting.Core.Models
 
     public static class ResultResponceExtension
     {
-        public static IActionResult ResultResponse(this ControllerBase controller, OperationDetails? operationDetails = null, dynamic? data = null)
+        public static IActionResult ResultResponse<DatType>(this ControllerBase controller, OperationDetails? operationDetails = null, DatType data = default)
         {
 
-            var result = new ResultResponse() { Data = data };
+            var result = new ResultResponse<DatType>() { Data = data };
 
             if (operationDetails != null)
             {
@@ -44,14 +44,14 @@ namespace AqoTesting.Core.Models
             return result.GetObjectResult(controller);
         }
 
-        public static IActionResult ResultResponse(this ControllerBase controller, OperationErrorMessages messageCode, dynamic? data = null)
+        public static IActionResult ResultResponse<DatType>(this ControllerBase controller, OperationErrorMessages messageCode, DatType data = default)
         {
-            return ObjectResultResponse(messageCode, data);
+            return ObjectResultResponse<DatType>(messageCode, data);
         }
 
-        public static IActionResult ObjectResultResponse(OperationErrorMessages messageCode, dynamic? data = null)
+        public static IActionResult ObjectResultResponse<DatType>(OperationErrorMessages messageCode, DatType data = default)
         {
-            var result = new ResultResponse() { Data = data };
+            var result = new ResultResponse<DatType>() { Data = data };
 
             result.ErrorMessageCode = messageCode;
             result.Succeeded = false;

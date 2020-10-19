@@ -30,7 +30,7 @@ namespace AqoTestingServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            return this.ResultResponse(OperationErrorMessages.NoError, true);
+            return this.ResultResponse<bool>(OperationErrorMessages.NoError, true);
         }
 
         [HttpGet("/meow")]
@@ -41,7 +41,7 @@ namespace AqoTestingServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            return this.ResultResponse(OperationErrorMessages.MayError, await _exampleService.GetMeow());
+            return this.ResultResponse<MeowDTO>(OperationErrorMessages.MayError, await _exampleService.GetMeow());
         }
     }
 }
