@@ -4,35 +4,44 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using AqoTesting.DTOs;
+using AqoTesting.Core.Models;
+using AqoTesting.Core.Enums;
+using AqoTesting.Core.DTOs.API;
+using AqoTesting.Core.Interfaces;
 
 namespace AqoTestingServer.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class DefaultController : ControllerBase
+    [Produces("application/json")]
+    public class DefaultController : Controller
     {
-        private readonly ILogger<DefaultController> _logger;
 
-        public DefaultController(ILogger<DefaultController> logger)
+        IExampleService _exampleService;
+
+        public DefaultController(IExampleService exampleService)
         {
-            _logger = logger;
+            _exampleService = exampleService;
         }
 
         [HttpGet("/value")]
-        public ResponseObject GetApi()
+        public async Task<IActionResult> GetApi()
         {
-            return new ResponseObject {
-            };
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return this.ResultResponse(OperationErrorMessages.NoError, true);
         }
 
         [HttpGet("/meow")]
-        public ResponseObject GetMeow()
+        public async Task<IActionResult> GetMeow()
         {
-            return new ResponseObject
+            if (!ModelState.IsValid)
             {
-                Data = "Мяу..."
-            };
+                return BadRequest(ModelState);
+            }
+
+            return this.ResultResponse(OperationErrorMessages.MayError, await _exampleService.GetMeow());
         }
     }
 }

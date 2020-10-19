@@ -1,10 +1,10 @@
-﻿using AqoTesting.DAL.Controllers;
+﻿using AqoTesting.Domain.Controllers;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AqoTesting.DAL.Utils
+namespace AqoTesting.Domain.Utils
 {
     public class PrepareDB
     {

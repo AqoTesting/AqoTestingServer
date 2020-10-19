@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AqoTesting.DTOs\AqoTesting.DTOs.csproj" />
+    <ProjectReference Include="..\AqoTesting.Core\AqoTesting.Core.csproj" />
   </ItemGroup>
 
 </Project>

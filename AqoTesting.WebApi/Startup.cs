@@ -2,8 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AqoTesting.Core.Interfaces;
+using AqoTesting.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +30,19 @@ namespace AqoTestingServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            // Load services
+            services.AddScoped<IExampleService, ExampleService>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                builder =>
+                {
+                    builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
+                });
+            });
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,7 +64,7 @@ namespace AqoTestingServer
                 endpoints.MapControllers();
             });
 
-
+            app.UseCors("AllowAllOrigins");
         }
     }
 }

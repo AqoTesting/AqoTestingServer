@@ -5,8 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AqoTesting.DAL\AqoTesting.DAL.csproj" />
-    <ProjectReference Include="..\AqoTesting.DTOs\AqoTesting.DTOs.csproj" />
+    <ProjectReference Include="..\AqoTesting.Core\AqoTesting.Core.csproj" />
+    <ProjectReference Include="..\AqoTesting.Domain\AqoTesting.Domain.csproj" />
+    <ProjectReference Include="..\AqoTesting.Services\AqoTesting.Services.csproj" />
   </ItemGroup>
 
 

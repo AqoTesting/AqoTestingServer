@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AqoTesting.DTOs.Enums
+namespace AqoTesting.Core.Enums
 {
     public enum QuestionTypeEnum : byte
     {

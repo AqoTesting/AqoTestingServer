@@ -1,9 +1,9 @@
-﻿using AqoTesting.DTOs.Enums;
+﻿using AqoTesting.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AqoTesting.DTOs.BDModels
+namespace AqoTesting.Core.DTOs.BD
 {
     public struct Question
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AqoTesting.DAL.Controllers
+namespace AqoTesting.Domain.Controllers
 {
     public static class MongoIOController
     {

@@ -1,11 +1,12 @@
-﻿using AqoTesting.DAL.Controllers;
-using AqoTesting.DTOs.BDModels;
+﻿using AqoTesting.Domain.Controllers;
+using AqoTesting.Core.Models;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using AqoTesting.Core.DTOs.BD;
 
-namespace AqoTesting.DAL.Tests
+namespace AqoTesting.Domain.Tests
 {
     public class TestIO
     {
@@ -34,7 +35,7 @@ namespace AqoTesting.DAL.Tests
                                     Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
-                                    Type = (DTOs.Enums.QuestionTypeEnum) 1,
+                                    Type = (Core.Enums.QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
@@ -42,7 +43,7 @@ namespace AqoTesting.DAL.Tests
                                     Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
-                                    Type = (DTOs.Enums.QuestionTypeEnum) 1,
+                                    Type = (Core.Enums.QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
@@ -57,7 +58,7 @@ namespace AqoTesting.DAL.Tests
                                     Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
-                                    Type = (DTOs.Enums.QuestionTypeEnum) 1,
+                                    Type = (Core.Enums.QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
@@ -65,7 +66,7 @@ namespace AqoTesting.DAL.Tests
                                     Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
-                                    Type = (DTOs.Enums.QuestionTypeEnum) 1,
+                                    Type = (Core.Enums.QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
@@ -93,7 +94,7 @@ namespace AqoTesting.DAL.Tests
                                     Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
-                                    Type = (DTOs.Enums.QuestionTypeEnum) 1,
+                                    Type = (Core.Enums.QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
@@ -101,7 +102,7 @@ namespace AqoTesting.DAL.Tests
                                     Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
-                                    Type = (DTOs.Enums.QuestionTypeEnum) 1,
+                                    Type = (Core.Enums.QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
@@ -116,7 +117,7 @@ namespace AqoTesting.DAL.Tests
                                     Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
-                                    Type = (DTOs.Enums.QuestionTypeEnum) 1,
+                                    Type = (Core.Enums.QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
@@ -124,7 +125,7 @@ namespace AqoTesting.DAL.Tests
                                     Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
-                                    Type = (DTOs.Enums.QuestionTypeEnum) 1,
+                                    Type = (Core.Enums.QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }

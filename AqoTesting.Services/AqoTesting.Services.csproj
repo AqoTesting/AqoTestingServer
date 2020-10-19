@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AqoTestingServer\AqoTesting.WebApi.csproj" />
+    <ProjectReference Include="..\AqoTesting.Core\AqoTesting.Core.csproj" />
+    <ProjectReference Include="..\AqoTesting.Domain\AqoTesting.Domain.csproj" />
   </ItemGroup>
 
 </Project>

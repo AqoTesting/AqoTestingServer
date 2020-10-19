@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AqoTesting.DTOs.BDModels
+namespace AqoTesting.Core.DTOs.BD
 {
     public struct Test
     {

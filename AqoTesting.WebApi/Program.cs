@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AqoTesting.DAL.Controllers;
-using AqoTesting.DAL.Tests;
-using AqoTesting.DAL.Utils;
-using AqoTesting.DTOs.BDModels;
+using AqoTesting.Domain.Controllers;
+using AqoTesting.Domain.Tests;
+using AqoTesting.Domain.Utils;
+using AqoTesting.Core.DTOs.BD;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +17,7 @@ namespace AqoTestingServer
     {
         public static void Main(string[] args)
         {
-            MongoController.ConnectToDB(null, null, "localhost", null, null, null);
+            /*MongoController.ConnectToDB(null, null, "localhost", null, null, null);
             MongoController.client.DropDatabase("mainAQObase");
 
             PrepareDB prepareDB = new PrepareDB();
@@ -29,7 +29,7 @@ namespace AqoTestingServer
                 var testIO = new TestIO();
                 testIO.AddTests();
                 Console.WriteLine(testIO.GetUserById(1));
-            }
+            }*/
 
             CreateHostBuilder(args).Build().Run();
         }
