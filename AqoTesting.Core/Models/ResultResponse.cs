@@ -12,7 +12,7 @@ namespace AqoTesting.Core.Models
     {
         public bool Succeeded { get; set; } = true;
         public OperationErrorMessages ErrorMessageCode { get; set; }  = OperationErrorMessages.NoError;
-        public dynamic? Data { get; set; }
+        public object? Data { get; set; }
         public IActionResult GetObjectResult(ControllerBase? controller = null)
         {
             /*switch (ErrorMessageCode)
