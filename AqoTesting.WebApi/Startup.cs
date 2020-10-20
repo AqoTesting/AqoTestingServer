@@ -36,6 +36,7 @@ namespace AqoTestingServer
 
             // Load services
             services.AddScoped<IExampleService, ExampleService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

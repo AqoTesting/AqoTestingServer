@@ -18,36 +18,6 @@ namespace AqoTestingServer
     {
         public static void Main(string[] args)
         {
-            /*MongoController.ConnectToDB(null, null, "144.76.197.194", 23565, null, null);
-            MongoController.client.DropDatabase("mainAQObase");
-
-            PrepareDB prepareDB = new PrepareDB();
-            var isMainDatabaseExist = prepareDB.CheckMainDatabaseExist();
-            if (!isMainDatabaseExist)
-            {
-                Console.WriteLine("Creating");
-                prepareDB.CreateMainDatabase();
-                var testIO = new TestIO();
-<<<<<<< HEAD
-                var testsIds = testIO.AddTests();
-                var usersIds = testIO.AddUsers();
-                Console.WriteLine(MongoIOController.GetUserById("42d3076b46319251f02bc896") == null);
-                Console.WriteLine("Find user with id " + usersIds[0].ToString());
-                var user = MongoIOController.GetUserById(usersIds[0]);
-                Console.WriteLine(user.Name);
-            }*/
-=======
-                //var testsIds = testIO.AddTests();
-                //var usersIds = testIO.AddUsers();
-                var roomsIds = testIO.AddRooms();
-                foreach (var id in roomsIds)
-                    Console.WriteLine(id.ToString());
-                //Console.WriteLine(MongoIOController.GetUserById((ObjectId) DBUtils.ParseObjectId("42d3076b46319251f02bc896")) == null);
-                //Console.WriteLine("Find user with id " + usersIds[0].ToString());
-                //var user = MongoIOController.GetUserById(usersIds[0]);
-                //Console.WriteLine(user.Name);
-            }
->>>>>>> c757d29ee8c771309a9e013779ed494cddc8eaf7
 
             CreateHostBuilder(args).Build().Run();
         }
