@@ -17,7 +17,7 @@ namespace AqoTestingServer
     {
         public static void Main(string[] args)
         {
-            MongoController.ConnectToDB(null, null, "144.76.197.194", 23565, null, null);
+            /*MongoController.ConnectToDB(null, null, "144.76.197.194", 23565, null, null);
             MongoController.client.DropDatabase("mainAQObase");
 
             PrepareDB prepareDB = new PrepareDB();
@@ -33,7 +33,7 @@ namespace AqoTestingServer
                 Console.WriteLine("Find user with id " + usersIds[0].ToString());
                 var user = MongoIOController.GetUserById(usersIds[0]);
                 Console.WriteLine(user.Name);
-            }
+            }*/
 
             CreateHostBuilder(args).Build().Run();
         }
