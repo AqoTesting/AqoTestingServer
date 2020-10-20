@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AqoTesting.Core\AqoTesting.Core.csproj" />
+    <ProjectReference Include="..\AqoTesting.Domain\AqoTesting.Domain.csproj" />
     <ProjectReference Include="..\AqoTesting.Shared\AqoTesting.Shared.csproj" />
   </ItemGroup>
 

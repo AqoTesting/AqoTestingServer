@@ -25,7 +25,7 @@ namespace AqoTesting.Domain.Controllers
 
         public static User GetUserById(ObjectId userId)
         {
-            var collection = MongoController.mainDatabase.GetCollection<User>("tests");
+            var collection = MongoController.mainDatabase.GetCollection<User>("users");
             var user = collection.Find(Builders<User>.Filter.Eq("Id", userId)).SingleOrDefault();
             return user;
         }

@@ -6,6 +6,7 @@ using System.Text;
 using AqoTesting.Shared.DTOs.BD.Tests;
 using MongoDB.Bson;
 using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.DTOs.BD.Users;
 
 namespace AqoTesting.Domain.Tests
 {
