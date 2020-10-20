@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AqoTesting.Shared.DTOs.BD
+namespace AqoTesting.Shared.DTOs.BD.Tests
 {
-    public struct Section
+    public class Section
     {
         public int Id { get; set; }
         //public int TestId { get; set; }

@@ -1,22 +1,22 @@
 ﻿using AqoTesting.Domain.Controllers;
-using AqoTesting.Shared.Models;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AqoTesting.Shared.DTOs.BD;
+using AqoTesting.Shared.DTOs.BD.Tests;
+using MongoDB.Bson;
+using AqoTesting.Shared.Enums;
 
 namespace AqoTesting.Domain.Tests
 {
     public class TestIO
     {
-        public void AddTests()
+        public ObjectId[] AddTests()
         {
             var tests = new Test[]
             {
                 new Test
                 {
-                    Id = 1,
                     UserId = 1,
                     CreationDate = DateTime.Now,
                     ActivationDate = null,
@@ -35,7 +35,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
-                                    Type = (Shared.Enums.QuestionTypeEnum) 1,
+                                    Type = (QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
@@ -43,7 +43,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
-                                    Type = (Shared.Enums.QuestionTypeEnum) 1,
+                                    Type = (QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
@@ -58,7 +58,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
-                                    Type = (Shared.Enums.QuestionTypeEnum) 1,
+                                    Type = (QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
@@ -66,7 +66,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
-                                    Type = (Shared.Enums.QuestionTypeEnum) 1,
+                                    Type = (QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
@@ -75,7 +75,6 @@ namespace AqoTesting.Domain.Tests
                 },
                 new Test
                 {
-                    Id = 2,
                     UserId = 1,
                     CreationDate = DateTime.Now,
                     ActivationDate = null,
@@ -94,7 +93,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
-                                    Type = (Shared.Enums.QuestionTypeEnum) 1,
+                                    Type = (QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
@@ -102,7 +101,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
-                                    Type = (Shared.Enums.QuestionTypeEnum) 1,
+                                    Type = (QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
@@ -117,7 +116,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
-                                    Type = (Shared.Enums.QuestionTypeEnum) 1,
+                                    Type = (QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
@@ -125,7 +124,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
-                                    Type = (Shared.Enums.QuestionTypeEnum) 1,
+                                    Type = (QuestionTypeEnum) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
@@ -133,32 +132,29 @@ namespace AqoTesting.Domain.Tests
                     }
                 }
             };
-
             MongoController.mainDatabase.GetCollection<Test>("tests").InsertMany(tests);
+            var TestsIds = new List<ObjectId>();
+            foreach (var test in tests)
+            {
+                Console.WriteLine("TestId: " + test.Id);
+                TestsIds.Add(test.Id);
+            }
+
+            return TestsIds.ToArray();
         }
 
-        public Test GetTestById(int testId)
-        {
-            var collection = MongoController.mainDatabase.GetCollection<Test>("tests");
-            var entity = collection.Find(Builders<Test>.Filter.Eq("id", testId));
-            var test = entity.SingleOrDefault();
-            return test;
-        }
-
-        public void AddUsers()
+        public ObjectId[] AddUsers()
         {
             var users = new User[]
             {
                 new User
                 {
-                    Id = 1,
                     Login = "Test Dev Login 1",
                     Name = "Test Dev Name 1",
                     RegistrationDate = DateTime.Now
                 },
                 new User
                 {
-                    Id = 2,
                     Login = "Test Dev Login 2",
                     Name = "Test Dev Name 2",
                     RegistrationDate = DateTime.Now
@@ -166,14 +162,14 @@ namespace AqoTesting.Domain.Tests
             };
 
             MongoController.mainDatabase.GetCollection<User>("users").InsertMany(users);
-        }
+            var UsersIds = new List<ObjectId>();
+            foreach (var user in users)
+            {
+                Console.WriteLine("UserId: " + user.Id);
+                UsersIds.Add(user.Id);
+            }
 
-        public User GetUserById(int userId)
-        {
-            var collection = MongoController.mainDatabase.GetCollection<User>("users");
-            var entity = collection.Find(Builders<User>.Filter.Eq("id", userId));
-            var user = entity.SingleOrDefault();
-            return user;
+            return UsersIds.ToArray();
         }
     }
 }
