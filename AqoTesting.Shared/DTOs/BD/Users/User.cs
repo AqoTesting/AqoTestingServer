@@ -11,6 +11,7 @@ namespace AqoTesting.Shared.DTOs.BD.Users
         [BsonId]
         public ObjectId Id { get; set; }
         public string Login { get; set; }
+        public string Email { get; set; }
         public string? Name { get; set; }
         public DateTime RegistrationDate { get; set; }
     }

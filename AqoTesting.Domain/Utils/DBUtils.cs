@@ -6,10 +6,11 @@ namespace AqoTesting.Domain.Utils
 {
     public static class DBUtils
     {
-        public static Tuple<ObjectId, BsonDocument> PrepateItemToWrite(object item)
+        public static ObjectId? ParseObjectId(string stringId)
         {
-            var bsonDocument = item.ToBsonDocument();
-            return Tuple.Create((ObjectId)bsonDocument.ElementAt(0).Value, bsonDocument);
+            if (ObjectId.TryParse(stringId, out ObjectId objectId))
+                return objectId;
+            return null;
         }
     }
 }

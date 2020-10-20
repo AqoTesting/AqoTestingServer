@@ -7,6 +7,8 @@ using AqoTesting.Shared.DTOs.BD.Tests;
 using MongoDB.Bson;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.DTOs.BD.Users;
+using AqoTesting.Shared.DTOs.BD.Rooms;
+using AqoTesting.Shared.DTOs.BD;
 
 namespace AqoTesting.Domain.Tests
 {
@@ -133,15 +135,9 @@ namespace AqoTesting.Domain.Tests
                     }
                 }
             };
-            MongoController.mainDatabase.GetCollection<Test>("tests").InsertMany(tests);
-            var TestsIds = new List<ObjectId>();
-            foreach (var test in tests)
-            {
-                Console.WriteLine("TestId: " + test.Id);
-                TestsIds.Add(test.Id);
-            }
 
-            return TestsIds.ToArray();
+            var TestsIds = MongoIOController.InsertTests(tests);
+            return TestsIds;
         }
 
         public ObjectId[] AddUsers()
@@ -151,26 +147,59 @@ namespace AqoTesting.Domain.Tests
                 new User
                 {
                     Login = "Test Dev Login 1",
+                    Email = "DevGavno@gmail.com",
                     Name = "Test Dev Name 1",
                     RegistrationDate = DateTime.Now
                 },
                 new User
                 {
                     Login = "Test Dev Login 2",
+                    Email = "DevGavno@gmail.com",
                     Name = "Test Dev Name 2",
                     RegistrationDate = DateTime.Now
                 }
             };
 
-            MongoController.mainDatabase.GetCollection<User>("users").InsertMany(users);
-            var UsersIds = new List<ObjectId>();
-            foreach (var user in users)
-            {
-                Console.WriteLine("UserId: " + user.Id);
-                UsersIds.Add(user.Id);
-            }
+            var UsersIds = MongoIOController.InsertUsers(users);
+            return UsersIds;
+        }
 
-            return UsersIds.ToArray();
+        public ObjectId[] AddRooms()
+        {
+            var rooms = new Room[]
+            {
+                new Room
+                {
+                    Name = "Test Dev Room",
+                    Domain = "Test Dev Domain",
+                    Members = new Member[]
+                    {
+                        new Member
+                        {
+                            Token = ObjectId.GenerateNewId().ToString(),
+                            Login = "Test Dev Login Member 1",
+                            Password = "123",
+                            Attempts = new Attempt[0],
+                            UserData = new object(),
+                        },
+                        new Member
+                        {
+                            Token = ObjectId.GenerateNewId().ToString(),
+                            Login = "Test Dev Login Member 2",
+                            Password = "123",
+                            Attempts = new Attempt[0],
+                            UserData = new object(),
+                        }
+                    },
+                    TestIds = AddTests(),
+                    OwnerId = AddUsers()[0],
+                    IsDataRequire = false,
+                    RequestedFields = new RequestedField[0],
+                    IsActive = true
+                }
+            };
+            var RoomsIds = MongoIOController.InsertRooms(rooms);
+            return RoomsIds;
         }
     }
 }
