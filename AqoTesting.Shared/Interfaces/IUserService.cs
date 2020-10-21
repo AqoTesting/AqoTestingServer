@@ -1,5 +1,6 @@
 ﻿using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.DTOs.BD.Users;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,11 @@ namespace AqoTesting.Shared.Interfaces
     public interface IUserService
     {
         Task<User> GetUserByAuthData(SignInUserDTO authData);
-        Task<AuthorizedUserDTO> GetAuthorizedUser(User user);
+        Task<User> GetUserByLogin(string login);
+        Task<User> GetUserByEmail(string email);
+
+        Task<ObjectId> InsertUser(User user);
+
+        AuthorizedUserDTO GetAuthorizedUser(User user);
     }
 }

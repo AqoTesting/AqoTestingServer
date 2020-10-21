@@ -36,7 +36,6 @@ namespace AqoTestingServer
             services.AddControllers();
 
             // Load services
-            services.AddScoped<IExampleService, ExampleService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRespository, UserRespository>();
 

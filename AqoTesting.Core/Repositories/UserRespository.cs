@@ -5,12 +5,25 @@ using System.Threading.Tasks;
 using AqoTesting.Domain.Controllers;
 using AqoTesting.Shared.DTOs.BD.Users;
 using AqoTesting.Shared.Interfaces;
+using MongoDB.Bson;
 
 namespace AqoTesting.Core.Repositories
 {
     public class UserRespository : IUserRespository {
         public async Task<User> GetUserByAuthData(string login, byte[] passwordHash) {
-            return MongoIOController.GetUserByAuthData(login, passwordHash);
+            return await Task.Run(() => MongoIOController.GetUserByAuthData(login, passwordHash));
+        }
+
+        public async Task<User> GetUserByLogin(string login) {
+            return await Task.Run(() => MongoIOController.GetUserByLogin(login));
+        }
+
+        public async Task<User> GetUserByEmail(string email) {
+            return await Task.Run(() => MongoIOController.GetUserByEmail(email));
+        }
+
+        public async Task<ObjectId> InsertUser(User user) {
+            return await Task.Run(() => MongoIOController.InsertUser(user));
         }
     }
 }

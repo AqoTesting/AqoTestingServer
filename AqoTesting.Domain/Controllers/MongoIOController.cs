@@ -47,6 +47,13 @@ namespace AqoTesting.Domain.Controllers
             return user;
         }
 
+        public static User GetUserByLogin(string login) {
+            var collection = MongoController.mainDatabase.GetCollection<User>("users");
+            var filter = Builders<User>.Filter.Eq("Login", login);
+            var user = collection.Find(filter).SingleOrDefault();
+            return user;
+        }
+
         public static User GetUserByEmail(string login)
         {
             var collection = MongoController.mainDatabase.GetCollection<User>("users");
@@ -55,13 +62,6 @@ namespace AqoTesting.Domain.Controllers
             return user;
         }
 
-        public static User GetUserByLogin(string login)
-        {
-            var collection = MongoController.mainDatabase.GetCollection<User>("users");
-            var filter = Builders<User>.Filter.Eq("Login", login);
-            var user = collection.Find(filter).SingleOrDefault();
-            return user;
-        }
         #endregion
 
         #region INSERT

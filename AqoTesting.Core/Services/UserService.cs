@@ -14,6 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using AqoTesting.Shared.Infrastructure;
 using System;
+using MongoDB.Bson;
 
 namespace AqoTesting.Core.Services
 {
@@ -29,7 +30,19 @@ namespace AqoTesting.Core.Services
             return await _userRepository.GetUserByAuthData(authData.Login, Sha256.Compute(authData.Password));
         }
 
-        public async Task<AuthorizedUserDTO> GetAuthorizedUser(User user) {
+        public async Task<User> GetUserByLogin(string login) {
+            return await _userRepository.GetUserByLogin(login);
+        }
+
+        public async Task<User> GetUserByEmail(string email) {
+            return await _userRepository.GetUserByEmail(email);
+        }
+
+        public async Task<ObjectId> InsertUser(User user) {
+            return await _userRepository.InsertUser(user);
+        }
+
+        public AuthorizedUserDTO GetAuthorizedUser(User user) {
 
             var authUser = new AuthUser {
                 Id = user.Id,

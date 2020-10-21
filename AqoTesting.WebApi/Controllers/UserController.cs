@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.DTOs.BD.Users;
 using AqoTesting.Shared.Enums;
@@ -10,6 +11,7 @@ using AqoTesting.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace AqoTesting.WebApi.Controllers
 {
@@ -31,8 +33,8 @@ namespace AqoTesting.WebApi.Controllers
             User user = await _userService.GetUserByAuthData(authData);
 
             if (user != null) {
-                var userDto = await _userService.GetAuthorizedUser(user);
-                return this.ResultResponse(OperationErrorMessages.NoError, userDto);
+                var authorizedUser = _userService.GetAuthorizedUser(user);
+                return this.ResultResponse(OperationErrorMessages.NoError, authorizedUser);
             } else {
                 return this.ResultResponse<object>(OperationErrorMessages.WrongAuthData);
             }
@@ -42,7 +44,29 @@ namespace AqoTesting.WebApi.Controllers
         public async Task<IActionResult> SignUp([FromBody] SignUpUserDTO userData) {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
-            return null;
+            User loginCheck = await _userService.GetUserByLogin(userData.Login);
+            if(loginCheck != null) {
+                return this.ResultResponse<object>(OperationErrorMessages.LoginAlreadyTaken);
+            }
+            User emailCheck = await _userService.GetUserByEmail(userData.Email);
+            if (emailCheck != null) {
+                return this.ResultResponse<object>(OperationErrorMessages.EmailAlreadyTaken);
+            }
+
+            User newUser = new User {
+                Login = userData.Login,
+                Email = userData.Email,
+                PasswordHash = Sha256.Compute(userData.Password),
+                Name = userData.Name,
+                RegistrationDate = DateTime.UtcNow
+            };
+
+            ObjectId newUserId = await _userService.InsertUser(newUser);
+
+            newUser.Id = newUserId;
+
+            var authorizedUser = _userService.GetAuthorizedUser(newUser);
+            return this.ResultResponse(OperationErrorMessages.NoError, authorizedUser);
         }
 
         [Authorize(Roles = "User")]
