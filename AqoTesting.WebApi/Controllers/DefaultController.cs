@@ -56,6 +56,15 @@ namespace AqoTestingServer.Controllers
             }
         }
 
+        [HttpPost("/auth/signup")]
+        public async Task<IActionResult> SignUp([FromBody] SignUpUserDTO userData)
+        {
+            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
+
+
+            return null;
+        }
+
         [Authorize]
         [HttpGet("/meow")]
         public async Task<IActionResult> GetMeow()
