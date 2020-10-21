@@ -9,6 +9,8 @@ namespace AqoTesting.Shared.Enums
         NoError = 0,
         InvalidModel = 1,
 
+        WrongAuthData = 10,
+
         // Мяу ошибка
         MayError = 100,
     }

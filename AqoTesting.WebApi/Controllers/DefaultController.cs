@@ -18,10 +18,17 @@ namespace AqoTestingServer.Controllers
     {
 
         IExampleService _exampleService;
+        IUserService _userService;
 
         public DefaultController(IExampleService exampleService)
         {
             _exampleService = exampleService;
+        }
+
+        //# Так ли это должно работать? Скорее всего - нет
+        public DefaultController(IUserService userService)
+        {
+            _userService = userService;
         }
 
         [HttpGet("/value")]
@@ -30,6 +37,15 @@ namespace AqoTestingServer.Controllers
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
             return this.ResultResponse<object>(OperationErrorMessages.NoError); // Получим null
+        }
+
+        [HttpPost("/auth/signin")]
+        public async Task<IActionResult> SignIn([FromBody] LoginUserDTO authData)
+        {
+            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
+
+            //# Чё как тут ошибку передать я всё равно не понял
+            return this.ResultResponse<object>(OperationErrorMessages.NoError, await _userService.SignIn(authData.Login, authData.Password));
         }
 
         [Authorize]

@@ -36,6 +36,14 @@ namespace AqoTesting.Domain.Controllers
             var user = collection.Find(filter).SingleOrDefault();
             return user;
         }
+
+        // Ну тут типа надо вернуть id, либо сразу User, но как тогда вернуть ошибку я фиг знаю, делай
+        public static bool SignIn(string login, byte[] passwordHash)
+        {
+            // Делай
+
+            return true;
+        }
         #endregion
 
         #region INSERT
