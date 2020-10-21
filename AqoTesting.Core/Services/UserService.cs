@@ -19,12 +19,17 @@ namespace AqoTesting.Core.Services
 {
     public class UserService : ServiceBase, IUserService
     {
+        IUserRespository _userRepository;
 
-        public async Task<User> GetUserByAuthData(SignInUserDTO authData) {
-            return MongoIOController.GetUserByAuthData(authData.Login, Sha256.Compute(authData.Password));
+        public UserService(IUserRespository userRespository) {
+            _userRepository = userRespository;
         }
 
-        public async Task<AuthorizedUserDTO> GenerateJwtToken(User user) {
+        public async Task<User> GetUserByAuthData(SignInUserDTO authData) {
+            return await _userRepository.GetUserByAuthData(authData.Login, Sha256.Compute(authData.Password));
+        }
+
+        public async Task<AuthorizedUserDTO> GetAuthorizedUser(User user) {
 
             var authUser = new AuthUser {
                 Id = user.Id,
@@ -46,7 +51,6 @@ namespace AqoTesting.Core.Services
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
 
             return new AuthorizedUserDTO { 
                 Token = encodedJwt,

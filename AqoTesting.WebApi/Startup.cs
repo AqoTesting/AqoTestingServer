@@ -17,6 +17,7 @@ using AqoTesting.Core.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using AqoTesting.Shared.Infrastructure;
+using AqoTesting.Core.Repositories;
 
 namespace AqoTestingServer
 {
@@ -37,6 +38,7 @@ namespace AqoTestingServer
             // Load services
             services.AddScoped<IExampleService, ExampleService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserRespository, UserRespository>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
