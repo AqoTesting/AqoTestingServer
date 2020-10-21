@@ -15,6 +15,7 @@ using System.Security.Cryptography;
 using AqoTesting.Domain.Controllers;
 using AqoTesting.Shared.DTOs.BD.Users;
 using AqoTesting.Core.Utils;
+using MongoDB.Bson;
 
 namespace AqoTestingServer.Controllers
 {
@@ -54,6 +55,17 @@ namespace AqoTestingServer.Controllers
             {
                 return this.ResultResponse<object>(OperationErrorMessages.WrongAuthData);
             }
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpGet("/profile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
+
+            //ObjectId.Parse(User.FindFirst("Id").Value);
+
+            return this.ResultResponse(OperationErrorMessages.NoError, User.FindFirst("Id").Value);
         }
 
         [HttpPost("/auth/signup")]
