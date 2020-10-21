@@ -20,8 +20,8 @@ namespace AqoTesting.Domain.Controllers
                 (options != null ? $"?options" : "");
 
             client = new MongoClient(connectionUri);
-            //if (client != null && database != null)
-            //    mainDatabase = client.GetDatabase(database);
+            if (client != null && database != null) mainDatabase = client.GetDatabase(database);
+
             return client;
         }
     }
