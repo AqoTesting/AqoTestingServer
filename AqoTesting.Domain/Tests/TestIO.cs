@@ -9,7 +9,6 @@ using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.DTOs.BD.Users;
 using AqoTesting.Shared.DTOs.BD.Rooms;
 using AqoTesting.Shared.DTOs.BD;
-using System.Security.Cryptography;
 
 namespace AqoTesting.Domain.Tests
 {
@@ -143,14 +142,12 @@ namespace AqoTesting.Domain.Tests
 
         public ObjectId[] AddUsers()
         {
-            using SHA512 sha512Hash = SHA512.Create();
             var users = new User[]
             {
                 new User
                 {
                     Login = "Test Dev Login 1",
                     Email = "DevGavno@gmail.com",
-                    Password = sha512Hash.ComputeHash(Encoding.UTF8.GetBytes("Pass1")),
                     Name = "Test Dev Name 1",
                     RegistrationDate = DateTime.Now
                 },
@@ -158,7 +155,6 @@ namespace AqoTesting.Domain.Tests
                 {
                     Login = "Test Dev Login 2",
                     Email = "DevGavno@gmail.com",
-                    Password = sha512Hash.ComputeHash(Encoding.UTF8.GetBytes("Pass2")),
                     Name = "Test Dev Name 2",
                     RegistrationDate = DateTime.Now
                 }

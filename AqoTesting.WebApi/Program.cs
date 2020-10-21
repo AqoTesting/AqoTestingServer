@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using AqoTesting.Domain.Controllers;
 using AqoTesting.Domain.Tests;
@@ -20,33 +18,7 @@ namespace AqoTestingServer
     {
         public static void Main(string[] args)
         {
-            MongoController.ConnectToDB(null, null, "144.76.197.194", 23565, null, null);
-            MongoController.client.DropDatabase("mainAQObase");
 
-            PrepareDB prepareDB = new PrepareDB();
-            var isMainDatabaseExist = prepareDB.CheckMainDatabaseExist();
-            if (!isMainDatabaseExist)
-            {
-                Console.WriteLine("Creating");
-                prepareDB.CreateMainDatabase();
-                var testIO = new TestIO();
-                //var testsIds = testIO.AddTests();
-                //var usersIds = testIO.AddUsers();
-                var roomsIds = testIO.AddRooms();
-                foreach (var id in roomsIds)
-                    Console.WriteLine(id.ToString());
-                //Console.WriteLine(MongoIOController.GetUserById((ObjectId) DBUtils.ParseObjectId("42d3076b46319251f02bc896")) == null);
-                //Console.WriteLine("Find user with id " + usersIds[0].ToString());
-                //var user = MongoIOController.GetUserById(usersIds[0]);
-                //Console.WriteLine(user.Name);
-                using SHA512 sha512Hash = SHA512.Create();
-                var user = MongoIOController.GetUserByData("Test Dev Login 2", sha512Hash.ComputeHash(Encoding.UTF8.GetBytes("Pass2")));
-                if (user != null)
-                {
-                    Console.WriteLine(user.Name);
-                    //MongoIOController.DeleteUserById(user.Id);
-                }
-            }
             CreateHostBuilder(args).Build().Run();
         }
 
