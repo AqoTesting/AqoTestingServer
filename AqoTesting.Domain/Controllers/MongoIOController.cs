@@ -37,10 +37,10 @@ namespace AqoTesting.Domain.Controllers
             return user;
         }
 
-        public static User GetUserByData(string login, byte[] passwordHash)
+        public static User GetUserByAuthData(string login, byte[] passwordHash)
         {
             var collection = MongoController.mainDatabase.GetCollection<User>("users");
-            var loginFilter = Builders<User>.Filter.Eq("Login", login);
+            var loginFilter = Builders<User>.Filter.Eq("Email", login) | Builders<User>.Filter.Eq("Login", login);
             var PasswordFilter = Builders<User>.Filter.Eq("Password", passwordHash);
             var filter = loginFilter & PasswordFilter;
             var user = collection.Find(filter).SingleOrDefault();
