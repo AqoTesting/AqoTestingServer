@@ -152,7 +152,7 @@ namespace AqoTesting.Domain.Tests
                 {
                     Login = "Test Dev Login 1",
                     Email = "DevGavno@gmail.com",
-                    Password = Sha256.Compute("Pass1"),
+                    PasswordHash = Sha256.Compute("Pass1"),
                     Name = "Test Dev Name 1",
                     RegistrationDate = DateTime.Now
                 },
@@ -160,7 +160,7 @@ namespace AqoTesting.Domain.Tests
                 {
                     Login = "Test Dev Login 2",
                     Email = "DevGavno@gmail.com",
-                    Password = Sha256.Compute("Pass2"),
+                    PasswordHash = Sha256.Compute("Pass2"),
                     Name = "Test Dev Name 2",
                     RegistrationDate = DateTime.Now
                 }
