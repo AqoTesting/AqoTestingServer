@@ -10,6 +10,11 @@ using AqoTesting.Shared.DTOs.API;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.DTOs.API.Users;
 using Microsoft.AspNetCore.Authorization;
+using System.Text;
+using System.Security.Cryptography;
+using AqoTesting.Domain.Controllers;
+using AqoTesting.Shared.DTOs.BD.Users;
+using AqoTesting.Shared.Utils;
 
 namespace AqoTestingServer.Controllers
 {
@@ -20,14 +25,9 @@ namespace AqoTestingServer.Controllers
         IExampleService _exampleService;
         IUserService _userService;
 
-        public DefaultController(IExampleService exampleService)
+        public DefaultController(IExampleService exampleService, IUserService userService)
         {
             _exampleService = exampleService;
-        }
-
-        //# Так ли это должно работать? Скорее всего - нет
-        public DefaultController(IUserService userService)
-        {
             _userService = userService;
         }
 
@@ -44,8 +44,24 @@ namespace AqoTestingServer.Controllers
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
-            //# Чё как тут ошибку передать я всё равно не понял
-            return this.ResultResponse<object>(OperationErrorMessages.NoError, await _userService.SignIn(authData.Login, authData.Password));
+            User user = MongoIOController.GetUserByData(authData.Login, Sha256.Compute(authData.Password));
+
+            if (user != null) {
+                string token = " generateJwtToken() ";
+
+                AuthorizedUserDTO userDto = new AuthorizedUserDTO {
+                    Token = token,
+                    Login = user.Login,
+                    Email = user.Email,
+                    Name = user.Name
+                };
+
+                return this.ResultResponse<AuthorizedUserDTO>(OperationErrorMessages.NoError, userDto);
+            }
+            else
+            {
+                return this.ResultResponse<object>(OperationErrorMessages.WrongAuthData);
+            }
         }
 
         [Authorize]

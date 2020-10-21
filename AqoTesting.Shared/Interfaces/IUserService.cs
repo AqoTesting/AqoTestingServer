@@ -8,6 +8,5 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IUserService
     {
-        Task<AuthorizedUserDTO> SignIn(string login, string password);
     }
 }
