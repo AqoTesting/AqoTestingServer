@@ -20,15 +20,16 @@ namespace AqoTestingServer
     {
         public static void Main(string[] args)
         {
-            MongoController.ConnectToDB(null, null, "144.76.197.194", 23565, null, null);
-            MongoController.client.DropDatabase("mainAQObase");
+            MongoController.ConnectToDB(null, null, "144.76.197.194", 23565, "mainAQObase", null);
+            //MongoController.client.DropDatabase("mainAQObase");
 
             PrepareDB prepareDB = new PrepareDB();
             var isMainDatabaseExist = prepareDB.CheckMainDatabaseExist();
-            if (!isMainDatabaseExist)
+            if (isMainDatabaseExist)
             {
-                Console.WriteLine("Creating");
-                prepareDB.CreateMainDatabase();
+
+                Console.WriteLine("OK");
+                /*prepareDB.CreateMainDatabase();
                 var testIO = new TestIO();
                 //var testsIds = testIO.AddTests();
                 //var usersIds = testIO.AddUsers();
@@ -45,8 +46,15 @@ namespace AqoTestingServer
                 {
                     Console.WriteLine(user.Name);
                     //MongoIOController.DeleteUserById(user.Id);
-                }
+                }*/
+            } else
+            {
+                prepareDB.CreateMainDatabase();
             }
+
+            //var testIO = new TestIO();
+            //var usersIds = testIO.AddUsers();
+
             CreateHostBuilder(args).Build().Run();
         }
 
