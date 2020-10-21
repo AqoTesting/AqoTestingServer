@@ -22,7 +22,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [HttpPost("/user/token")]
-        public async Task<IActionResult> GetToken([FromBody] LoginUserDTO userModel)
+        public async Task<IActionResult> GetToken([FromBody] SignInUserDTO userModel)
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 

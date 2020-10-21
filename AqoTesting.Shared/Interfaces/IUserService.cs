@@ -9,7 +9,7 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IUserService
     {
-        Task<User> GetUserByAuthData(LoginUserDTO authData);
+        Task<User> GetUserByAuthData(SignInUserDTO authData);
         Task<string> GenerateJwtToken(User user);
     }
 }

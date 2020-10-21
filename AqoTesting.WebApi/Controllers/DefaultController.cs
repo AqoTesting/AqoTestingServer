@@ -40,7 +40,7 @@ namespace AqoTestingServer.Controllers
         }
 
         [HttpPost("/auth/signin")]
-        public async Task<IActionResult> SignIn([FromBody] LoginUserDTO authData)
+        public async Task<IActionResult> SignIn([FromBody] SignInUserDTO authData)
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
@@ -62,6 +62,15 @@ namespace AqoTestingServer.Controllers
             {
                 return this.ResultResponse<object>(OperationErrorMessages.WrongAuthData);
             }
+        }
+
+        [HttpPost("/auth/signup")]
+        public async Task<IActionResult> SignUp([FromBody] SignUpUserDTO userData)
+        {
+            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
+
+
+            return null;
         }
 
         [Authorize]
