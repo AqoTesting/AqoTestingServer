@@ -40,23 +40,15 @@ namespace AqoTestingServer.Controllers
         }
 
         [HttpPost("/auth/signin")]
-        public async Task<IActionResult> SignIn([FromBody] LoginUserDTO authData)
+        public async Task<IActionResult> SignIn([FromBody] SignInUserDTO authData)
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
             User user = await _userService.GetUserByAuthData(authData);
 
             if (user != null) {
-                string token = await _userService.GenerateJwtToken(user);
-
-                AuthorizedUserDTO userDto = new AuthorizedUserDTO {
-                    Token = token,
-                    Login = user.Login,
-                    Email = user.Email,
-                    Name = user.Name
-                };
-
-                return this.ResultResponse<AuthorizedUserDTO>(OperationErrorMessages.NoError, userDto);
+                var userDto = await _userService.GenerateJwtToken(user);
+                return this.ResultResponse(OperationErrorMessages.NoError, userDto);
             }
             else
             {

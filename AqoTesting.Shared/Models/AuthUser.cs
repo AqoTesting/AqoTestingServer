@@ -12,11 +12,6 @@ namespace AqoTesting.Shared.Models
         public ObjectId Id { get; set; }
         public string Login { get; set; }
         public string Email { get; set; }
-        public Role[] Roles { get; set; }
-        public string CurrentTokenId { get; set; }
-        public bool HasRoleFlag(Role roleFlag)
-        {
-            return Roles.Contains(roleFlag);
-        }
+        public Role Role { get; set; }
     }
 }
