@@ -4,8 +4,10 @@ using AqoTesting.Shared.DTOs.BD.Tests;
 using AqoTesting.Shared.DTOs.BD.Users;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace AqoTesting.Domain.Controllers
@@ -21,11 +23,18 @@ namespace AqoTesting.Domain.Controllers
             return room;
         }
 
+        public static Room GetRoomByDomain(string domain) {
+            var collection = MongoController.mainDatabase.GetCollection<Room>("rooms");
+            var filter = Builders<Room>.Filter.Eq("Domain", domain);
+            var room = collection.Find(filter).SingleOrDefault();
+            return room;
+        }
+
         public static Room[] GetRoomsByOwnerId(ObjectId ownerId)
         {
             var collection = MongoController.mainDatabase.GetCollection<Room>("rooms");
             var filter = Builders<Room>.Filter.Eq("OwnerId", ownerId);
-            var rooms = collection.Find(filter).ToList();
+            var rooms = collection.Find(filter).ToList<Room>();
 
             return rooms.ToArray();
         }

@@ -44,12 +44,12 @@ namespace AqoTesting.WebApi.Controllers
         public async Task<IActionResult> SignUp([FromBody] SignUpUserDTO userData) {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
-            User loginCheck = await _userService.GetUserByLogin(userData.Login);
-            if(loginCheck != null) {
+            User loginTaken = await _userService.GetUserByLogin(userData.Login);
+            if(loginTaken != null) {
                 return this.ResultResponse<object>(OperationErrorMessages.LoginAlreadyTaken);
             }
-            User emailCheck = await _userService.GetUserByEmail(userData.Email);
-            if (emailCheck != null) {
+            User emailTaken = await _userService.GetUserByEmail(userData.Email);
+            if (emailTaken != null) {
                 return this.ResultResponse<object>(OperationErrorMessages.EmailAlreadyTaken);
             }
 

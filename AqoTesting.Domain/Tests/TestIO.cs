@@ -199,7 +199,7 @@ namespace AqoTesting.Domain.Tests
                     },
                     TestIds = AddTests(),
                     OwnerId = AddUsers()[0],
-                    IsDataRequire = false,
+                    IsDataRequired = false,
                     RequestedFields = new RequestedField[0],
                     IsActive = true
                 }

@@ -8,5 +8,8 @@ using MongoDB.Bson;
 namespace AqoTesting.Shared.Interfaces {
     public interface IRoomRespository {
         Task<Room[]> GetRoomsByOwnerId(ObjectId ownerId);
+        Task<Room> GetRoomByDomain(string domain);
+
+        Task<ObjectId> InsertRoom(Room newRoom);
     }
 }

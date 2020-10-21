@@ -15,7 +15,7 @@ namespace AqoTesting.Shared.DTOs.BD.Rooms
         public Member[] Members { get; set; }
         public ObjectId[] TestIds { get; set; }
         public ObjectId OwnerId { get; set; }
-        public bool IsDataRequire { get; set; }
+        public bool IsDataRequired { get; set; }
         public RequestedField[] RequestedFields { get; set; }
         public bool IsActive { get; set; }
     }

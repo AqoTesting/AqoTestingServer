@@ -13,5 +13,8 @@ namespace AqoTesting.Shared.Enums
         WrongAuthData = 10,
         LoginAlreadyTaken = 11,
         EmailAlreadyTaken = 12,
+
+        // Rooms
+        DomainAlreadyTaken = 20,
     }
 }

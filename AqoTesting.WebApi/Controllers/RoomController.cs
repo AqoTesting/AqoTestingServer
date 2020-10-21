@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AqoTesting.Shared.DTOs.API.Rooms;
 using AqoTesting.Shared.DTOs.BD.Rooms;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
@@ -24,13 +25,26 @@ namespace AqoTesting.WebApi.Controllers
         [Authorize]
         [HttpGet("/rooms")]
         public async Task<IActionResult> GetRooms() {
-            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
-
             ObjectId ownerId = ObjectId.Parse(User.FindFirst("Id").Value);
 
-            Room[] rooms = await _roomService.GetRoomsByOwnerId(ownerId);
+            GetRoomsItemDTO[] rooms = await _roomService.GetRoomsByOwnerId(ownerId);
 
             return this.ResultResponse(OperationErrorMessages.NoError, rooms);
+        }
+
+        [Authorize]
+        [HttpPost("/room")]
+        public async Task<IActionResult> CreateRoom([FromBody] CreateRoomDTO newRoom) {
+            Room domainTaken = await _roomService.GetRoomByDomain(newRoom.Domain);
+
+            if(domainTaken != null) {
+                return this.ResultResponse<object>(OperationErrorMessages.DomainAlreadyTaken);
+            }
+
+            ObjectId ownerId = ObjectId.Parse(User.FindFirst("Id").Value);
+            ObjectId roomId = await _roomService.InsertRoom(newRoom, ownerId);
+
+            return this.ResultResponse(OperationErrorMessages.NoError, roomId);
         }
     }
 }
