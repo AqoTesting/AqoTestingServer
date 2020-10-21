@@ -37,12 +37,14 @@ namespace AqoTesting.Domain.Controllers
             return user;
         }
 
-        // Ну тут типа надо вернуть id, либо сразу User, но как тогда вернуть ошибку я фиг знаю, делай
-        public static bool SignIn(string login, byte[] passwordHash)
+        public static User GetUserByData(string login, byte[] passwordHash)
         {
-            // Делай
-
-            return true;
+            var collection = MongoController.mainDatabase.GetCollection<User>("users");
+            var loginFilter = Builders<User>.Filter.Eq("Login", login);
+            var PasswordFilter = Builders<User>.Filter.Eq("Password", passwordHash);
+            var filter = loginFilter & PasswordFilter;
+            var user = collection.Find(filter).SingleOrDefault();
+            return user;
         }
         #endregion
 
@@ -94,6 +96,30 @@ namespace AqoTesting.Domain.Controllers
 
             return UsersIds.ToArray();
         }
+        #endregion
+
+        #region DELETE
+        public static void DeleteRoomById(ObjectId roomId)
+        {
+            var collection = MongoController.mainDatabase.GetCollection<Room>("rooms");
+            var filter = Builders<Room>.Filter.Eq("Id", roomId);
+            collection.DeleteOne(filter);
+        }
+
+        public static void DeleteTestById(ObjectId testId)
+        {
+            var collection = MongoController.mainDatabase.GetCollection<Test>("tests");
+            var filter = Builders<Test>.Filter.Eq("Id", testId);
+            collection.DeleteOne(filter);
+        }
+
+        public static void DeleteUserById(ObjectId userId)
+        {
+            var collection = MongoController.mainDatabase.GetCollection<User>("users");
+            var filter = Builders<User>.Filter.Eq("Id", userId);
+            collection.DeleteOne(filter);
+        }
+
         #endregion
     }
 }
