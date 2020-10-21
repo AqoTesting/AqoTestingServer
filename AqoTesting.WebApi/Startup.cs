@@ -38,6 +38,8 @@ namespace AqoTestingServer
             // Load services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRespository, UserRespository>();
+            services.AddScoped<IRoomService, RoomService>();
+            services.AddScoped<IRoomRespository, RoomRespository>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

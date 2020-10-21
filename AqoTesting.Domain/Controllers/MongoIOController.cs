@@ -21,6 +21,15 @@ namespace AqoTesting.Domain.Controllers
             return room;
         }
 
+        public static Room[] GetRoomsByOwnerId(ObjectId ownerId)
+        {
+            var collection = MongoController.mainDatabase.GetCollection<Room>("rooms");
+            var filter = Builders<Room>.Filter.Eq("OwnerId", ownerId);
+            var rooms = collection.Find(filter).ToList();
+
+            return rooms.ToArray();
+        }
+
         public static Test GetTestById(ObjectId testId)
         {
             var collection = MongoController.mainDatabase.GetCollection<Test>("tests");
