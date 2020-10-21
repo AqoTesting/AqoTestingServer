@@ -1,4 +1,5 @@
 ﻿using AqoTesting.Shared.DTOs.API.Users;
+using AqoTesting.Shared.DTOs.BD.Users;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,5 +9,7 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IUserService
     {
+        Task<User> GetUserByAuthData(LoginUserDTO authData);
+        Task<string> GenerateJwtToken(User user);
     }
 }

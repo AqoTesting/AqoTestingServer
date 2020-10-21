@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace AqoTesting.Shared.Utils {
+namespace AqoTesting.Core.Utils {
     public static class Sha256 {
         public static byte[] Compute(string password) {
             byte[] bytedPassword = Encoding.UTF8.GetBytes(password);

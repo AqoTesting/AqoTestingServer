@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using AqoTesting.Domain.Controllers;
+using AqoTesting.Core.Utils;
 
 namespace AqoTesting.Core.Services
 {
@@ -28,6 +30,14 @@ namespace AqoTesting.Core.Services
 
             // если пользователя не найдено
             return null;
+        }
+
+        public async Task<User> GetUserByAuthData(LoginUserDTO authData) {
+            return MongoIOController.GetUserByAuthData(authData.Login, Sha256.Compute(authData.Password));
+        }
+
+        public async Task<string> GenerateJwtToken(User user) {
+            return "token";
         }
     }
 }

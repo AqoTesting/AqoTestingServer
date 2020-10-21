@@ -14,7 +14,7 @@ using System.Text;
 using System.Security.Cryptography;
 using AqoTesting.Domain.Controllers;
 using AqoTesting.Shared.DTOs.BD.Users;
-using AqoTesting.Shared.Utils;
+using AqoTesting.Core.Utils;
 
 namespace AqoTestingServer.Controllers
 {
@@ -44,10 +44,10 @@ namespace AqoTestingServer.Controllers
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
-            User user = MongoIOController.GetUserByData(authData.Login, Sha256.Compute(authData.Password));
+            User user = await _userService.GetUserByAuthData(authData);
 
             if (user != null) {
-                string token = " generateJwtToken() ";
+                string token = await _userService.GenerateJwtToken(user);
 
                 AuthorizedUserDTO userDto = new AuthorizedUserDTO {
                     Token = token,
