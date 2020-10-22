@@ -1,6 +1,6 @@
 ﻿using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.Interfaces;
-using AqoTesting.Shared.DTOs.BD.Users;
+using AqoTesting.Shared.DTOs.DB.Users;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;

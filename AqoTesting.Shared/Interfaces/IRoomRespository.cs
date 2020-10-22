@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.BD.Rooms;
+using AqoTesting.Shared.DTOs.DB.Rooms;
 using MongoDB.Bson;
 
 namespace AqoTesting.Shared.Interfaces {

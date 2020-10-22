@@ -1,4 +1,4 @@
-﻿namespace AqoTesting.Shared.DTOs.BD
+﻿namespace AqoTesting.Shared.DTOs.DB
 {
     public struct RequestedField
     {

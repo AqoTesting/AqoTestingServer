@@ -4,8 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.API.Rooms;
 using AqoTesting.Shared.DTOs.API.Users;
-using AqoTesting.Shared.DTOs.BD;
-using AqoTesting.Shared.DTOs.BD.Rooms;
+using AqoTesting.Shared.DTOs.DB;
+using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
 

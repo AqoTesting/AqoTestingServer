@@ -1,5 +1,5 @@
 ﻿using AqoTesting.Domain.Controllers;
-using AqoTesting.Shared.DTOs.BD.Rooms;
+using AqoTesting.Shared.DTOs.DB.Rooms;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;

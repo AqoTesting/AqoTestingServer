@@ -1,5 +1,5 @@
 ﻿using AqoTesting.Shared.DTOs.API.Users;
-using AqoTesting.Shared.DTOs.BD.Users;
+using AqoTesting.Shared.DTOs.DB.Users;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;

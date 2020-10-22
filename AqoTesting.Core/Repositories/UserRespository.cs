@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using AqoTesting.Domain.Controllers;
-using AqoTesting.Shared.DTOs.BD.Users;
+using AqoTesting.Shared.DTOs.DB.Users;
 using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.API.Rooms;
-using AqoTesting.Shared.DTOs.BD.Rooms;
+using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;

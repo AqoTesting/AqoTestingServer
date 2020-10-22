@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.API.Users;
-using AqoTesting.Shared.DTOs.BD.Users;
+using AqoTesting.Shared.DTOs.DB.Users;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;

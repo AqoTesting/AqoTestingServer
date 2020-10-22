@@ -1,7 +1,7 @@
-﻿using AqoTesting.Shared.DTOs.BD;
-using AqoTesting.Shared.DTOs.BD.Rooms;
-using AqoTesting.Shared.DTOs.BD.Tests;
-using AqoTesting.Shared.DTOs.BD.Users;
+﻿using AqoTesting.Shared.DTOs.DB;
+using AqoTesting.Shared.DTOs.DB.Rooms;
+using AqoTesting.Shared.DTOs.DB.Tests;
+using AqoTesting.Shared.DTOs.DB.Users;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Org.BouncyCastle.Asn1.Ocsp;

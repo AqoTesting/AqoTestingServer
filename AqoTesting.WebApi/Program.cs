@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using AqoTesting.Domain.Controllers;
 using AqoTesting.Domain.Tests;
 using AqoTesting.Domain.Utils;
-using AqoTesting.Shared.DTOs.BD;
+using AqoTesting.Shared.DTOs.DB;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;

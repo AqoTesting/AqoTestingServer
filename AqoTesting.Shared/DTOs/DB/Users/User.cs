@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AqoTesting.Shared.DTOs.BD.Users
+namespace AqoTesting.Shared.DTOs.DB.Users
 {
     public class User
     {

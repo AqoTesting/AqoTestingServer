@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AqoTesting.Shared.DTOs.BD.Rooms
+namespace AqoTesting.Shared.DTOs.DB.Rooms
 {
     public class Attempt
     {
