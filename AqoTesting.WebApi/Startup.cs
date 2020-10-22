@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using AqoTesting.Shared.Infrastructure;
 using AqoTesting.Core.Repositories;
+using AqoTesting.WebApi.Infrastructure;
 
 namespace AqoTestingServer
 {
@@ -74,7 +75,9 @@ namespace AqoTestingServer
                     builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
                 });
             });
-           
+
+            AutoMapperConfig.Initialize();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

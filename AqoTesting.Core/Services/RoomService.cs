@@ -7,6 +7,7 @@ using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.DTOs.DB;
 using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.Interfaces;
+using AutoMapper;
 using MongoDB.Bson;
 
 namespace AqoTesting.Core.Services {
@@ -20,20 +21,7 @@ namespace AqoTesting.Core.Services {
         public async Task<GetRoomsItemDTO[]> GetRoomsByOwnerId(ObjectId ownerId) {
             Room[] rooms = await _roomRepository.GetRoomsByOwnerId(ownerId);
 
-            GetRoomsItemDTO[] responseRooms = new GetRoomsItemDTO[rooms.Length];
-
-            for (var i = 0; i < rooms.Length; i++) {
-                var room = rooms[i];
-
-                responseRooms[i] = new GetRoomsItemDTO {
-                    Id             = room.Id,
-                    Name           = room.Name,
-                    Domain         = room.Domain,
-                    OwnerId        = room.OwnerId,
-                    IsDataRequired = room.IsDataRequired,
-                    IsActive       = room.IsActive
-                };
-            }
+            GetRoomsItemDTO[] responseRooms = Mapper.Map<GetRoomsItemDTO[]>(rooms);
 
             return responseRooms;
         }
