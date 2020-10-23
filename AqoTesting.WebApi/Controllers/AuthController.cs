@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace AqoTesting.WebApi.Controllers
 {

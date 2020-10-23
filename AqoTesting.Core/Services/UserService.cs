@@ -96,8 +96,8 @@ namespace AqoTesting.Core.Services
 
             var claims = new List<Claim>
             {
-                new Claim("Id", user.Id.ToString()),
-                new Claim("Login", user.Login),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                //new Claim("Login", user.Login),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
             };
 

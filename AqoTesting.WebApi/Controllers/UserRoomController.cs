@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Enums;
@@ -16,6 +18,8 @@ namespace AqoTesting.WebApi.Controllers
     public class UserRoomController : Controller
     {
         IRoomService _roomService;
+
+        ObjectId _userId => ObjectId.Parse(User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
         public UserRoomController(IRoomService roomService)
         {
