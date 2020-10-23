@@ -4,6 +4,7 @@ using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
+using AqoTesting.WebApi.Attributes;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ namespace AqoTesting.WebApi.Controllers
             _roomService = roomService;
         }
 
+        [OnlyRoomOwner]
         [HttpGet("/user/room/{roomId}")]
         public async Task<IActionResult> GetRoom([FromRoute] string roomId)
         {
