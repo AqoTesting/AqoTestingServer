@@ -1,14 +1,10 @@
-﻿using AqoTesting.Shared.DTOs.DB;
-using AqoTesting.Shared.DTOs.DB.Rooms;
+﻿using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.DTOs.DB.Users;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Org.BouncyCastle.Asn1.Ocsp;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AqoTesting.Domain.Controllers
 {
@@ -23,7 +19,8 @@ namespace AqoTesting.Domain.Controllers
             return room;
         }
 
-        public static Room GetRoomByDomain(string domain) {
+        public static Room GetRoomByDomain(string domain)
+        {
             var collection = MongoController.mainDatabase.GetCollection<Room>("rooms");
             var filter = Builders<Room>.Filter.Eq("Domain", domain);
             var room = collection.Find(filter).SingleOrDefault();
@@ -34,7 +31,7 @@ namespace AqoTesting.Domain.Controllers
         {
             var collection = MongoController.mainDatabase.GetCollection<Room>("rooms");
             var filter = Builders<Room>.Filter.Eq("OwnerId", ownerId);
-            var rooms = collection.Find(filter).ToList<Room>();
+            var rooms = collection.Find(filter).ToEnumerable();
 
             return rooms.ToArray();
         }
@@ -65,7 +62,8 @@ namespace AqoTesting.Domain.Controllers
             return user;
         }
 
-        public static User GetUserByLogin(string login) {
+        public static User GetUserByLogin(string login)
+        {
             var collection = MongoController.mainDatabase.GetCollection<User>("users");
             var filter = Builders<User>.Filter.Eq("Login", login);
             var user = collection.Find(filter).SingleOrDefault();

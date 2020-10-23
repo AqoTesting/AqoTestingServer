@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.API.Rooms;
 using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.Enums;
@@ -18,13 +15,15 @@ namespace AqoTesting.WebApi.Controllers
     {
         IRoomService _roomService;
 
-        public RoomController(IRoomService roomService) {
+        public RoomController(IRoomService roomService)
+        {
             _roomService = roomService;
         }
 
         [Authorize]
         [HttpGet("/rooms")]
-        public async Task<IActionResult> GetRooms() {
+        public async Task<IActionResult> GetRooms()
+        {
             ObjectId ownerId = ObjectId.Parse(User.FindFirst("Id").Value);
 
             GetRoomsItemDTO[] rooms = await _roomService.GetRoomsByOwnerId(ownerId);
@@ -34,17 +33,40 @@ namespace AqoTesting.WebApi.Controllers
 
         [Authorize]
         [HttpPost("/room")]
-        public async Task<IActionResult> CreateRoom([FromBody] CreateRoomDTO newRoom) {
-            Room domainTaken = await _roomService.GetRoomByDomain(newRoom.Domain);
+        public async Task<IActionResult> CreateRoom([FromBody] CreateRoomDTO newRoom)
+        {
+            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
-            if(domainTaken != null) {
+            Room domainAlreadyTaken = await _roomService.GetRoomByDomain(newRoom.Domain);
+
+            if (domainAlreadyTaken != null)
+            {
                 return this.ResultResponse<object>(OperationErrorMessages.DomainAlreadyTaken);
             }
 
-            ObjectId ownerId = ObjectId.Parse(User.FindFirst("Id").Value);
-            ObjectId roomId = await _roomService.InsertRoom(newRoom, ownerId);
+            string ownerId = User.FindFirst("Id").Value;
+            string roomId = await _roomService.InsertRoom(newRoom, ownerId);
 
             return this.ResultResponse(OperationErrorMessages.NoError, roomId);
+        }
+
+        [Authorize]
+        [HttpDelete("/room")]
+        public async Task<IActionResult> DeleteRoom([FromBody] DeleteRoomDTO oldRoom)
+        {
+            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
+
+            await _roomService.DeleteRoomById(oldRoom.Id);
+
+            return this.ResultResponse<object>(OperationErrorMessages.NoError);
+        }
+
+        [HttpGet("/roomTest")]
+        public async Task<IActionResult> RoomTest()
+        {
+            Room room = await _roomService.GetRoomByDomain("hall");
+
+            return this.ResultResponse(OperationErrorMessages.NoError, room);
         }
     }
 }

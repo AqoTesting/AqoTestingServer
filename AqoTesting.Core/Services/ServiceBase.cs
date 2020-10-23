@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AqoTesting.Core.Services
 {
@@ -8,7 +6,7 @@ namespace AqoTesting.Core.Services
     {
         public ServiceBase()
         {
-        
+
         }
 
         public virtual void Dispose()

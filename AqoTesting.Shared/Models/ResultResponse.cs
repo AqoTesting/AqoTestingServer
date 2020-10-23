@@ -1,9 +1,6 @@
 ﻿using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Utils;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.Http;
 
 namespace AqoTesting.Shared.Models
@@ -11,7 +8,7 @@ namespace AqoTesting.Shared.Models
     public class ResultResponse<TData>
     {
         public bool Succeeded { get; set; } = true;
-        public OperationErrorMessages ErrorMessageCode { get; set; }  = OperationErrorMessages.NoError;
+        public OperationErrorMessages ErrorMessageCode { get; set; } = OperationErrorMessages.NoError;
         public TData Data { get; set; } = default;
         public IActionResult GetObjectResult(ControllerBase? controller = null)
         {

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace AqoTesting.Shared.DTOs.API.Rooms
 {
-    public class CreateRoomDTO {
+    public class CreateRoomDTO
+    {
         [StringLength(64, MinimumLength = 1)]
         public string Name { get; set; }
 

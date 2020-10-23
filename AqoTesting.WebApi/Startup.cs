@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AqoTesting.Shared.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -48,22 +44,22 @@ namespace AqoTestingServer
                     options.RequireHttpsMetadata = false;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                                    // укзывает, будет ли валидироваться издатель при валидации токена
-                                    ValidateIssuer = true,
-                                    // строка, представляющая издателя
-                                    ValidIssuer = AuthOptions.ISSUER,
+                        // укзывает, будет ли валидироваться издатель при валидации токена
+                        ValidateIssuer = true,
+                        // строка, представляющая издателя
+                        ValidIssuer = AuthOptions.ISSUER,
 
-                                    // будет ли валидироваться потребитель токена
-                                    ValidateAudience = true,
-                                    // установка потребителя токена
-                                    ValidAudience = AuthOptions.AUDIENCE,
-                                    // будет ли валидироваться время существования
-                                    ValidateLifetime = true,
+                        // будет ли валидироваться потребитель токена
+                        ValidateAudience = true,
+                        // установка потребителя токена
+                        ValidAudience = AuthOptions.AUDIENCE,
+                        // будет ли валидироваться время существования
+                        ValidateLifetime = true,
 
-                                    // установка ключа безопасности
-                                    IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                                    // валидация ключа безопасности
-                                    ValidateIssuerSigningKey = true,
+                        // установка ключа безопасности
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        // валидация ключа безопасности
+                        ValidateIssuerSigningKey = true,
                     };
                 });
 

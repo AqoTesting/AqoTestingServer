@@ -1,9 +1,6 @@
 ﻿using AqoTesting.Domain.Controllers;
 using AqoTesting.Shared.DTOs.DB.Rooms;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AqoTesting.Domain.Workers
 {

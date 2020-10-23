@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using AqoTesting.Domain.Controllers;
 using AqoTesting.Domain.Tests;
@@ -47,7 +43,8 @@ namespace AqoTestingServer
                     Console.WriteLine(user.Name);
                     //MongoIOController.DeleteUserById(user.Id);
                 }*/
-            } else
+            }
+            else
             {
                 prepareDB.CreateMainDatabase();
             }

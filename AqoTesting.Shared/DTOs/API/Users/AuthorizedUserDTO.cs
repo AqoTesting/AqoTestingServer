@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AqoTesting.Shared.DTOs.API.Users
+﻿namespace AqoTesting.Shared.DTOs.API.Users
 {
     public class AuthorizedUserDTO
     {

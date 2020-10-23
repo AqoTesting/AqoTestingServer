@@ -1,8 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AqoTesting.Shared.DTOs.DB.Rooms
 {
@@ -12,11 +9,11 @@ namespace AqoTesting.Shared.DTOs.DB.Rooms
         public ObjectId Id { get; set; }
         public string Name { get; set; }
         public string Domain { get; set; }
-        public Member[] Members { get; set; }
-        public ObjectId[] TestIds { get; set; }
+        public Member[] Members { get; set; } = new Member[0];
+        public ObjectId[] TestIds { get; set; } = new ObjectId[0];
         public ObjectId OwnerId { get; set; }
-        public bool IsDataRequired { get; set; }
-        public RequestedField[] RequestedFields { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsDataRequired { get; set; } = false;
+        public RequestedField[] RequestedFields { get; set; } = new RequestedField[0];
+        public bool IsActive { get; set; } = false;
     }
 }

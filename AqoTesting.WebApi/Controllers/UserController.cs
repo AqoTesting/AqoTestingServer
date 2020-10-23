@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.API.Users;
@@ -27,51 +25,50 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [HttpPost("/auth/signin")]
-        public async Task<IActionResult> SignIn([FromBody] SignInUserDTO authData) {
+        public async Task<IActionResult> SignIn([FromBody] SignInUserDTO authData)
+        {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
-            User user = await _userService.GetUserByAuthData(authData);
+            var user = await _userService.GetUserByAuthData(authData);
 
-            if (user != null) {
+            if (user != null)
+            {
                 var authorizedUser = _userService.GetAuthorizedUser(user);
                 return this.ResultResponse(OperationErrorMessages.NoError, authorizedUser);
-            } else {
+            }
+            else
+            {
                 return this.ResultResponse<object>(OperationErrorMessages.WrongAuthData);
             }
         }
 
         [HttpPost("/auth/signup")]
-        public async Task<IActionResult> SignUp([FromBody] SignUpUserDTO userData) {
+        public async Task<IActionResult> SignUp([FromBody] SignUpUserDTO signUpUserDTO)
+        {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
-            User loginTaken = await _userService.GetUserByLogin(userData.Login);
-            if(loginTaken != null) {
+            var loginAlreadyTaken = await _userService.GetUserByLogin(signUpUserDTO.Login);
+            if (loginAlreadyTaken != null)
+            {
                 return this.ResultResponse<object>(OperationErrorMessages.LoginAlreadyTaken);
             }
-            User emailTaken = await _userService.GetUserByEmail(userData.Email);
-            if (emailTaken != null) {
+            var emailAlreadyTaken = await _userService.GetUserByEmail(signUpUserDTO.Email);
+            if (emailAlreadyTaken != null)
+            {
                 return this.ResultResponse<object>(OperationErrorMessages.EmailAlreadyTaken);
             }
 
-            User newUser = new User {
-                Login = userData.Login,
-                Email = userData.Email,
-                PasswordHash = Sha256.Compute(userData.Password),
-                Name = userData.Name,
-                RegistrationDate = DateTime.UtcNow
-            };
-
-            ObjectId newUserId = await _userService.InsertUser(newUser);
-
-            newUser.Id = newUserId;
+            var newUser = await _userService.InsertUser(signUpUserDTO);
 
             var authorizedUser = _userService.GetAuthorizedUser(newUser);
+
             return this.ResultResponse(OperationErrorMessages.NoError, authorizedUser);
         }
 
         [Authorize(Roles = "User")]
         [HttpGet("/profile")]
-        public async Task<IActionResult> GetProfile() {
+        public async Task<IActionResult> GetProfile()
+        {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
             //ObjectId.Parse(User.FindFirst("Id").Value);

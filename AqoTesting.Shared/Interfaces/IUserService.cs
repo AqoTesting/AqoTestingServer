@@ -1,9 +1,6 @@
 ﻿using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.DTOs.DB.Users;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AqoTesting.Shared.Interfaces
@@ -14,7 +11,7 @@ namespace AqoTesting.Shared.Interfaces
         Task<User> GetUserByLogin(string login);
         Task<User> GetUserByEmail(string email);
 
-        Task<ObjectId> InsertUser(User user);
+        Task<User> InsertUser(SignUpUserDTO signUpUserDTO);
 
         AuthorizedUserDTO GetAuthorizedUser(User user);
     }

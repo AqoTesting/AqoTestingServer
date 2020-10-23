@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AqoTesting.Shared.Enums
+﻿namespace AqoTesting.Shared.Enums
 {
     public enum OperationErrorMessages
     {
@@ -16,5 +12,6 @@ namespace AqoTesting.Shared.Enums
 
         // Rooms
         DomainAlreadyTaken = 20,
+        RoomDoesntExist = 21,
     }
 }

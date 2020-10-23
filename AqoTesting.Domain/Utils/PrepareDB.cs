@@ -1,8 +1,5 @@
 ﻿using AqoTesting.Domain.Controllers;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AqoTesting.Domain.Utils
 {

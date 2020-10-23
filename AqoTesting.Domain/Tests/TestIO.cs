@@ -1,8 +1,6 @@
 ﻿using AqoTesting.Domain.Controllers;
 using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using MongoDB.Bson;
 using AqoTesting.Shared.Enums;
@@ -144,7 +142,7 @@ namespace AqoTesting.Domain.Tests
 
         public ObjectId[] AddUsers()
         {
-            
+
             using SHA512 sha512Hash = SHA512.Create();
             var users = new User[]
             {
