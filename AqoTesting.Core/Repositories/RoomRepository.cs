@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AqoTesting.Domain.Controllers;
+using AqoTesting.Domain.Workers;
 using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
@@ -19,7 +20,7 @@ namespace AqoTesting.Core.Repositories
         }
         public async Task<Room[]> GetRoomsByOwnerId(ObjectId ownerId)
         {
-            return await Task.Run(() => MongoIOController.GetRoomsByOwnerId(ownerId));
+            return await Task.Run(() => UserWorker.GetUserRooms(ownerId));
         }
 
         public async Task<ObjectId> InsertRoom(Room newRoom)
