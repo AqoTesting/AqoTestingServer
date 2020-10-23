@@ -11,6 +11,7 @@ using AqoTesting.Shared.Models;
 using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+using AqoTesting.Shared.DTOs.API.Users.Rooms;
 
 namespace AqoTesting.WebApi.Attributes
 {
@@ -52,9 +53,9 @@ namespace AqoTesting.WebApi.Attributes
         }
         private OperationErrorMessages EvaluateValidationAttributes(object argument, HttpContext httpContext, IRoomService roomService)
         {
-            ObjectId roomId = ObjectId.Parse(argument.ToString());
-            ObjectId ownerId = ObjectId.Parse(httpContext.User.FindFirst("Id").Value);
-            Room room = roomService.GetRoomById(roomId).Result;
+            string roomId = argument.ToString();
+            string ownerId = httpContext.User.FindFirst("Id").Value;
+            GetRoomDTO room = roomService.GetRoomById(roomId).Result;
 
             if (room == null) {
                 return OperationErrorMessages.RoomDoesntExists;

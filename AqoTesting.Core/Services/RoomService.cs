@@ -16,9 +16,10 @@ namespace AqoTesting.Core.Services
             _roomRepository = roomRespository;
         }
 
-        public async Task<Room> GetRoomById(ObjectId roomId)
+        public async Task<GetRoomDTO> GetRoomById(string roomId)
         {
-            return await _roomRepository.GetRoomById(roomId);
+            var room = await _roomRepository.GetRoomById(ObjectId.Parse(roomId));
+            return Mapper.Map<GetRoomDTO>(room);
         }
 
         public async Task<Room> GetRoomByDomain(string domain)

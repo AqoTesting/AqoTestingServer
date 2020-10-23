@@ -4,6 +4,7 @@ using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -21,9 +22,9 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [HttpGet("/user/room/{roomId}")]
-        public async Task<IActionResult> GetRoom([FromQuery] ObjectId roomId)
+        public async Task<IActionResult> GetRoom([FromRoute] string roomId)
         {
-            Room room = await _roomService.GetRoomByDomain("hall");
+            GetRoomDTO room = await _roomService.GetRoomById(roomId);
 
             return this.ResultResponse(OperationErrorMessages.NoError, room);
         }

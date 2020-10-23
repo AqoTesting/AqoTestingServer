@@ -7,7 +7,7 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IRoomService
     {
-        Task<Room> GetRoomById(ObjectId roomId);
+        Task<GetRoomDTO> GetRoomById(string roomId);
 
         Task<Room> GetRoomByDomain(string domain);
 
