@@ -9,14 +9,24 @@ namespace AqoTesting.Core.Repositories
 {
     public class RoomRespository : IRoomRespository
     {
+        Room _room;
+
         public async Task<Room> GetRoomById(ObjectId roomId)
         {
-            return await Task.Run(() => MongoIOController.GetRoomById(roomId));
+            return await Task.Run(() =>
+            {
+                if(_room == null) _room = MongoIOController.GetRoomById(roomId);
+                return _room;
+            });
         }
 
         public async Task<Room> GetRoomByDomain(string domain)
         {
-            return await Task.Run(() => MongoIOController.GetRoomByDomain(domain));
+            return await Task.Run(() =>
+            {
+                if (_room == null) _room = MongoIOController.GetRoomByDomain(domain);
+                return _room;
+            });
         }
         public async Task<Room[]> GetRoomsByOwnerId(ObjectId ownerId)
         {
