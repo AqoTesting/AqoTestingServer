@@ -10,6 +10,6 @@ namespace AqoTesting.Shared.Interfaces
         Task<Room> GetRoomByDomain(string domain);
         Task<Room[]> GetRoomsByOwnerId(ObjectId ownerId);
         Task<ObjectId> InsertRoom(Room newRoom);
-        Task DeleteRoomById(ObjectId roomId);
+        Task<bool> DeleteRoomById(ObjectId roomId);
     }
 }

@@ -64,9 +64,13 @@ namespace AqoTesting.WebApi.Controllers
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
-            await _roomService.DeleteRoomById(oldRoom.Id);
+            bool deleted = await _roomService.DeleteRoomById(oldRoom.Id);
 
-            return this.ResultResponse<object>(OperationErrorMessages.NoError);
+            if (deleted)
+                return this.ResultResponse<object>(OperationErrorMessages.NoError);
+
+            else
+                return this.ResultResponse<object>(OperationErrorMessages.RoomDoesntExists);
         }
     }
 }

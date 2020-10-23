@@ -44,9 +44,9 @@ namespace AqoTesting.Core.Services
             return (await _roomRepository.InsertRoom(newRoom)).ToString();
         }
 
-        public async Task DeleteRoomById(string roomId)
+        public async Task<bool> DeleteRoomById(string roomId)
         {
-            await _roomRepository.DeleteRoomById(ObjectId.Parse(roomId));
+            return await _roomRepository.DeleteRoomById(ObjectId.Parse(roomId));
         }
     }
 }

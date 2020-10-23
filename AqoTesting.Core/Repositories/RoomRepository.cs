@@ -28,9 +28,9 @@ namespace AqoTesting.Core.Repositories
             return await Task.Run(() => MongoIOController.InsertRoom(newRoom));
         }
 
-        public async Task DeleteRoomById(ObjectId roomId)
+        public async Task<bool> DeleteRoomById(ObjectId roomId)
         {
-            await Task.Run(() => MongoIOController.DeleteRoomById(roomId));
+            return await Task.Run(() => MongoIOController.DeleteRoomById(roomId));
         }
     }
 }

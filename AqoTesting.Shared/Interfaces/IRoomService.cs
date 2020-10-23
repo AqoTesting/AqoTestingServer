@@ -15,6 +15,6 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<string> InsertRoom(CreateRoomDTO newRoomDto, string ownerId);
 
-        Task DeleteRoomById(string roomId);
+        Task<bool> DeleteRoomById(string roomId);
     }
 }

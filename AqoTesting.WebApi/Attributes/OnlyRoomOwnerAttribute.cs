@@ -57,7 +57,7 @@ namespace AqoTesting.WebApi.Attributes
             Room room = roomService.GetRoomById(roomId).Result;
 
             if (room == null) {
-                return OperationErrorMessages.RoomDoesntExist;
+                return OperationErrorMessages.RoomDoesntExists;
             } 
             else if (room.OwnerId != ownerId)
             {

@@ -13,7 +13,7 @@
 
         // Rooms
         DomainAlreadyTaken = 20,
-        RoomDoesntExist = 21,
+        RoomDoesntExists = 21,
         RoomAccessError = 22
     }
 }
