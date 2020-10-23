@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AqoTesting.Shared.DTOs.API.Rooms
+namespace AqoTesting.Shared.DTOs.API.Users.Rooms
 {
     public struct RequestedFieldDTO
     {

@@ -1,4 +1,4 @@
-﻿using AqoTesting.Shared.DTOs.DB.Rooms;
+﻿using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.DTOs.DB.Users;
 using MongoDB.Bson;

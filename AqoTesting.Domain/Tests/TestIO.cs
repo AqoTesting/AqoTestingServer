@@ -5,7 +5,7 @@ using AqoTesting.Shared.DTOs.DB.Tests;
 using MongoDB.Bson;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.DTOs.DB.Users;
-using AqoTesting.Shared.DTOs.DB.Rooms;
+using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.DTOs.DB;
 using System.Security.Cryptography;
 using AqoTesting.Domain.Utils;

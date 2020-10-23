@@ -1,6 +1,6 @@
 ﻿namespace AqoTesting.Shared.DTOs.DB.Rooms
 {
-    public struct RequestedField
+    public class RequestedField
     {
         public string Key { get; set; }
         public string Name { get; set; }

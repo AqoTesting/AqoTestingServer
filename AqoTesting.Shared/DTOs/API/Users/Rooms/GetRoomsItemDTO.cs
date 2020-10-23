@@ -1,4 +1,4 @@
-﻿namespace AqoTesting.Shared.DTOs.API.Rooms
+﻿namespace AqoTesting.Shared.DTOs.API.Users.Rooms
 {
     public class GetRoomsItemDTO
     {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API.Rooms;
-using AqoTesting.Shared.DTOs.DB.Rooms;
+using AqoTesting.Shared.DTOs.API.Users.Rooms;
+using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
@@ -11,6 +11,7 @@ using MongoDB.Bson;
 namespace AqoTesting.WebApi.Controllers
 {
     [Produces("application/json")]
+    [Route("/user")]
     public class RoomController : Controller
     {
         IRoomService _roomService;
@@ -18,6 +19,15 @@ namespace AqoTesting.WebApi.Controllers
         public RoomController(IRoomService roomService)
         {
             _roomService = roomService;
+        }
+
+
+        [HttpGet("/room")]
+        public async Task<IActionResult> GetRoom()
+        {
+            Room room = await _roomService.GetRoomByDomain("hall");
+
+            return this.ResultResponse(OperationErrorMessages.NoError, room);
         }
 
         [Authorize]
@@ -59,14 +69,6 @@ namespace AqoTesting.WebApi.Controllers
             await _roomService.DeleteRoomById(oldRoom.Id);
 
             return this.ResultResponse<object>(OperationErrorMessages.NoError);
-        }
-
-        [HttpGet("/roomTest")]
-        public async Task<IActionResult> RoomTest()
-        {
-            Room room = await _roomService.GetRoomByDomain("hall");
-
-            return this.ResultResponse(OperationErrorMessages.NoError, room);
         }
     }
 }

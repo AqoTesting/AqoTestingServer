@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API.Rooms;
-using AqoTesting.Shared.DTOs.DB.Rooms;
+using AqoTesting.Shared.DTOs.API.Users.Rooms;
+using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Interfaces;
 using AutoMapper;
 using MongoDB.Bson;
