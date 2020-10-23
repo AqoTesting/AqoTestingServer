@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace AqoTesting.Shared.DTOs.DB.Rooms
+namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
 {
     public class Room
     {

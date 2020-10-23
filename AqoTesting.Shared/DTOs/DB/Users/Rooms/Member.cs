@@ -1,4 +1,4 @@
-﻿namespace AqoTesting.Shared.DTOs.DB.Rooms
+﻿namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
 {
     public class Member
     {

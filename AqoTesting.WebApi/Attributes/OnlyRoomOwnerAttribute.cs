@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 using AqoTesting.Shared.Models;
 using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
-using AqoTesting.Shared.DTOs.DB.Rooms;
-using AqoTesting.Shared.DTOs.DB.Users;
+using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 
 namespace AqoTesting.WebApi.Attributes
 {
