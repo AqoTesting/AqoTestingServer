@@ -26,6 +26,15 @@ namespace AqoTesting.Domain.Workers
             return ids.ToArray();
         }
 
+        public static Room GetUserRoom(ObjectId UserId, ObjectId RoomId)
+        {
+            var idFilter = Builders<Room>.Filter.Eq("Id", RoomId);
+            var ownerFilter = Builders<Room>.Filter.Eq("OwnerId", UserId);
+            var filter = idFilter & ownerFilter;
+            var room = MongoController.mainDatabase.GetCollection<Room>("rooms").Find(filter).SingleOrDefault();
+            return room;
+        }
+
         public static bool IsUserOwner(ObjectId UserId, ObjectId RoomId)
         {
             var idFilter = Builders<Room>.Filter.Eq("Id", RoomId);
