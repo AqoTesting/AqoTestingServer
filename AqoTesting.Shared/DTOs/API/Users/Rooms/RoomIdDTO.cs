@@ -3,7 +3,7 @@ using MongoDB.Bson;
 
 namespace AqoTesting.Shared.DTOs.API.Users.Rooms
 {
-    public class DeleteRoomDTO
+    public class RoomIdDTO
     {
         [Required]
         public string Id { get; set; }

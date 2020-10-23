@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Folder Include="DTOs\API\Members\Rooms\" />
+    <Folder Include="DTOs\DB\Members\Rooms\" />
   </ItemGroup>
 
 </Project>

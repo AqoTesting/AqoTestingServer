@@ -10,6 +10,7 @@ namespace AqoTesting.WebApi.Infrastructure
         {
             Mapper.Initialize(cfg =>
             {
+                cfg.CreateMap<Room, GetRoomDTO>();
                 cfg.CreateMap<Room, GetRoomsItemDTO>();
                 cfg.CreateMap<CreateRoomDTO, Room>();
             });

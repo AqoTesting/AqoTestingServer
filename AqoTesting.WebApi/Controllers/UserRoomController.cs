@@ -11,18 +11,18 @@ using MongoDB.Bson;
 namespace AqoTesting.WebApi.Controllers
 {
     [Produces("application/json")]
-    [Route("/user")]
-    public class RoomController : Controller
+    [Route("/user/room")]
+    public class UserRoomController : Controller
     {
         IRoomService _roomService;
 
-        public RoomController(IRoomService roomService)
+        public UserRoomController(IRoomService roomService)
         {
             _roomService = roomService;
         }
 
 
-        [HttpGet("/room")]
+        [HttpGet("/{roomId}")]
         public async Task<IActionResult> GetRoom()
         {
             Room room = await _roomService.GetRoomByDomain("hall");
@@ -31,7 +31,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("/rooms")]
+        [HttpGet("s")]
         public async Task<IActionResult> GetRooms()
         {
             ObjectId ownerId = ObjectId.Parse(User.FindFirst("Id").Value);
@@ -42,7 +42,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("/room")]
+        [HttpPost]
         public async Task<IActionResult> CreateRoom([FromBody] CreateRoomDTO newRoom)
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
@@ -61,8 +61,8 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpDelete("/room")]
-        public async Task<IActionResult> DeleteRoom([FromBody] DeleteRoomDTO oldRoom)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteRoom([FromBody] RoomIdDTO oldRoom)
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
