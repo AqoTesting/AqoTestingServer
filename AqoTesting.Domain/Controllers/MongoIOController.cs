@@ -131,25 +131,28 @@ namespace AqoTesting.Domain.Controllers
         #endregion
 
         #region DELETE
-        public static void DeleteRoomById(ObjectId roomId)
+        public static bool DeleteRoomById(ObjectId roomId)
         {
             var collection = MongoController.mainDatabase.GetCollection<Room>("rooms");
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            collection.DeleteOne(filter);
+            var isDeleteSuccessful = collection.DeleteOne(filter).DeletedCount == 1;
+            return isDeleteSuccessful;
         }
 
-        public static void DeleteTestById(ObjectId testId)
+        public static bool DeleteTestById(ObjectId testId)
         {
             var collection = MongoController.mainDatabase.GetCollection<Test>("tests");
             var filter = Builders<Test>.Filter.Eq("Id", testId);
-            collection.DeleteOne(filter);
+            var isDeleteSuccessful = collection.DeleteOne(filter).DeletedCount == 1;
+            return isDeleteSuccessful;
         }
 
-        public static void DeleteUserById(ObjectId userId)
+        public static bool DeleteUserById(ObjectId userId)
         {
             var collection = MongoController.mainDatabase.GetCollection<User>("users");
             var filter = Builders<User>.Filter.Eq("Id", userId);
-            collection.DeleteOne(filter);
+            var isDeleteSuccessful = collection.DeleteOne(filter).DeletedCount == 1;
+            return isDeleteSuccessful;
         }
 
         #endregion
