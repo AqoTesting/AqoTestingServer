@@ -1,5 +1,11 @@
-﻿using AqoTesting.Shared.DTOs.API.Users.Rooms;
+﻿using System;
+using AqoTesting.Core.Utils;
+using AqoTesting.Shared.DTOs.API.Users;
+using AqoTesting.Shared.DTOs.API.Users.Rooms;
+using AqoTesting.Shared.DTOs.DB.Users;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.Models;
 using AutoMapper;
 
 namespace AqoTesting.WebApi.Infrastructure
@@ -10,9 +16,23 @@ namespace AqoTesting.WebApi.Infrastructure
         {
             Mapper.Initialize(cfg =>
             {
+                // Rooms
                 cfg.CreateMap<Room, GetRoomDTO>();
+
                 cfg.CreateMap<Room, GetRoomsItemDTO>();
+
                 cfg.CreateMap<CreateRoomDTO, Room>();
+
+                // Users
+                cfg.CreateMap<SignUpUserDTO, User>()
+                    .ForMember(x => x.PasswordHash,
+                        x => x.MapFrom(m => Sha256.Compute(m.Password)))
+                    .ForMember(x => x.RegistrationDate,
+                        x => x.MapFrom(m => DateTime.UtcNow));
+                
+                cfg.CreateMap<User, AuthUser>()
+                    .ForMember(x => x.Role,
+                        x => x.MapFrom(m => Role.User));
             });
         }
     }

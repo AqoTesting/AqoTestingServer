@@ -21,6 +21,7 @@ namespace AqoTesting.WebApi.Attributes
         public OnlyRoomOwnerAttribute()
         {
         }
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var _roomService = context.HttpContext.RequestServices.GetService<IRoomService>();
@@ -53,8 +54,10 @@ namespace AqoTesting.WebApi.Attributes
         }
         private OperationErrorMessages EvaluateValidationAttributes(object argument, HttpContext httpContext, IRoomService roomService)
         {
+            var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
+
             string roomId = argument.ToString();
-            string ownerId = httpContext.User.FindFirst("Id").Value;
+            string ownerId = _workContext.UserId.ToString();
             GetRoomDTO room = roomService.GetRoomById(roomId).Result;
 
             if (room == null) {

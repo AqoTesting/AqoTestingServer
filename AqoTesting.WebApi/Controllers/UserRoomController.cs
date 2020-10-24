@@ -19,8 +19,6 @@ namespace AqoTesting.WebApi.Controllers
     {
         IWorkContext _workContext;
         IRoomService _roomService;
-
-        //ObjectId _userId => ObjectId.Parse(User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
             
         public UserRoomController(IWorkContext workContext, IRoomService roomService)
         {
@@ -28,11 +26,14 @@ namespace AqoTesting.WebApi.Controllers
             _roomService = roomService;
         }
 
+        [Authorize]
         [OnlyRoomOwner]
-        [HttpGet("/user/room/{roomId}")]
-        public async Task<IActionResult> GetRoom([FromRoute] string roomId)
+        [HttpGet("/user/room/{Id}")]
+        public async Task<IActionResult> GetRoom([FromRoute] RoomIdDTO roomIdDTO)
         {
-            GetRoomDTO room = await _roomService.GetRoomById(roomId);
+            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
+
+            var room = await _roomService.GetRoomById(roomIdDTO.Id);
 
             return this.ResultResponse(OperationErrorMessages.NoError, room);
         }
@@ -41,9 +42,7 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/user/rooms")]
         public async Task<IActionResult> GetRooms()
         {
-            ObjectId ownerId = ObjectId.Parse(User.FindFirst("Id").Value);
-
-            GetRoomsItemDTO[] rooms = await _roomService.GetRoomsByOwnerId(ownerId);
+            var rooms = await _roomService.GetRoomsByOwnerId(_workContext.UserId.ToString());
 
             return this.ResultResponse(OperationErrorMessages.NoError, rooms);
         }
@@ -54,32 +53,30 @@ namespace AqoTesting.WebApi.Controllers
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
-            Room domainAlreadyTaken = await _roomService.GetRoomByDomain(newRoom.Domain);
+            var domainAlreadyTaken = await _roomService.GetRoomByDomain(newRoom.Domain);
 
             if (domainAlreadyTaken != null)
-            {
-                return this.ResultResponse<object>(OperationErrorMessages.DomainAlreadyTaken);
-            }
+                throw new ResultException(OperationErrorMessages.DomainAlreadyTaken);
 
-            string ownerId = User.FindFirst("Id").Value;
-            string roomId = await _roomService.InsertRoom(newRoom, ownerId);
+            var roomId = await _roomService.InsertRoom(newRoom);
 
             return this.ResultResponse(OperationErrorMessages.NoError, roomId);
         }
 
         [Authorize]
+        [OnlyRoomOwner]
         [HttpDelete("/user/room")]
         public async Task<IActionResult> DeleteRoom([FromBody] RoomIdDTO oldRoom)
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
-            bool deleted = await _roomService.DeleteRoomById(oldRoom.Id);
+            var deleted = await _roomService.DeleteRoomById(oldRoom.Id);
 
             if (deleted)
                 return this.ResultResponse<object>(OperationErrorMessages.NoError);
 
             else
-                return this.ResultResponse<object>(OperationErrorMessages.RoomDoesntExists);
+                throw new ResultException(OperationErrorMessages.RoomDoesntExists);
         }
     }
 }

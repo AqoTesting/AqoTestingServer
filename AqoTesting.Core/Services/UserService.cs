@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using AqoTesting.Shared.Infrastructure;
 using System;
 using MongoDB.Bson;
+using AutoMapper;
 
 namespace AqoTesting.Core.Services
 {
@@ -26,7 +27,9 @@ namespace AqoTesting.Core.Services
 
         public async Task<User> GetUserByAuthData(SignInUserDTO authData)
         {
-            return await _userRepository.GetUserByAuthData(authData.Login, Sha256.Compute(authData.Password));
+            var user = await _userRepository.GetUserByAuthData(authData.Login, Sha256.Compute(authData.Password));
+            if(user == null) throw new ResultException(OperationErrorMessages.WrongAuthData);
+            return user;
         }
 
         public async Task<User> GetUserByLogin(string login)
@@ -41,14 +44,7 @@ namespace AqoTesting.Core.Services
 
         public async Task<User> InsertUser(SignUpUserDTO signUpUserDTO)
         {
-            var newUser = new User
-            {
-                Login = signUpUserDTO.Login,
-                Email = signUpUserDTO.Email,
-                PasswordHash = Sha256.Compute(signUpUserDTO.Password),
-                Name = signUpUserDTO.Name,
-                RegistrationDate = DateTime.UtcNow
-            };
+            var newUser = Mapper.Map<User>(signUpUserDTO);
 
             var newUserId = await _userRepository.InsertUser(newUser);
 
@@ -59,16 +55,9 @@ namespace AqoTesting.Core.Services
 
         public AuthorizedUserDTO GetAuthorizedUser(User user)
         {
+            var authorizedUser = Mapper.Map<AuthUser>(user);
 
-            var authUser = new AuthUser
-            {
-                Id = user.Id,
-                Login = user.Login,
-                Email = user.Email,
-                Role = Role.User
-            };
-
-            var identity = GetIdentity(authUser);
+            var identity = GetIdentity(authorizedUser);
 
             var now = DateTime.UtcNow;
             // создаем JWT-токен

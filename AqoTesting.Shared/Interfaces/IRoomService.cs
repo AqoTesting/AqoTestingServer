@@ -11,9 +11,9 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<Room> GetRoomByDomain(string domain);
 
-        Task<GetRoomsItemDTO[]> GetRoomsByOwnerId(ObjectId ownerId);
+        Task<GetRoomsItemDTO[]> GetRoomsByOwnerId(string ownerId);
 
-        Task<string> InsertRoom(CreateRoomDTO newRoomDto, string ownerId);
+        Task<string> InsertRoom(CreateRoomDTO newRoomDto);
 
         Task<bool> DeleteRoomById(string roomId);
     }

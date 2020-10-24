@@ -1,8 +1,11 @@
 ﻿using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
+using AqoTesting.Shared.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 
 namespace AqoTesting.Core.Services
@@ -10,15 +13,20 @@ namespace AqoTesting.Core.Services
     public class RoomService : ServiceBase, IRoomService
     {
         IRoomRespository _roomRepository;
+        IWorkContext _workContext;
 
-        public RoomService(IRoomRespository roomRespository)
+        public RoomService(IRoomRespository roomRespository, IWorkContext workContext)
         {
             _roomRepository = roomRespository;
+            _workContext = workContext;
         }
 
         public async Task<GetRoomDTO> GetRoomById(string roomId)
         {
             var room = await _roomRepository.GetRoomById(ObjectId.Parse(roomId));
+
+            if (room == null) throw new ResultException(OperationErrorMessages.RoomDoesntExists);
+
             return Mapper.Map<GetRoomDTO>(room);
         }
 
@@ -27,21 +35,20 @@ namespace AqoTesting.Core.Services
             return await _roomRepository.GetRoomByDomain(domain);
         }
 
-        public async Task<GetRoomsItemDTO[]> GetRoomsByOwnerId(ObjectId ownerId)
+        public async Task<GetRoomsItemDTO[]> GetRoomsByOwnerId(string ownerId)
         {
-            var rooms = await _roomRepository.GetRoomsByOwnerId(ownerId);
+            var rooms = await _roomRepository.GetRoomsByOwnerId(ObjectId.Parse(ownerId));
 
             var responseRooms = Mapper.Map<GetRoomsItemDTO[]>(rooms);
 
             return responseRooms;
         }
 
-        public async Task<string> InsertRoom(CreateRoomDTO newRoomDto, string ownerId)
+        public async Task<string> InsertRoom(CreateRoomDTO newRoomDto)
         {
             var newRoom = Mapper.Map<Room>(newRoomDto);
-            newRoom.OwnerId = ObjectId.Parse(ownerId);
+            newRoom.OwnerId = _workContext.UserId;
 
-            //return await Task.Run(() => new ObjectId().ToString()); // Затычка для дебага
             return (await _roomRepository.InsertRoom(newRoom)).ToString();
         }
 

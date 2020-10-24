@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace AqoTesting.WebApi.Controllers
 {
     [Produces("application/json")]
-    [Route("/user")]
     public class UserController : Controller
     {
 
@@ -22,7 +21,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Authorize(Roles = "User")]
-        [HttpGet]
+        [HttpGet("/user")]
         public async Task<IActionResult> GetProfile()
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
