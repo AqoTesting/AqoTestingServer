@@ -1,5 +1,8 @@
 ﻿using AqoTesting.Shared.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MongoDB.Bson;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AqoTesting.Shared.Infrastructure
@@ -14,7 +17,9 @@ namespace AqoTesting.Shared.Infrastructure
 
         public override async Task TokenValidated(TokenValidatedContext context)
         {
-            //context.Principal.
+            _workContext.UserId = ObjectId.Parse(context.Principal.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            await base.TokenValidated(context);
         }
     }
 }

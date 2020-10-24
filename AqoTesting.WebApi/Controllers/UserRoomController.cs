@@ -17,12 +17,14 @@ namespace AqoTesting.WebApi.Controllers
     [Produces("application/json")]
     public class UserRoomController : Controller
     {
+        IWorkContext _workContext;
         IRoomService _roomService;
 
-        ObjectId _userId => ObjectId.Parse(User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
-
-        public UserRoomController(IRoomService roomService)
+        //ObjectId _userId => ObjectId.Parse(User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            
+        public UserRoomController(IWorkContext workContext, IRoomService roomService)
         {
+            _workContext = workContext;
             _roomService = roomService;
         }
 

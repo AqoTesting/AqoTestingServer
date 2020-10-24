@@ -15,6 +15,10 @@ using Microsoft.IdentityModel.Tokens;
 using AqoTesting.Shared.Infrastructure;
 using AqoTesting.Core.Repositories;
 using AqoTesting.WebApi.Infrastructure;
+using AqoTesting.Shared.Models;
+using Microsoft.AspNetCore.Diagnostics;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace AqoTestingServer
 {
@@ -31,6 +35,9 @@ namespace AqoTestingServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddScoped<IWorkContext, WorkContext>();
+            services.AddScoped<DefaultJwtBearerEvents>();
 
             // Load services
             services.AddScoped<IUserService, UserService>();
@@ -61,6 +68,7 @@ namespace AqoTestingServer
                         // валидация ключа безопасности
                         ValidateIssuerSigningKey = true,
                     };
+                    options.EventsType = typeof(DefaultJwtBearerEvents);
                 });
 
             services.AddCors(options =>
@@ -87,6 +95,27 @@ namespace AqoTestingServer
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseExceptionHandler(appError => {
+                appError.Run(async context => {
+
+                    var serverError = context.Features.Get<IExceptionHandlerPathFeature>()?.Error;
+                    if (serverError != null && serverError is IResultException resultException)
+                    {
+                        context.Response.StatusCode = 200;
+                        context.Response.ContentType = "application/json";
+                        
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(
+                            new ResultResponse<object> { Succeeded = false, ErrorMessageCode = resultException.ErrorMessageCode }, 
+                            new JsonSerializerSettings
+                            {
+                                ContractResolver = new CamelCasePropertyNamesContractResolver()
+                            }
+                        )).ConfigureAwait(true);
+                    }
+
+                });
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();
