@@ -1,4 +1,7 @@
-﻿using MongoDB.Driver;
+﻿using AqoTesting.Shared.DTOs.DB.Tests;
+using AqoTesting.Shared.DTOs.DB.Users;
+using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+using MongoDB.Driver;
 
 namespace AqoTesting.Domain.Controllers
 {
@@ -20,6 +23,21 @@ namespace AqoTesting.Domain.Controllers
             if (client != null && database != null) mainDatabase = client.GetDatabase(database);
 
             return client;
+        }
+
+        public static IMongoCollection<Room> GetRoomsCollection()
+        {
+            return mainDatabase.GetCollection<Room>("rooms");
+        }
+
+        public static IMongoCollection<Test> GetTestsCollection()
+        {
+            return mainDatabase.GetCollection<Test>("tests");
+        }
+
+        public static IMongoCollection<User> GetUsersCollection()
+        {
+            return mainDatabase.GetCollection<User>("users");
         }
     }
 }

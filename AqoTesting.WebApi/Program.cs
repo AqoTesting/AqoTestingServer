@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using AqoTesting.Domain.Controllers;
 using AqoTesting.Domain.Tests;
 using AqoTesting.Domain.Utils;
+using AqoTesting.Domain.Workers;
 using AqoTesting.Shared.DTOs.DB;
+using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -48,6 +50,28 @@ namespace AqoTestingServer
             {
                 prepareDB.CreateMainDatabase();
             }
+
+            //var user = UserWorker.GetUserById(ObjectId.Parse("5f92b5ba5f039b5caf621df7"));
+            //user.SetName("Test Name");
+
+            //var test = TestWorker.GetTestById(ObjectId.Parse("5f92b5b95f039b5caf621df6"));
+            //test.SetTitle("test title");
+            //test.SetUserId(ObjectId.Parse("5f92b5ba5f039b5caf621df7"));
+            //test.SetActivationDate(DateTime.Now);
+            //test.SetDeactivationDate(DateTime.Now.AddDays(1));
+
+            //var room = RoomWorker.GetRoomById(ObjectId.Parse("5f92b5ba5f039b5caf621df9"));
+            /*
+            room.AddMember(new Member
+            {
+                Token = ObjectId.GenerateNewId().ToString(),
+                Login = "test new",
+                Password = "123",
+                Attempts = new Attempt[0],
+                UserData = new object(),
+            });
+            */
+            //room.RemoveMemberByToken("5f92b5b95f039b5caf621df3");
 
             //var testIO = new TestIO();
             //var usersIds = testIO.AddUsers();

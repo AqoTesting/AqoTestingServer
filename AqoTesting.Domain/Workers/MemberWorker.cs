@@ -18,7 +18,7 @@ namespace AqoTesting.Domain.Workers
 
         public static Member? GetMemberFromRoom(ObjectId roomId, string memberLogin)
         {
-            return GetMemberFromRoom(MongoIOController.GetRoomById(roomId), memberLogin);
+            return GetMemberFromRoom(RoomWorker.GetRoomById(roomId), memberLogin);
         }
         #endregion
 
@@ -26,7 +26,7 @@ namespace AqoTesting.Domain.Workers
 
         public static bool CheckMemberInRoom(ObjectId roomId, string memberLogin)
         {
-            return GetMemberFromRoom(MongoIOController.GetRoomById(roomId), memberLogin) != null;
+            return GetMemberFromRoom(RoomWorker.GetRoomById(roomId), memberLogin) != null;
         }
         #endregion
 
@@ -40,7 +40,7 @@ namespace AqoTesting.Domain.Workers
         #region Common
         public static Attempt? GetMemberAttempt(ObjectId roomId, string memberLogin, ObjectId testId)
         {
-            var member = GetMemberFromRoom(MongoIOController.GetRoomById(roomId), memberLogin);
+            var member = GetMemberFromRoom(RoomWorker.GetRoomById(roomId), memberLogin);
             if (member != null)
                 foreach (var attempt in member.Attempts)
                     if (attempt.TestId.Equals(testId))
@@ -50,13 +50,13 @@ namespace AqoTesting.Domain.Workers
 
         public static object? GetMemberUserData(ObjectId roomId, string memberLogin)
         {
-            var member = GetMemberFromRoom(MongoIOController.GetRoomById(roomId), memberLogin);
+            var member = GetMemberFromRoom(RoomWorker.GetRoomById(roomId), memberLogin);
             return member?.UserData;
         }
 
         public static object? GetMemberPassword(ObjectId roomId, string memberLogin)
         {
-            var member = GetMemberFromRoom(MongoIOController.GetRoomById(roomId), memberLogin);
+            var member = GetMemberFromRoom(RoomWorker.GetRoomById(roomId), memberLogin);
             return member?.Password;
         }
         #endregion

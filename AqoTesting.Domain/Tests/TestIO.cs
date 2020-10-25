@@ -9,18 +9,19 @@ using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.DTOs.DB;
 using System.Security.Cryptography;
 using AqoTesting.Domain.Utils;
+using AqoTesting.Domain.Workers;
 
 namespace AqoTesting.Domain.Tests
 {
     public class TestIO
     {
-        public ObjectId[] AddTests()
+        public ObjectId[] AddTests(ObjectId userId)
         {
             var tests = new Test[]
             {
                 new Test
                 {
-                    UserId = 1,
+                    UserId = userId,
                     CreationDate = DateTime.Now,
                     ActivationDate = null,
                     DeactivationDate = null,
@@ -78,7 +79,7 @@ namespace AqoTesting.Domain.Tests
                 },
                 new Test
                 {
-                    UserId = 1,
+                    UserId = userId,
                     CreationDate = DateTime.Now,
                     ActivationDate = null,
                     DeactivationDate = null,
@@ -136,7 +137,7 @@ namespace AqoTesting.Domain.Tests
                 }
             };
 
-            var TestsIds = MongoIOController.InsertTests(tests);
+            var TestsIds = TestWorker.InsertTests(tests);
             return TestsIds;
         }
 
@@ -164,12 +165,13 @@ namespace AqoTesting.Domain.Tests
                 }
             };
 
-            var UsersIds = MongoIOController.InsertUsers(users);
+            var UsersIds = UserWorker.InsertUsers(users);
             return UsersIds;
         }
 
         public ObjectId[] AddRooms()
         {
+            var users = AddUsers();
             var rooms = new Room[]
             {
                 new Room
@@ -195,14 +197,14 @@ namespace AqoTesting.Domain.Tests
                             UserData = new object(),
                         }
                     },
-                    TestIds = AddTests(),
-                    OwnerId = AddUsers()[0],
+                    TestIds = AddTests(users[0]),
+                    OwnerId = users[0],
                     IsDataRequired = false,
                     RequestedFields = new RequestedField[0],
                     IsActive = true
                 }
             };
-            var RoomsIds = MongoIOController.InsertRooms(rooms);
+            var RoomsIds = RoomWorker.InsertRooms(rooms);
             return RoomsIds;
         }
     }
