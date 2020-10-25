@@ -5,6 +5,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
+using AqoTesting.Shared.DTOs.API.Users.Rooms;
 
 namespace AqoTesting.Domain.Controllers
 {
@@ -127,6 +128,29 @@ namespace AqoTesting.Domain.Controllers
                 UsersIds.Add(user.Id);
 
             return UsersIds.ToArray();
+        }
+        #endregion
+
+        #region MODIFY
+        public static void SetRoomName(ObjectId roomId, string newName)
+        {
+            
+        }
+        public static void SetRoomDomain(ObjectId roomId, string newDomain)
+        {
+            
+        }
+        public static void SetRoomRequestedFields(ObjectId roomId, RequestedFieldDTO[] newRequestedFields)
+        {
+            
+        }
+        public static void SetRoomIsDataRequired(ObjectId roomId, bool newIsDataRequired)
+        {
+            
+        }
+        public static void SetRoomIsActive(ObjectId roomId, bool newIsActive)
+        {
+            
         }
         #endregion
 

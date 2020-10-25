@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
@@ -65,18 +66,26 @@ namespace AqoTesting.WebApi.Controllers
 
         [Authorize]
         [OnlyRoomOwner]
+        [HttpPatch("/user/room/{Id}")]
+        public async Task<IActionResult> EditRoom([FromRoute] RoomIdDTO roomIdDTO, [FromBody] EditRoomDTO roomUpdates)
+        {
+            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
+
+            var updatedRoom = await _roomService.EditRoom(roomIdDTO, roomUpdates);
+
+            return this.ResultResponse<object>(OperationErrorMessages.NoError, updatedRoom);
+        }    
+
+        [Authorize]
+        [OnlyRoomOwner]
         [HttpDelete("/user/room")]
         public async Task<IActionResult> DeleteRoom([FromBody] RoomIdDTO oldRoom)
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
-            var deleted = await _roomService.DeleteRoomById(oldRoom.Id);
+            await _roomService.DeleteRoomById(oldRoom.Id);
 
-            if (deleted)
-                return this.ResultResponse<object>(OperationErrorMessages.NoError);
-
-            else
-                throw new ResultException(OperationErrorMessages.RoomDoesntExists);
+            return this.ResultResponse<object>(OperationErrorMessages.NoError);
         }
     }
 }

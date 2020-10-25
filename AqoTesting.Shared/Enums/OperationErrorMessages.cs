@@ -5,6 +5,7 @@
         NoError = 0,
         InvalidModel = 1,
         EntityNotFound = 3,
+        NothingChanged = 4,
 
         // Auth
         WrongAuthData = 10,
@@ -14,6 +15,6 @@
         // Rooms
         DomainAlreadyTaken = 20,
         RoomDoesntExists = 21,
-        RoomAccessError = 22
+        RoomAccessError = 22,
     }
 }

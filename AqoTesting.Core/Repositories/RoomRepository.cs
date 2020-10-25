@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AqoTesting.Domain.Controllers;
 using AqoTesting.Domain.Workers;
+using AqoTesting.Shared.DTOs.API.Users.Rooms;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
@@ -36,6 +37,27 @@ namespace AqoTesting.Core.Repositories
         public async Task<ObjectId> InsertRoom(Room newRoom)
         {
             return await Task.Run(() => MongoIOController.InsertRoom(newRoom));
+        }
+
+        public async Task SetRoomName(ObjectId roomId, string newName)
+        {
+            await Task.Run(() => MongoIOController.SetRoomName(roomId, newName));
+        }
+        public async Task SetRoomDomain(ObjectId roomId, string newDomain)
+        {
+            await Task.Run(() => MongoIOController.SetRoomDomain(roomId, newDomain));
+        }
+        public async Task SetRoomRequestedFields(ObjectId roomId, RequestedFieldDTO[] newRequestedFields)
+        {
+            await Task.Run(() => MongoIOController.SetRoomRequestedFields(roomId, newRequestedFields));
+        }
+        public async Task SetRoomIsDataRequired(ObjectId roomId, bool newIsDataRequired)
+        {
+            await Task.Run(() => MongoIOController.SetRoomIsDataRequired(roomId, newIsDataRequired));
+        }
+        public async Task SetRoomIsActive(ObjectId roomId, bool newIsActive)
+        {
+            await Task.Run(() => MongoIOController.SetRoomIsActive(roomId, newIsActive));
         }
 
         public async Task<bool> DeleteRoomById(ObjectId roomId)
