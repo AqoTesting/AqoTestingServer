@@ -7,37 +7,26 @@ namespace AqoTesting.Domain.Controllers
 {
     public static class MongoController
     {
-        public static string? connectionUri;
+        public static string? 接続アドレス;
         public static MongoClient? client;
         public static IMongoDatabase mainDatabase;
 
-        public static MongoClient? ConnectToDB(string? username, string? password, string host, ushort? port, string? database, string? options)
+        public static MongoClient? ConnectToDB(string? ユーザ名, string? パスワード, string ホスト, ushort? ポート, string? データベー, string? オプション)
         {
-            connectionUri = "mongodb://" + (username != null ? $"{username}:{password}@" : "") +
-                host + (port != null ? $":{port}" : "") +
-                (database != null || options != null ? "/" : "") +
-                (database != null ? $"{database}" : "") +
-                (options != null ? $"?options" : "");
+            接続アドレス = "mongodb://" + (ユーザ名 != null ? $"{ユーザ名}:{パスワード}@" : "") +
+                ホスト + (ポート != null ? $":{ポート}" : "") +
+                (データベー != null || オプション != null ? "/" : "") +
+                (データベー != null ? $"{データベー}" : "") +
+                (オプション != null ? $"?options" : "");
 
-            client = new MongoClient(connectionUri);
-            if (client != null && database != null) mainDatabase = client.GetDatabase(database);
+            client = new MongoClient(接続アドレス);
+            if (client != null && データベー != null) mainDatabase = client.GetDatabase(データベー);
 
             return client;
         }
 
-        public static IMongoCollection<Room> GetRoomsCollection()
-        {
-            return mainDatabase.GetCollection<Room>("rooms");
-        }
-
-        public static IMongoCollection<Test> GetTestsCollection()
-        {
-            return mainDatabase.GetCollection<Test>("tests");
-        }
-
-        public static IMongoCollection<User> GetUsersCollection()
-        {
-            return mainDatabase.GetCollection<User>("users");
-        }
+        public static IMongoCollection<Room> GetRoomsCollection() => mainDatabase.GetCollection<Room>("rooms");
+        public static IMongoCollection<Test> GetTestsCollection() => mainDatabase.GetCollection<Test>("tests");
+        public static IMongoCollection<User> GetUsersCollection() => mainDatabase.GetCollection<User>("users");
     }
 }

@@ -21,7 +21,7 @@ namespace AqoTesting.Domain.Tests
             {
                 new Test
                 {
-                    UserId = userId,
+                    OwnerId = userId,
                     CreationDate = DateTime.Now,
                     ActivationDate = null,
                     DeactivationDate = null,
@@ -79,7 +79,7 @@ namespace AqoTesting.Domain.Tests
                 },
                 new Test
                 {
-                    UserId = userId,
+                    OwnerId = userId,
                     CreationDate = DateTime.Now,
                     ActivationDate = null,
                     DeactivationDate = null,

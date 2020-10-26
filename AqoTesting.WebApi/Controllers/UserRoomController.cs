@@ -1,17 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
 using AqoTesting.WebApi.Attributes;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 
 namespace AqoTesting.WebApi.Controllers
 {
@@ -27,19 +21,19 @@ namespace AqoTesting.WebApi.Controllers
             _roomService = roomService;
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [OnlyRoomOwner]
         [HttpGet("/user/room/{Id}")]
         public async Task<IActionResult> GetRoom([FromRoute] RoomIdDTO roomIdDTO)
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
-            var room = await _roomService.GetRoomById(roomIdDTO.Id);
+            var room = await _roomService.GetRoomById(roomIdDTO);
 
             return this.ResultResponse(OperationErrorMessages.NoError, room);
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [HttpGet("/user/rooms")]
         public async Task<IActionResult> GetRooms()
         {
@@ -48,7 +42,7 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(OperationErrorMessages.NoError, rooms);
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [HttpPost("/user/room")]
         public async Task<IActionResult> CreateRoom([FromBody] CreateRoomDTO newRoom)
         {
@@ -64,7 +58,7 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(OperationErrorMessages.NoError, roomId);
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [OnlyRoomOwner]
         [HttpPatch("/user/room/{Id}")]
         public async Task<IActionResult> EditRoom([FromRoute] RoomIdDTO roomIdDTO, [FromBody] EditRoomDTO roomUpdates)
@@ -76,14 +70,14 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse<object>(OperationErrorMessages.NoError, updatedRoom);
         }    
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [OnlyRoomOwner]
-        [HttpDelete("/user/room")]
-        public async Task<IActionResult> DeleteRoom([FromBody] RoomIdDTO oldRoom)
+        [HttpDelete("/user/room/{Id}")]
+        public async Task<IActionResult> DeleteRoom([FromRoute] RoomIdDTO roomIdDTO)
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
 
-            await _roomService.DeleteRoomById(oldRoom.Id);
+            await _roomService.DeleteRoomById(roomIdDTO);
 
             return this.ResultResponse<object>(OperationErrorMessages.NoError);
         }

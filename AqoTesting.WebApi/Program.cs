@@ -27,24 +27,24 @@ namespace AqoTestingServer
             {
 
                 Console.WriteLine("OK");
-                /*prepareDB.CreateMainDatabase();
+                //prepareDB.CreateMainDatabase();
                 var testIO = new TestIO();
-                //var testsIds = testIO.AddTests();
-                //var usersIds = testIO.AddUsers();
-                var roomsIds = testIO.AddRooms();
-                foreach (var id in roomsIds)
-                    Console.WriteLine(id.ToString());
-                //Console.WriteLine(MongoIOController.GetUserById((ObjectId) DBUtils.ParseObjectId("42d3076b46319251f02bc896")) == null);
-                //Console.WriteLine("Find user with id " + usersIds[0].ToString());
-                //var user = MongoIOController.GetUserById(usersIds[0]);
-                //Console.WriteLine(user.Name);
-                using SHA512 sha512Hash = SHA512.Create();
-                var user = MongoIOController.GetUserByData("Test Dev Login 2", sha512Hash.ComputeHash(Encoding.UTF8.GetBytes("Pass2")));
-                if (user != null)
-                {
-                    Console.WriteLine(user.Name);
-                    //MongoIOController.DeleteUserById(user.Id);
-                }*/
+                var testsIds = testIO.AddTests(ObjectId.Parse("5f9211bd5858e9955f588f19"));
+                ////var usersIds = testIO.AddUsers();
+                //var roomsIds = testIO.AddRooms();
+                //foreach (var id in roomsIds)
+                //    Console.WriteLine(id.ToString());
+                ////Console.WriteLine(MongoIOController.GetUserById((ObjectId) DBUtils.ParseObjectId("42d3076b46319251f02bc896")) == null);
+                ////Console.WriteLine("Find user with id " + usersIds[0].ToString());
+                ////var user = MongoIOController.GetUserById(usersIds[0]);
+                ////Console.WriteLine(user.Name);
+                //using SHA512 sha512Hash = SHA512.Create();
+                //var user = MongoIOController.GetUserByData("Test Dev Login 2", sha512Hash.ComputeHash(Encoding.UTF8.GetBytes("Pass2")));
+                //if (user != null)
+                //{
+                //    Console.WriteLine(user.Name);
+                //    //MongoIOController.DeleteUserById(user.Id);
+                //}
             }
             else
             {

@@ -5,7 +5,7 @@ using MongoDB.Bson;
 
 namespace AqoTesting.Shared.Interfaces
 {
-    public interface IRoomRespository
+    public interface IRoomRepository
     {
         Task<Room> GetRoomById(ObjectId roomId);
 

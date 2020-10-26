@@ -4,7 +4,7 @@ using MongoDB.Bson;
 
 namespace AqoTesting.Shared.Interfaces
 {
-    public interface IUserRespository
+    public interface IUserRepository
     {
         Task<User> GetUserByAuthData(string login, byte[] passwordHash);
         Task<User> GetUserByLogin(string login);

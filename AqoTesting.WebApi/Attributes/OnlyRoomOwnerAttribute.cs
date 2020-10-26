@@ -56,17 +56,15 @@ namespace AqoTesting.WebApi.Attributes
         {
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
-            string roomId = argument.ToString();
-            string ownerId = _workContext.UserId.ToString();
-            GetRoomDTO room = roomService.GetRoomById(roomId).Result;
+            var roomIdDTO = new RoomIdDTO { Id = argument.ToString() };
+            var ownerId = _workContext.UserId.ToString();
+            var room = roomService.GetRoomById(roomIdDTO).Result;
 
-            if (room == null) {
-                return OperationErrorMessages.RoomDoesntExists;
-            }
-            else if (room.OwnerId != ownerId)
-            {
+            if(room == null)
+                return OperationErrorMessages.RoomNotFound;
+
+            else if(room.OwnerId != ownerId)
                 return OperationErrorMessages.RoomAccessError;
-            }
 
             return OperationErrorMessages.NoError;
         }

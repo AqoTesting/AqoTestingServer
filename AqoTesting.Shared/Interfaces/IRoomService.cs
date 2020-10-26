@@ -7,7 +7,7 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IRoomService
     {
-        Task<GetRoomDTO> GetRoomById(string roomId);
+        Task<GetRoomDTO> GetRoomById(RoomIdDTO roomIdDTO);
 
         Task<Room> GetRoomByDomain(string domain);
 
@@ -17,6 +17,6 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<GetRoomDTO> EditRoom(RoomIdDTO roomIdDTO, EditRoomDTO roomUpdates);
 
-        Task DeleteRoomById(string roomId);
+        Task DeleteRoomById(RoomIdDTO roomIdDTO);
     }
 }

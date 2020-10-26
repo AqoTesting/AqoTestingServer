@@ -20,6 +20,7 @@ namespace AqoTesting.Domain.Workers
             var ownerFilter = Builders<Room>.Filter.Eq("OwnerId", UserId);
             var filter = idFilter & ownerFilter;
             var room = collection.Find(filter).SingleOrDefault();
+
             return room;
         }
 
@@ -28,6 +29,7 @@ namespace AqoTesting.Domain.Workers
             var collection = MongoController.mainDatabase.GetCollection<Room>("rooms");
             var filter = Builders<Room>.Filter.Eq("OwnerId", UserId);
             var rooms = collection.Find(filter).ToList();
+
             return rooms.ToArray();
         }
 
@@ -47,6 +49,7 @@ namespace AqoTesting.Domain.Workers
             var ownerFilter = Builders<Room>.Filter.Eq("OwnerId", UserId);
             var filter = idFilter & ownerFilter;
             var isOwner = collection.Find(filter).CountDocuments() == 1;
+
             return isOwner;
         }
 
@@ -59,6 +62,7 @@ namespace AqoTesting.Domain.Workers
             var collection = MongoController.mainDatabase.GetCollection<User>("users");
             var filter = Builders<User>.Filter.Eq("Id", userId);
             var user = collection.Find(filter).SingleOrDefault();
+
             return user;
         }
 
@@ -69,6 +73,7 @@ namespace AqoTesting.Domain.Workers
             var passwordFilter = Builders<User>.Filter.Eq("PasswordHash", passwordHash);
             var filter = loginFilter & passwordFilter;
             var user = collection.Find(filter).SingleOrDefault();
+
             return user;
         }
 
@@ -77,6 +82,7 @@ namespace AqoTesting.Domain.Workers
             var collection = MongoController.mainDatabase.GetCollection<User>("users");
             var filter = Builders<User>.Filter.Eq("Login", login);
             var user = collection.Find(filter).SingleOrDefault();
+
             return user;
         }
 
@@ -85,12 +91,14 @@ namespace AqoTesting.Domain.Workers
             var collection = MongoController.mainDatabase.GetCollection<User>("users");
             var filter = Builders<User>.Filter.Eq("Email", login);
             var user = collection.Find(filter).SingleOrDefault();
+
             return user;
         }
 
         public static ObjectId InsertUser(User user)
         {
             MongoController.mainDatabase.GetCollection<User>("users").InsertOne(user);
+
             return user.Id;
         }
 
@@ -106,12 +114,13 @@ namespace AqoTesting.Domain.Workers
             var collection = MongoController.mainDatabase.GetCollection<User>("users");
             var filter = Builders<User>.Filter.Eq("Id", userId);
             var isDeleteSuccessful = collection.DeleteOne(filter).DeletedCount == 1;
+
             return isDeleteSuccessful;
         }
 
         #endregion
 
-        #region props
+        #region Props
 
         public static void SetUserLogin(ObjectId userId, string newLogin)
         {
@@ -120,8 +129,8 @@ namespace AqoTesting.Domain.Workers
             var update = Builders<User>.Update.Set("Login", newLogin);
             collection.UpdateOne(filter, update);
         }
-
-        public static void SetLogin(this User user, string newName) => SetUserLogin(user.Id, newName);
+        public static void SetLogin(this User user, string newName)
+            => SetUserLogin(user.Id, newName);
 
         public static void SetUserEmail(ObjectId userId, string newEmail)
         {
@@ -130,8 +139,8 @@ namespace AqoTesting.Domain.Workers
             var update = Builders<User>.Update.Set("Email", newEmail);
             collection.UpdateOne(filter, update);
         }
-
-        public static void SetEmail(this User user, string newEmail) => SetUserEmail(user.Id, newEmail);
+        public static void SetEmail(this User user, string newEmail)
+            => SetUserEmail(user.Id, newEmail);
 
         public static void SetUserPasswordHash(ObjectId userId, byte[] newPasswordHash)
         {
@@ -140,8 +149,8 @@ namespace AqoTesting.Domain.Workers
             var update = Builders<User>.Update.Set("PasswordHash", newPasswordHash);
             collection.UpdateOne(filter, update);
         }
-
-        public static void SetPasswordHash(this User user, byte[] newPasswordHash) => SetUserPasswordHash(user.Id, newPasswordHash);
+        public static void SetPasswordHash(this User user, byte[] newPasswordHash)
+            => SetUserPasswordHash(user.Id, newPasswordHash);
 
         public static void SetUserName(ObjectId userId, string newName)
         {
@@ -150,8 +159,8 @@ namespace AqoTesting.Domain.Workers
             var update = Builders<User>.Update.Set("Name", newName);
             collection.UpdateOne(filter, update);
         }
-
-        public static void SetName(this User user, string newName) => SetUserName(user.Id, newName);
+        public static void SetName(this User user, string newName)
+            => SetUserName(user.Id, newName);
 
         #endregion
     }

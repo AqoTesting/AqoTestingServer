@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using AqoTesting.Domain.Controllers;
 using AqoTesting.Domain.Workers;
 using AqoTesting.Shared.DTOs.DB.Users;
 using AqoTesting.Shared.Interfaces;
@@ -7,7 +6,7 @@ using MongoDB.Bson;
 
 namespace AqoTesting.Core.Repositories
 {
-    public class UserRespository : IUserRespository
+    public class UserRepository : IUserRepository
     {
         public async Task<User> GetUserByAuthData(string login, byte[] passwordHash)
         {

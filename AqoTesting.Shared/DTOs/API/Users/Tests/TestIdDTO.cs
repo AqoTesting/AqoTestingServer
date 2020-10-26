@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AqoTesting.Shared.DTOs.API.Users.Rooms
+namespace AqoTesting.Shared.DTOs.API.Users.Test
 {
-    public class RoomIdDTO
+    public class TestIdDTO
     {
         [Required]
         [StringLength(24, MinimumLength = 24)]

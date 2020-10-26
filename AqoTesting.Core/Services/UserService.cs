@@ -18,9 +18,9 @@ namespace AqoTesting.Core.Services
 {
     public class UserService : ServiceBase, IUserService
     {
-        IUserRespository _userRepository;
+        IUserRepository _userRepository;
 
-        public UserService(IUserRespository userRespository)
+        public UserService(IUserRepository userRespository)
         {
             _userRepository = userRespository;
         }

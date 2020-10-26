@@ -30,13 +30,6 @@ namespace AqoTesting.Domain.Workers
         }
         #endregion
 
-        #region AddMember
-        public static bool AddMemberInRoom(ObjectId roomId, Member member)
-        {
-            return true;
-        }
-        #endregion
-
         #region Common
         public static Attempt? GetMemberAttempt(ObjectId roomId, string memberLogin, ObjectId testId)
         {
@@ -45,18 +38,21 @@ namespace AqoTesting.Domain.Workers
                 foreach (var attempt in member.Attempts)
                     if (attempt.TestId.Equals(testId))
                         return attempt;
+
             return null;
         }
 
         public static object? GetMemberUserData(ObjectId roomId, string memberLogin)
         {
             var member = GetMemberFromRoom(RoomWorker.GetRoomById(roomId), memberLogin);
+
             return member?.UserData;
         }
 
         public static object? GetMemberPassword(ObjectId roomId, string memberLogin)
         {
             var member = GetMemberFromRoom(RoomWorker.GetRoomById(roomId), memberLogin);
+
             return member?.Password;
         }
         #endregion

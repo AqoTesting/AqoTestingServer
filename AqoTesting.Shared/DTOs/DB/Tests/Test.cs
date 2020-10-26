@@ -6,11 +6,10 @@ namespace AqoTesting.Shared.DTOs.DB.Tests
 {
     public class Test
     {
-        //public int Id { get; set; }
         [BsonId]
         public ObjectId Id { get; set; }
         public string Title { get; set; }
-        public ObjectId UserId { get; set; }
+        public ObjectId OwnerId { get; set; }
         public bool IsActive { get; set; } //приоритет над датами (если true)
         public Section[] Sections { get; set; }
         public DateTime CreationDate { get; set; }

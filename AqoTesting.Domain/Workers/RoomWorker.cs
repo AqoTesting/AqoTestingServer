@@ -33,7 +33,7 @@ namespace AqoTesting.Domain.Workers
         {
             var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("OwnerId", ownerId);
-            var rooms = collection.Find(filter).ToList();
+            var rooms = collection.Find(filter).ToEnumerable();
 
             return rooms.ToArray();
         }
@@ -59,8 +59,7 @@ namespace AqoTesting.Domain.Workers
         }
         #endregion
 
-        #region members
-
+        #region Members
         public static void AddMemberToRoom(ObjectId roomId, Member member)
         {
             var collection = MongoController.GetRoomsCollection();
@@ -68,18 +67,8 @@ namespace AqoTesting.Domain.Workers
             var update = Builders<Room>.Update.Push("Members", member);
             collection.UpdateOne(filter, update);
         }
-
-        public static void AddMember(this Room room, Member member) => AddMemberToRoom(room.Id, member);
-
-        public static void RemoveMemberFromRoomByToken(ObjectId roomId, string token)
-        {
-            var collection = MongoController.GetRoomsCollection();
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.PullFilter("Members", Builders<Member>.Filter.Eq("Token", token));
-            collection.UpdateOne(filter, update);
-        }
-
-        public static void RemoveMemberByToken(this Room room, string token) => RemoveMemberFromRoomByToken(room.Id, token);
+        public static void AddMember(this Room room, Member member) =>
+            AddMemberToRoom(room.Id, member);
 
         public static void RemoveMemberFromRoomByLogin(ObjectId roomId, string login)
         {
@@ -88,12 +77,37 @@ namespace AqoTesting.Domain.Workers
             var update = Builders<Room>.Update.PullFilter("Members", Builders<Member>.Filter.Eq("Login", login));
             collection.UpdateOne(filter, update);
         }
-
-        public static void RemoveMemberByLogin(this Room room, string login) => RemoveMemberFromRoomByLogin(room.Id, login);
+        public static void RemoveMemberByLogin(this Room room, string login) =>
+            RemoveMemberFromRoomByLogin(room.Id, login);
 
         #endregion
 
-        #region props
+        #region Tests
+        public static bool AddTestToRoomById(ObjectId roomId, ObjectId testId)
+        {
+            var collection = MongoController.GetRoomsCollection();
+            var filter = Builders<Room>.Filter.Eq("Id", roomId);
+            var update = Builders<Room>.Update.Push("TestIds", testId);
+            var isUpdatedSuccessful = collection.UpdateOne(filter, update).ModifiedCount == 1;
+            return isUpdatedSuccessful;
+        }
+        public static bool AddTestById(this Room room, ObjectId testId) =>
+            AddTestToRoomById(room.Id, testId);
+
+        public static bool RemoveTestFromRoomById(ObjectId roomId, ObjectId testId)
+        {
+            var collection = MongoController.GetRoomsCollection();
+            var filter = Builders<Room>.Filter.Eq("Id", roomId);
+            var update = Builders<Room>.Update.Pull("TestIds", testId);
+            var isUpdatedSuccessful = collection.UpdateOne(filter, update).ModifiedCount == 1;
+            return isUpdatedSuccessful;
+        }
+        public static bool RemoveTestById(this Room room, ObjectId testId) =>
+            RemoveTestFromRoomById(room.Id, testId);
+
+        #endregion
+
+        #region Props
 
         public static void SetRoomName(ObjectId roomId, string newName)
         {
@@ -102,8 +116,8 @@ namespace AqoTesting.Domain.Workers
             var update = Builders<Room>.Update.Set("Name", newName);
             collection.UpdateOne(filter, update);
         }
-
-        public static void SetName(this Room room, string newName) => SetRoomName(room.Id, newName);
+        public static void SetName(this Room room, string newName) =>
+            SetRoomName(room.Id, newName);
 
         public static void SetRoomDomain(ObjectId roomId, string newDomain)
         {
@@ -112,8 +126,8 @@ namespace AqoTesting.Domain.Workers
             var update = Builders<Room>.Update.Set("Domain", newDomain);
             collection.UpdateOne(filter, update);
         }
-
-        public static void SetDomain(this Room room, string newDomain) => SetRoomDomain(room.Id, newDomain);
+        public static void SetDomain(this Room room, string newDomain) =>
+            SetRoomDomain(room.Id, newDomain);
 
         public static void SetRoomRequestedFields(ObjectId roomId, RequestedFieldDTO[] newRequestedFields)
         {
@@ -122,8 +136,8 @@ namespace AqoTesting.Domain.Workers
             var update = Builders<Room>.Update.Set("RequestedFields", newRequestedFields);
             collection.UpdateOne(filter, update);
         }
-
-        public static void SetRequestedFields(this Room room, RequestedFieldDTO[] newRequestedFields) => SetRoomRequestedFields(room.Id, newRequestedFields);
+        public static void SetRequestedFields(this Room room, RequestedFieldDTO[] newRequestedFields) =>
+            SetRoomRequestedFields(room.Id, newRequestedFields);
 
         public static void SetRoomIsDataRequired(ObjectId roomId, bool newIsDataRequired)
         {
@@ -132,8 +146,8 @@ namespace AqoTesting.Domain.Workers
             var update = Builders<Room>.Update.Set("IsDataRequired", newIsDataRequired);
             collection.UpdateOne(filter, update);
         }
-
-        public static void SetIsDataRequired(this Room room, bool newIsDataRequired) => SetRoomIsDataRequired(room.Id, newIsDataRequired);
+        public static void SetIsDataRequired(this Room room, bool newIsDataRequired) =>
+            SetRoomIsDataRequired(room.Id, newIsDataRequired);
 
         public static void SetRoomIsActive(ObjectId roomId, bool newIsActive)
         {
@@ -142,8 +156,8 @@ namespace AqoTesting.Domain.Workers
             var update = Builders<Room>.Update.Set("IsActive", newIsActive);
             collection.UpdateOne(filter, update);
         }
-
-        public static void SetIsActive(this Room room, bool newIsActive) => SetRoomIsActive(room.Id, newIsActive);
+        public static void SetIsActive(this Room room, bool newIsActive)  =>
+            SetRoomIsActive(room.Id, newIsActive);
 
         #endregion
     }
