@@ -28,7 +28,7 @@ namespace AqoTestingServer
 
                 Console.WriteLine("OK");
                 //prepareDB.CreateMainDatabase();
-                //var testIO = new TestIO();
+                var testIO = new TestIO();
                 //var testsIds = testIO.AddTests(ObjectId.Parse("5f9211bd5858e9955f588f19"));
                 ////var usersIds = testIO.AddUsers();
                 //var roomsIds = testIO.AddRooms();

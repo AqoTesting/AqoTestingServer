@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AqoTesting.Shared.DTOs.API.Members;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Enums;
@@ -22,7 +23,9 @@ namespace AqoTesting.Core.Services
 
         public async Task<GetRoomDTO> GetRoomById(RoomIdDTO roomIdDTO)
         {
-            var room = await _roomRepository.GetRoomById(ObjectId.Parse(roomIdDTO.Id));
+            var roomId = ObjectId.Parse(roomIdDTO.RoomId);
+
+            var room = await _roomRepository.GetRoomById(roomId);
 
             if (room == null)
                 throw new ResultException(OperationErrorMessages.RoomNotFound);
@@ -54,9 +57,9 @@ namespace AqoTesting.Core.Services
 
         public async Task<GetRoomDTO> EditRoom(RoomIdDTO roomIdDTO, EditRoomDTO roomUpdates)
         {
-            var outdatedRoom = await this.GetRoomById(roomIdDTO);
+            var roomId = ObjectId.Parse(roomIdDTO.RoomId);
 
-            var roomId = ObjectId.Parse(roomIdDTO.Id);
+            var outdatedRoom = await this.GetRoomById(roomIdDTO);
 
             var somethingChanged = false;
 
@@ -97,9 +100,22 @@ namespace AqoTesting.Core.Services
             return outdatedRoom;
         }
 
+        public async Task RemoveMemberFromRoomByTokenById(RoomIdDTO roomIdDTO, MemberTokenDTO memberIdDTO)
+        {
+            var roomId = ObjectId.Parse(roomIdDTO.RoomId);
+            var memberId = memberIdDTO.MemberToken;
+
+            var removed = await _roomRepository.RemoveMemberFromRoomByTokenById(roomId, memberId);
+
+            if (!removed)
+                throw new ResultException(OperationErrorMessages.TestNotFound);
+        }
+
         public async Task DeleteRoomById(RoomIdDTO roomIdDTO)
         {
-            var deleted = await _roomRepository.DeleteRoomById(ObjectId.Parse(roomIdDTO.Id));
+            var roomId = ObjectId.Parse(roomIdDTO.RoomId);
+
+            var deleted = await _roomRepository.DeleteRoomById(roomId);
 
             if (!deleted)
                 throw new ResultException(OperationErrorMessages.RoomNotFound);

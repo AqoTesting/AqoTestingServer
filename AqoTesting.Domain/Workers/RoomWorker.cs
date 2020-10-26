@@ -70,6 +70,18 @@ namespace AqoTesting.Domain.Workers
         public static void AddMember(this Room room, Member member) =>
             AddMemberToRoom(room.Id, member);
 
+        public static bool RemoveMemberFromRoomByTokenById(ObjectId roomId, string memberToken)
+        {
+            var collection = MongoController.GetRoomsCollection();
+            var filter = Builders<Room>.Filter.Eq("Id", roomId);
+            var update = Builders<Room>.Update.PullFilter("Members", Builders<Member>.Filter.Eq("Token", memberToken));
+            var isRemovedSuccessful = collection.UpdateOne(filter, update).ModifiedCount == 1;
+
+            return isRemovedSuccessful;
+        }
+        public static void RemoveMemberById(this Room room, string memberId) =>
+            RemoveMemberFromRoomByTokenById(room.Id, memberId);
+
         public static void RemoveMemberFromRoomByLogin(ObjectId roomId, string login)
         {
             var collection = MongoController.GetRoomsCollection();

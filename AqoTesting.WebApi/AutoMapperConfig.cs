@@ -38,7 +38,7 @@ namespace AqoTesting.WebApi.Infrastructure
 
 
                 // Tests
-                cfg.CreateMap<Test[], GetTestsItemDTO[]>();
+                cfg.CreateMap<Test, GetTestsItemDTO>();
                 cfg.CreateMap<Test, GetTestDTO>();
             });
         }

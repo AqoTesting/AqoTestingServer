@@ -144,7 +144,6 @@ namespace AqoTesting.Domain.Tests
         public ObjectId[] AddUsers()
         {
 
-            using SHA512 sha512Hash = SHA512.Create();
             var users = new User[]
             {
                 new User
@@ -199,6 +198,8 @@ namespace AqoTesting.Domain.Tests
                     },
                     TestIds = AddTests(users[0]),
                     OwnerId = users[0],
+                    //TestIds = AddTests(ObjectId.Parse("5f9211bd5858e9955f588f19")),
+                    //OwnerId = ObjectId.Parse("5f9211bd5858e9955f588f19"),
                     IsDataRequired = false,
                     RequestedFields = new RequestedField[0],
                     IsActive = true

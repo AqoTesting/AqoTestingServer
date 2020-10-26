@@ -27,7 +27,7 @@ namespace AqoTesting.Core.Services
 
         public async Task<GetTestsItemDTO[]> GetTestsByRoomId(RoomIdDTO roomIdDTO)
         {
-            var roomId = ObjectId.Parse(roomIdDTO.Id);
+            var roomId = ObjectId.Parse(roomIdDTO.RoomId);
 
             var room = await _roomRepository.GetRoomById(roomId);
 
@@ -43,7 +43,7 @@ namespace AqoTesting.Core.Services
 
         public async Task<GetTestDTO> GetTestById(TestIdDTO testIdDTO)
         {
-            var testId = ObjectId.Parse(testIdDTO.Id);
+            var testId = ObjectId.Parse(testIdDTO.TestId);
 
             var test = await _testRepository.GetTestById(testId);
 

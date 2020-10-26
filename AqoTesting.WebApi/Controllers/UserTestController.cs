@@ -22,7 +22,7 @@ namespace AqoTesting.WebApi.Controllers
 
         [Authorize(Roles = "User")]
         [OnlyRoomOwner]
-        [HttpGet("/user/room/{Id}/tests")]
+        [HttpGet("/user/room/{RoomId}/tests")]
         public async Task<IActionResult> GetTests([FromRoute] RoomIdDTO roomIdDTO)
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
@@ -34,7 +34,7 @@ namespace AqoTesting.WebApi.Controllers
 
         [Authorize(Roles = "User")]
         [OnlyRoomOwner]
-        [HttpGet("/user/test/{Id}")]
+        [HttpGet("/user/test/{TestId}")]
         public async Task<IActionResult> GetTest([FromRoute] TestIdDTO testIdDTO)
         {
             if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);

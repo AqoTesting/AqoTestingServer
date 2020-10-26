@@ -46,6 +46,9 @@ namespace AqoTesting.Core.Repositories
         public async Task SetRoomIsActive(ObjectId roomId, bool newIsActive) =>
             await Task.Run(() => RoomWorker.SetRoomIsActive(roomId, newIsActive));
 
+        public async Task<bool> RemoveMemberFromRoomByTokenById(ObjectId roomId, string memberId) =>
+            await Task.Run(() => RoomWorker.RemoveMemberFromRoomByTokenById(roomId, memberId));
+
         public async Task<bool> DeleteRoomById(ObjectId roomId) =>
             await Task.Run(() => RoomWorker.DeleteRoomById(roomId));
     }

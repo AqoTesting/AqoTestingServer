@@ -34,7 +34,7 @@ namespace AqoTesting.WebApi.Attributes
 
                 foreach (var parameter in parameters)
                 {
-                    if (parameter.Name != "roomId") continue;
+                    if (parameter.Name != "roomIdDTO") continue;
 
                     if (!context.ActionArguments.ContainsKey(parameter.Name))
                     {
@@ -56,9 +56,8 @@ namespace AqoTesting.WebApi.Attributes
         {
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
-            var roomIdDTO = new RoomIdDTO { Id = argument.ToString() };
             var ownerId = _workContext.UserId.ToString();
-            var room = roomService.GetRoomById(roomIdDTO).Result;
+            var room = roomService.GetRoomById((RoomIdDTO) argument).Result;
 
             if(room == null)
                 return OperationErrorMessages.RoomNotFound;
