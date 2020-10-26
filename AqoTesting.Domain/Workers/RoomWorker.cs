@@ -156,7 +156,7 @@ namespace AqoTesting.Domain.Workers
             var update = Builders<Room>.Update.Set("IsActive", newIsActive);
             collection.UpdateOne(filter, update);
         }
-        public static void SetIsActive(this Room room, bool newIsActive)  =>
+        public static void SetIsActive(this Room room, bool newIsActive) =>
             SetRoomIsActive(room.Id, newIsActive);
 
         #endregion
