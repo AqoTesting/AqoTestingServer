@@ -21,8 +21,6 @@ namespace AqoTesting.WebApi.Controllers
         [HttpPost("/auth/signin")]
         public async Task<IActionResult> SignIn([FromBody] SignInUserDTO authData)
         {
-            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
-
             var user = await _userService.GetUserByAuthData(authData);
 
             var authorizedUser = _userService.GetAuthorizedUser(user);
@@ -33,8 +31,6 @@ namespace AqoTesting.WebApi.Controllers
         [HttpPost("/auth/signup")]
         public async Task<IActionResult> SignUp([FromBody] SignUpUserDTO signUpUserDTO)
         {
-            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
-
             var loginAlreadyTaken = await _userService.GetUserByLogin(signUpUserDTO.Login);
             if (loginAlreadyTaken != null)
                 throw new ResultException(OperationErrorMessages.LoginAlreadyTaken);

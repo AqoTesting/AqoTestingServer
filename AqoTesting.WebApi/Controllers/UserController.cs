@@ -24,8 +24,6 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/user")]
         public async Task<IActionResult> GetProfile()
         {
-            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
-
             throw new ResultException(OperationErrorMessages.LoginAlreadyTaken);
 
             //return this.ResultResponse(OperationErrorMessages.NoError, _workContext.UserId);

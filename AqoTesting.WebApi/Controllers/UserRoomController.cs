@@ -27,8 +27,6 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/user/room/{RoomId}")]
         public async Task<IActionResult> GetRoom([FromRoute] RoomIdDTO roomIdDTO)
         {
-            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
-
             var room = await _roomService.GetRoomById(roomIdDTO);
 
             return this.ResultResponse(OperationErrorMessages.NoError, room);
@@ -47,8 +45,6 @@ namespace AqoTesting.WebApi.Controllers
         [HttpPost("/user/room")]
         public async Task<IActionResult> CreateRoom([FromBody] CreateRoomDTO newRoom)
         {
-            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
-
             var domainAlreadyTaken = await _roomService.GetRoomByDomain(newRoom.Domain);
 
             if (domainAlreadyTaken != null)
@@ -64,8 +60,6 @@ namespace AqoTesting.WebApi.Controllers
         [HttpPatch("/user/room/{RoomId}")]
         public async Task<IActionResult> EditRoom([FromRoute] RoomIdDTO roomIdDTO, [FromBody] EditRoomDTO roomUpdates)
         {
-            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
-
             var updatedRoom = await _roomService.EditRoom(roomIdDTO, roomUpdates);
 
             return this.ResultResponse<object>(OperationErrorMessages.NoError, updatedRoom);
@@ -76,8 +70,6 @@ namespace AqoTesting.WebApi.Controllers
         [HttpDelete("/user/room/{RoomId}")]
         public async Task<IActionResult> DeleteRoom([FromRoute] RoomIdDTO roomIdDTO)
         {
-            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
-
             await _roomService.DeleteRoomById(roomIdDTO);
 
             return this.ResultResponse<object>(OperationErrorMessages.NoError);
@@ -88,8 +80,6 @@ namespace AqoTesting.WebApi.Controllers
         [HttpDelete("/user/room/{RoomId}/member/{MemberToken}")]
         public async Task<IActionResult> KickMember([FromRoute] RoomIdDTO roomIdDTO, [FromRoute] MemberTokenDTO memberTokenDTO)
         {
-            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
-
             await _roomService.RemoveMemberFromRoomByTokenById(roomIdDTO, memberTokenDTO);
 
             return this.ResultResponse<object>(OperationErrorMessages.NoError);

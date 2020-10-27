@@ -19,6 +19,7 @@ using AqoTesting.Shared.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using AqoTesting.WebApi.Attributes;
 
 namespace AqoTestingServer
 {
@@ -82,6 +83,10 @@ namespace AqoTestingServer
                 });
             });
 
+            services.AddMvc(options => {
+                options.Filters.Add(typeof(ValidateModelAttribute));
+            });
+
             AutoMapperConfig.Initialize();
 
         }
@@ -124,7 +129,6 @@ namespace AqoTestingServer
 
             app.UseEndpoints(endpoints =>
             {
-                
                 endpoints.MapControllers();
             });
 

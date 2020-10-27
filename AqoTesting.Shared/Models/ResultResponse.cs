@@ -10,6 +10,7 @@ namespace AqoTesting.Shared.Models
         public bool Succeeded { get; set; } = true;
         public OperationErrorMessages ErrorMessageCode { get; set; } = OperationErrorMessages.NoError;
         public TData Data { get; set; } = default;
+
         public IActionResult GetObjectResult(ControllerBase? controller = null)
         {
             /*switch (ErrorMessageCode)

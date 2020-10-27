@@ -25,8 +25,6 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/user/room/{RoomId}/tests")]
         public async Task<IActionResult> GetTests([FromRoute] RoomIdDTO roomIdDTO)
         {
-            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
-
             var tests = await _testService.GetTestsByRoomId(roomIdDTO);
 
             return this.ResultResponse(OperationErrorMessages.NoError, tests);
@@ -37,8 +35,6 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/user/test/{TestId}")]
         public async Task<IActionResult> GetTest([FromRoute] TestIdDTO testIdDTO)
         {
-            if (!ModelState.IsValid) return this.ResultResponse(OperationErrorMessages.InvalidModel, ModelState);
-
             var test = await _testService.GetTestById(testIdDTO);
 
             return this.ResultResponse(OperationErrorMessages.NoError, test);
