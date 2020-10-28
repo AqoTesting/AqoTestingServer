@@ -25,10 +25,8 @@ namespace AqoTesting.Core.Services
             _workContext = workContext;
         }
 
-        public async Task<GetTestsItemDTO[]> GetTestsByRoomId(RoomIdDTO roomIdDTO)
+        public async Task<GetTestsItemDTO[]> GetTestsByRoomId(ObjectId roomId)
         {
-            var roomId = ObjectId.Parse(roomIdDTO.RoomId);
-
             var room = await _roomRepository.GetRoomById(roomId);
 
             if (room == null)
@@ -40,11 +38,11 @@ namespace AqoTesting.Core.Services
 
             return responseTests;
         }
+        public async Task<GetTestsItemDTO[]> GetTestsByRoomId(RoomIdDTO roomIdDTO) =>
+            await GetTestsByRoomId(ObjectId.Parse(roomIdDTO.RoomId));
 
-        public async Task<GetTestDTO> GetTestById(TestIdDTO testIdDTO)
+        public async Task<GetTestDTO> GetTestById(ObjectId testId)
         {
-            var testId = ObjectId.Parse(testIdDTO.TestId);
-
             var test = await _testRepository.GetTestById(testId);
 
             if(test == null)
@@ -54,5 +52,7 @@ namespace AqoTesting.Core.Services
 
             return responseTest;
         }
+        public async Task<GetTestDTO> GetTestById(TestIdDTO testIdDTO) =>
+            await GetTestById(ObjectId.Parse(testIdDTO.TestId));
     }
 }

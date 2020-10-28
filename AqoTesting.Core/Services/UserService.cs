@@ -45,15 +45,11 @@ namespace AqoTesting.Core.Services
             return user;
         }
 
-        public async Task<User> GetUserByLogin(string login)
-        {
-            return await _userRepository.GetUserByLogin(login);
-        }
+        public async Task<User> GetUserByLogin(string login) =>
+            await _userRepository.GetUserByLogin(login);
 
-        public async Task<User> GetUserByEmail(string email)
-        {
-            return await _userRepository.GetUserByEmail(email);
-        }
+        public async Task<User> GetUserByEmail(string email) =>
+            await _userRepository.GetUserByEmail(email);
 
         public async Task<User> InsertUser(SignUpUserDTO signUpUserDTO)
         {
@@ -66,7 +62,7 @@ namespace AqoTesting.Core.Services
             return newUser;
         }
 
-        public AuthorizedUserDTO GetAuthorizedUser(User user)
+        public GetUserTokenDTO GenerateUserToken(User user)
         {
             var authorizedUser = Mapper.Map<AuthUser>(user);
 
@@ -84,13 +80,7 @@ namespace AqoTesting.Core.Services
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            return new AuthorizedUserDTO
-            {
-                Token = encodedJwt,
-                Name = user.Name,
-                Login = user.Login,
-                Email = user.Email
-            };
+            return new GetUserTokenDTO { Token = encodedJwt };
         }
 
         private ClaimsIdentity GetIdentity(AuthUser user)
