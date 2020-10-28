@@ -15,6 +15,6 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<User> InsertUser(SignUpUserDTO signUpUserDTO);
 
-        AuthorizedUserDTO GetAuthorizedUser(User user);
+        GetUserTokenDTO GenerateUserToken(User user);
     }
 }
