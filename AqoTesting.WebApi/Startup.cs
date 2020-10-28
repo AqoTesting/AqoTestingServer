@@ -48,6 +48,8 @@ namespace AqoTestingServer
             services.AddScoped<ITestService, TestService>();
             services.AddScoped<ITestRepository, TestRepository>();
 
+            services.AddCors();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -74,15 +76,6 @@ namespace AqoTestingServer
                     options.EventsType = typeof(DefaultJwtBearerEvents);
                 });
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAllOrigins",
-                builder =>
-                {
-                    builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
-                });
-            });
-
             services.AddMvc(options => {
                 options.Filters.Add(typeof(ValidateModelAttribute));
             }).AddJsonOptions(options => {
@@ -102,9 +95,20 @@ namespace AqoTestingServer
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             app.UseExceptionHandler(appError => {
                 appError.Run(async context => {
@@ -122,16 +126,6 @@ namespace AqoTestingServer
 
                 });
             });
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
-            app.UseCors("AllowAllOrigins");
         }
     }
 }
