@@ -7,6 +7,8 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IUserService
     {
+        Task<GetUserDTO> GetUserById(ObjectId userId);
+        Task<GetUserDTO> GetUserById(UserIdDTO userIdDTO);
         Task<User> GetUserByAuthData(SignInUserDTO authData);
         Task<User> GetUserByLogin(string login);
         Task<User> GetUserByEmail(string email);

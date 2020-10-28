@@ -19,5 +19,8 @@
 
         // Tests
         TestNotFound = 30,
+
+        //Users
+        UserNotFound = 40,
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
@@ -24,9 +25,18 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/user")]
         public async Task<IActionResult> GetProfile()
         {
-            throw new ResultException(OperationErrorMessages.LoginAlreadyTaken);
+            var user = await _userService.GetUserById(_workContext.UserId);
 
-            //return this.ResultResponse(OperationErrorMessages.NoError, _workContext.UserId);
+            return this.ResultResponse(OperationErrorMessages.NoError, user);
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpGet("/user/{UserId}")]
+        public async Task<IActionResult> GetUser([FromRoute] UserIdDTO userIdDTO)
+        {
+            var user = await _userService.GetUserById(userIdDTO);
+
+            return this.ResultResponse(OperationErrorMessages.NoError, user);
         }
     }
 }

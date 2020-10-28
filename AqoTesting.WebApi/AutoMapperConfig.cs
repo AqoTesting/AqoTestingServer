@@ -29,6 +29,8 @@ namespace AqoTesting.WebApi.Infrastructure
                     .ForMember(x => x.Role,
                         x => x.MapFrom(m => Role.User));
 
+                cfg.CreateMap<User, GetUserDTO>();
+
                 // Rooms
                 cfg.CreateMap<Room, GetRoomDTO>();
 

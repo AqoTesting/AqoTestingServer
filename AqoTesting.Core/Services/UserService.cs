@@ -20,10 +20,23 @@ namespace AqoTesting.Core.Services
     {
         IUserRepository _userRepository;
 
-        public UserService(IUserRepository userRespository)
+        public UserService(IUserRepository userRespository, IWorkContext workContext)
         {
             _userRepository = userRespository;
         }
+
+        public async Task<GetUserDTO> GetUserById(ObjectId userId)
+        {
+            var user = await _userRepository.GetUserById(userId);
+
+            if(user == null) throw new ResultException(OperationErrorMessages.UserNotFound);
+
+            var responseUser = Mapper.Map<GetUserDTO>(user);
+
+            return responseUser;
+        }
+        public async Task<GetUserDTO> GetUserById(UserIdDTO userIdDTO) =>
+            await GetUserById(ObjectId.Parse(userIdDTO.UserId));
 
         public async Task<User> GetUserByAuthData(SignInUserDTO authData)
         {
