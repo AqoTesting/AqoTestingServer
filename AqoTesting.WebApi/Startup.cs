@@ -78,9 +78,6 @@ namespace AqoTestingServer
 
             services.AddMvc(options => {
                 options.Filters.Add(typeof(ValidateModelAttribute));
-            }).AddJsonOptions(options => {
-                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                options.JsonSerializerOptions.PropertyNamingPolicy = null;
             });
 
             AutoMapperConfig.Initialize();
@@ -120,7 +117,11 @@ namespace AqoTestingServer
                         context.Response.ContentType = "application/json";
                         
                         await context.Response.WriteAsync(JsonConvert.SerializeObject(
-                            new ResultResponse<object> { Succeeded = false, ErrorMessageCode = resultException.ErrorMessageCode }
+                            new ResultResponse<object> { Succeeded = false, ErrorMessageCode = resultException.ErrorMessageCode }, 
+                            new JsonSerializerSettings
+                            {
+                                ContractResolver = new CamelCasePropertyNamesContractResolver()
+                            }
                         )).ConfigureAwait(true);
                     }
 
