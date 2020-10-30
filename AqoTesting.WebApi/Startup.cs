@@ -102,11 +102,6 @@ namespace AqoTestingServer
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
             app.UseExceptionHandler(appError => {
                 appError.Run(async context => {
 
@@ -115,9 +110,9 @@ namespace AqoTestingServer
                     {
                         context.Response.StatusCode = 200;
                         context.Response.ContentType = "application/json";
-                        
+
                         await context.Response.WriteAsync(JsonConvert.SerializeObject(
-                            new ResultResponse<object> { Succeeded = false, ErrorMessageCode = resultException.ErrorMessageCode }, 
+                            new ResultResponse<object> { Succeeded = false, ErrorMessageCode = resultException.ErrorMessageCode },
                             new JsonSerializerSettings
                             {
                                 ContractResolver = new CamelCasePropertyNamesContractResolver()
@@ -126,6 +121,11 @@ namespace AqoTestingServer
                     }
 
                 });
+            });
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
             });
         }
     }
