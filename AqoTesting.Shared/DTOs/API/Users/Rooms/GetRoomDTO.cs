@@ -1,4 +1,5 @@
 ﻿using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+using AqoTesting.Shared.Interfaces.DTO;
 
 namespace AqoTesting.Shared.DTOs.API.Users.Rooms
 {
@@ -11,7 +12,7 @@ namespace AqoTesting.Shared.DTOs.API.Users.Rooms
         public string[] TestIds { get; set; }
         public string OwnerId { get; set; }
         public bool IsDataRequired { get; set; }
-        public RequestedFieldDTO[] RequestedFields { get; set; }
+        public IUserRoomField[] RoomFields { get; set; }
         public bool IsActive { get; set; }
     }
 }

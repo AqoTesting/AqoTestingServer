@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using AqoTesting.Domain.Workers;
-using AqoTesting.Shared.DTOs.API.Users.Rooms;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Interfaces;
+using AqoTesting.Shared.Interfaces.DTO;
 using MongoDB.Bson;
 
 namespace AqoTesting.Core.Repositories
@@ -37,7 +37,7 @@ namespace AqoTesting.Core.Repositories
         public async Task SetRoomDomain(ObjectId roomId, string newDomain) =>
             await Task.Run(() => RoomWorker.SetRoomDomain(roomId, newDomain));
 
-        public async Task SetRoomRequestedFields(ObjectId roomId, RequestedFieldDTO[] newRequestedFields) =>
+        public async Task SetRoomRequestedFields(ObjectId roomId, IUserRoomField[] newRequestedFields) =>
             await Task.Run(() => RoomWorker.SetRoomRequestedFields(roomId, newRequestedFields));
 
         public async Task SetRoomIsDataRequired(ObjectId roomId, bool newIsDataRequired) =>

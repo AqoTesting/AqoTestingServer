@@ -66,7 +66,7 @@ namespace AqoTestingServer
             {
                 Token = ObjectId.GenerateNewId().ToString(),
                 Login = "test new",
-                Password = "123",
+                PasswordHash = "123",
                 Attempts = new Attempt[0],
                 UserData = new object(),
             });

@@ -74,10 +74,10 @@ namespace AqoTesting.Core.Services
                 await _roomRepository.SetRoomDomain(roomId, roomUpdates.Domain);
                 somethingChanged = true;
             }
-            if (roomUpdates.RequestedFields != null && outdatedRoom.RequestedFields != roomUpdates.RequestedFields)
+            if (roomUpdates.Fields != null && outdatedRoom.RoomFields != roomUpdates.Fields)
             {
-                outdatedRoom.RequestedFields = roomUpdates.RequestedFields;
-                await _roomRepository.SetRoomRequestedFields(roomId, roomUpdates.RequestedFields);
+                outdatedRoom.RoomFields = roomUpdates.Fields;
+                await _roomRepository.SetRoomRequestedFields(roomId, roomUpdates.Fields);
                 somethingChanged = true;
             }
             if (roomUpdates.IsDataRequired != null && outdatedRoom.IsDataRequired != roomUpdates.IsDataRequired)

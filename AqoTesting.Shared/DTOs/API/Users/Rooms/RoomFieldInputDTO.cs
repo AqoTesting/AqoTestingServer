@@ -1,24 +1,27 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.Interfaces.DTO;
 
 namespace AqoTesting.Shared.DTOs.API.Users.Rooms
 {
-    public struct RequestedFieldDTO
+    public struct RoomFieldInputDTO : IUserRoomField
     {
-        [Required]
-        [StringLength(32, MinimumLength = 1)]
-        [RegularExpression(@"^[A-z0-9_]+$")]
-        public string Key { get; set; }
-
         [Required]
         [StringLength(64, MinimumLength = 1)]
         public string Name { get; set; }
 
-        [StringLength(64, MinimumLength = 1)]
-        public string? Placeholder { get; set; }
+        [Required]
+        public FieldType Type { get; set; }
 
         [Required]
         public bool IsRequired { get; set; }
+
         [Required]
         public bool IsShowTable { get; set; }
+
+        [Required]
+        public bool IsKey { get; set; }
+
+        public string Placeholder { get; set; }
     }
 }

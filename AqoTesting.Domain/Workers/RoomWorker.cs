@@ -5,6 +5,7 @@ using System.Text;
 using AqoTesting.Domain.Controllers;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+using AqoTesting.Shared.Interfaces.DTO;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -141,14 +142,14 @@ namespace AqoTesting.Domain.Workers
         public static void SetDomain(this Room room, string newDomain) =>
             SetRoomDomain(room.Id, newDomain);
 
-        public static void SetRoomRequestedFields(ObjectId roomId, RequestedFieldDTO[] newRequestedFields)
+        public static void SetRoomRequestedFields(ObjectId roomId, IUserRoomField[] newRequestedFields)
         {
             var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Set("RequestedFields", newRequestedFields);
+            var update = Builders<Room>.Update.Set("Fields", newRequestedFields);
             collection.UpdateOne(filter, update);
         }
-        public static void SetRequestedFields(this Room room, RequestedFieldDTO[] newRequestedFields) =>
+        public static void SetRequestedFields(this Room room, IUserRoomField[] newRequestedFields) =>
             SetRoomRequestedFields(room.Id, newRequestedFields);
 
         public static void SetRoomIsDataRequired(ObjectId roomId, bool newIsDataRequired)

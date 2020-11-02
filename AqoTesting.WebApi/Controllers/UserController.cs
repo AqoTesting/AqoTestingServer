@@ -23,7 +23,7 @@ namespace AqoTesting.WebApi.Controllers
 
         [Authorize(Roles = "User")]
         [HttpGet("/user")]
-        public async Task<IActionResult> GetProfile()
+        public async Task<IActionResult> GetUserProfile()
         {
             var user = await _userService.GetUserById(_workContext.UserId);
 

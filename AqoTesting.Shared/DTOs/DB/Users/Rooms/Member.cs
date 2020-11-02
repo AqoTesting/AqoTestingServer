@@ -4,7 +4,7 @@
     {
         public string Token { get; set; }
         public string Login { get; set; }
-        public string Password { get; set; }
+        public string PasswordHash { get; set; }
         public Attempt[] Attempts { get; set; }
         public object UserData { get; set; }
     }

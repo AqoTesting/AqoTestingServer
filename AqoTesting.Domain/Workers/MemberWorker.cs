@@ -53,7 +53,7 @@ namespace AqoTesting.Domain.Workers
         {
             var member = GetMemberFromRoom(RoomWorker.GetRoomById(roomId), memberLogin);
 
-            return member?.Password;
+            return member?.PasswordHash;
         }
         #endregion
     }

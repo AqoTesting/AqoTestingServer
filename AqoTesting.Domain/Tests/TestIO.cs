@@ -183,7 +183,7 @@ namespace AqoTesting.Domain.Tests
                         {
                             Token = ObjectId.GenerateNewId().ToString(),
                             Login = "Test Dev Login Member 1",
-                            Password = "123",
+                            PasswordHash = "123",
                             Attempts = new Attempt[0],
                             UserData = new object(),
                         },
@@ -191,7 +191,7 @@ namespace AqoTesting.Domain.Tests
                         {
                             Token = ObjectId.GenerateNewId().ToString(),
                             Login = "Test Dev Login Member 2",
-                            Password = "123",
+                            PasswordHash = "123",
                             Attempts = new Attempt[0],
                             UserData = new object(),
                         }
