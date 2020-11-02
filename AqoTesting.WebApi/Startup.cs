@@ -78,6 +78,8 @@ namespace AqoTestingServer
 
             services.AddMvc(options => {
                 options.Filters.Add(typeof(ValidateModelAttribute));
+
+                options.EnableEndpointRouting = false;
             });
 
             AutoMapperConfig.Initialize();
@@ -94,16 +96,13 @@ namespace AqoTestingServer
 
             //app.UseHttpsRedirection();
 
-            app.UseRouting();
-
             app.UseAuthentication();
 
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthorization();
 
-            app.UseExceptionHandler(appError => {
-                appError.Run(async context => {
+            app.UseExceptionHandler(appError => appError.Run(async context => {
 
                     var serverError = context.Features.Get<IExceptionHandlerPathFeature>()?.Error;
                     if (serverError != null && serverError is IResultException resultException)
@@ -117,16 +116,12 @@ namespace AqoTestingServer
                             {
                                 ContractResolver = new CamelCasePropertyNamesContractResolver()
                             }
-                        )).ConfigureAwait(true);
+                        ));
                     }
 
-                });
-            });
+            }));
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseMvc();
         }
     }
 }
