@@ -17,19 +17,19 @@ namespace AqoTesting.Domain.Controllers
         public static IMongoCollection<Member>? MemberCollection;
 
 
-        public static MongoClient? ConnectToDB(string? leshaPidor1, string? leshaPidor2, string leshaPidor3, ushort? leshaPidor4, string? leshaPidor5, string? leshaPidor6)
+        public static MongoClient? ConnectToDB(string? username, string? password, string host, ushort? port, string? defaultauthdb, string? options)
         {
-            leshaPidor = "mongodb://" + (leshaPidor1 != null ? $"{leshaPidor1}:{leshaPidor2}@" : "") +
-                leshaPidor3 + (leshaPidor4 != null ? $":{leshaPidor4}" : "") +
-                (leshaPidor5 != null || leshaPidor6 != null ? "/" : "") +
-                (leshaPidor5 != null ? $"{leshaPidor5}" : "") +
-                (leshaPidor6 != null ? $"?options" : "");
+            leshaPidor = "mongodb://" + (username != null ? $"{username}:{password}@" : "") +
+                host + (port != null ? $":{port}" : "") +
+                (defaultauthdb != null || options != null ? "/" : "") +
+                (defaultauthdb != null ? $"{defaultauthdb}" : "") +
+                (options != null ? $"?options" : "");
 
             client = new MongoClient(leshaPidor);
-            if (client != null && leshaPidor5 != null)
+            if (client != null && defaultauthdb != null)
             {
-                if (leshaPidor5 != null)
-                    mainDatabase = client.GetDatabase(leshaPidor5);
+                if (defaultauthdb != null)
+                    mainDatabase = client.GetDatabase(defaultauthdb);
                 PreInitCollections();
             }
 
