@@ -10,7 +10,6 @@ using AqoTesting.Shared.DTOs.DB;
 using System.Security.Cryptography;
 using AqoTesting.Domain.Utils;
 using AqoTesting.Domain.Workers;
-using AqoTesting.Shared.DTOs.DB.Members;
 
 namespace AqoTesting.Domain.Tests
 {
@@ -169,32 +168,6 @@ namespace AqoTesting.Domain.Tests
             return UsersIds;
         }
 
-        public ObjectId[] AddMembers()
-        {
-            var members = new Member[]
-            {
-                new Member
-                {
-                    //Token = ObjectId.GenerateNewId().ToString(),
-                    Login = "Test Dev Login Member 1",
-                    PasswordHash = "123",
-                    Attempts = new Attempt[0],
-                    UserData = new object(),
-                },
-                new Member
-                {
-                    //Token = ObjectId.GenerateNewId().ToString(),
-                    Login = "Test Dev Login Member 2",
-                    PasswordHash = "123",
-                    Attempts = new Attempt[0],
-                    UserData = new object(),
-                }
-            };
-
-            var MemberIds = MemberWorker.InsertMembers(members);
-            return MemberIds;
-        }
-
         public ObjectId[] AddRooms()
         {
             var users = AddUsers();
@@ -204,7 +177,25 @@ namespace AqoTesting.Domain.Tests
                 {
                     Name = "Test Dev Room",
                     Domain = "Test Dev Domain",
-                    //Members = 
+                    Members = new Member[]
+                    {
+                        new Member
+                        {
+                            Token = ObjectId.GenerateNewId().ToString(),
+                            Login = "Test Dev Login Member 1",
+                            PasswordHash = "123",
+                            Attempts = new Attempt[0],
+                            UserData = new object(),
+                        },
+                        new Member
+                        {
+                            Token = ObjectId.GenerateNewId().ToString(),
+                            Login = "Test Dev Login Member 2",
+                            PasswordHash = "123",
+                            Attempts = new Attempt[0],
+                            UserData = new object(),
+                        }
+                    },
                     TestIds = AddTests(users[0]),
                     OwnerId = users[0],
                     //TestIds = AddTests(ObjectId.Parse("5f9211bd5858e9955f588f19")),

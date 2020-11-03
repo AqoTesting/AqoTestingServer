@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using AqoTesting.Domain.Controllers;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
-using AqoTesting.Shared.DTOs.DB.Members;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Interfaces.DTO;
 using MongoDB.Bson;
@@ -17,107 +16,107 @@ namespace AqoTesting.Domain.Workers
         #region IO
         public static Room GetRoomById(ObjectId roomId)
         {
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var room = MongoController.RoomCollection.Find(filter).SingleOrDefault();
+            var room = collection.Find(filter).SingleOrDefault();
             return room;
         }
 
         public static Room GetRoomByDomain(string domain)
         {
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Domain", domain);
-            var room = MongoController.RoomCollection.Find(filter).SingleOrDefault();
+            var room = collection.Find(filter).SingleOrDefault();
             return room;
         }
 
         public static Room[] GetRoomsByOwnerId(ObjectId ownerId)
         {
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("OwnerId", ownerId);
-            var rooms = MongoController.RoomCollection.Find(filter).ToEnumerable();
+            var rooms = collection.Find(filter).ToEnumerable();
 
             return rooms.ToArray();
         }
 
         public static ObjectId InsertRoom(Room room)
         {
-            MongoController.RoomCollection.InsertOne(room);
+            MongoController.GetRoomsCollection().InsertOne(room);
             return room.Id;
         }
 
         public static ObjectId[] InsertRooms(Room[] rooms)
         {
-            MongoController.RoomCollection.InsertMany(rooms);
+            MongoController.GetRoomsCollection().InsertMany(rooms);
             return rooms.Select(room => room.Id).ToArray();
         }
 
         public static bool DeleteRoomById(ObjectId roomId)
         {
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var isDeleteSuccessful = MongoController.RoomCollection.DeleteOne(filter).DeletedCount == 1;
+            var isDeleteSuccessful = collection.DeleteOne(filter).DeletedCount == 1;
             return isDeleteSuccessful;
         }
         #endregion
 
         #region Members
-        public static void AddMemberToRoom(ObjectId roomId, ObjectId memberId)
-        {
-            MemberWorker.SetMemberRoomId(memberId, roomId);
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Push("Members", memberId);
-            MongoController.RoomCollection.UpdateOne(filter, update);
-        }
-        public static void AddMember(this Room room, ObjectId memberId) => AddMemberToRoom(room.Id, memberId);
         public static void AddMemberToRoom(ObjectId roomId, Member member)
         {
-            member.RoomId = roomId;
-            MemberWorker.InsertMember(member);
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Push("Members", member.Id);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            var update = Builders<Room>.Update.Push("Members", member);
+            collection.UpdateOne(filter, update);
         }
-        public static void AddMember(this Room room, Member member) => AddMemberToRoom(room.Id, member);
+        public static void AddMember(this Room room, Member member) =>
+            AddMemberToRoom(room.Id, member);
 
-        public static bool RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId)
+        public static bool RemoveMemberFromRoomByTokenById(ObjectId roomId, string memberToken)
         {
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Pull("Members", memberId);
-            var isRemovedSuccessful = MongoController.RoomCollection.UpdateOne(filter, update).ModifiedCount == 1;
+            var update = Builders<Room>.Update.PullFilter("Members", Builders<Member>.Filter.Eq("Token", memberToken));
+            var isRemovedSuccessful = collection.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isRemovedSuccessful;
         }
-        public static void RemoveMemberById(this Room room, ObjectId memberId) => RemoveMemberFromRoomById(room.Id, memberId);
+        public static void RemoveMemberById(this Room room, string memberId) =>
+            RemoveMemberFromRoomByTokenById(room.Id, memberId);
 
-        public static void RemoveMemberFromRoomByLogin(ObjectId roomId, string memberLogin)
+        public static void RemoveMemberFromRoomByLogin(ObjectId roomId, string login)
         {
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var member = MemberWorker.GetMemberFromRoom(roomId, memberLogin);
-            if (member != null)
-            {
-                var update = Builders<Room>.Update.Pull("Members", member);
-                MongoController.RoomCollection.UpdateOne(filter, update);
-            }
+            var update = Builders<Room>.Update.PullFilter("Members", Builders<Member>.Filter.Eq("Login", login));
+            collection.UpdateOne(filter, update);
         }
-        public static void RemoveMemberByLogin(this Room room, string memberLogin) => RemoveMemberFromRoomByLogin(room.Id, memberLogin);
+        public static void RemoveMemberByLogin(this Room room, string login) =>
+            RemoveMemberFromRoomByLogin(room.Id, login);
 
         #endregion
 
         #region Tests
         public static bool AddTestToRoomById(ObjectId roomId, ObjectId testId)
         {
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Push("TestIds", testId);
-            var isUpdatedSuccessful = MongoController.RoomCollection.UpdateOne(filter, update).ModifiedCount == 1;
+            var isUpdatedSuccessful = collection.UpdateOne(filter, update).ModifiedCount == 1;
             return isUpdatedSuccessful;
         }
-        public static bool AddTestById(this Room room, ObjectId testId) => AddTestToRoomById(room.Id, testId);
+        public static bool AddTestById(this Room room, ObjectId testId) =>
+            AddTestToRoomById(room.Id, testId);
 
         public static bool RemoveTestFromRoomById(ObjectId roomId, ObjectId testId)
         {
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Pull("TestIds", testId);
-            var isUpdatedSuccessful = MongoController.RoomCollection.UpdateOne(filter, update).ModifiedCount == 1;
+            var isUpdatedSuccessful = collection.UpdateOne(filter, update).ModifiedCount == 1;
             return isUpdatedSuccessful;
         }
-        public static bool RemoveTestById(this Room room, ObjectId testId) => RemoveTestFromRoomById(room.Id, testId);
+        public static bool RemoveTestById(this Room room, ObjectId testId) =>
+            RemoveTestFromRoomById(room.Id, testId);
 
         #endregion
 
@@ -125,43 +124,53 @@ namespace AqoTesting.Domain.Workers
 
         public static void SetRoomName(ObjectId roomId, string newName)
         {
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Set("Name", newName);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            collection.UpdateOne(filter, update);
         }
-        public static void SetName(this Room room, string newName) => SetRoomName(room.Id, newName);
+        public static void SetName(this Room room, string newName) =>
+            SetRoomName(room.Id, newName);
 
         public static void SetRoomDomain(ObjectId roomId, string newDomain)
         {
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Set("Domain", newDomain);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            collection.UpdateOne(filter, update);
         }
-        public static void SetDomain(this Room room, string newDomain) => SetRoomDomain(room.Id, newDomain);
+        public static void SetDomain(this Room room, string newDomain) =>
+            SetRoomDomain(room.Id, newDomain);
 
         public static void SetRoomRequestedFields(ObjectId roomId, IUserRoomField[] newRequestedFields)
         {
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Set("Fields", newRequestedFields);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            collection.UpdateOne(filter, update);
         }
-        public static void SetRequestedFields(this Room room, IUserRoomField[] newRequestedFields) => SetRoomRequestedFields(room.Id, newRequestedFields);
+        public static void SetRequestedFields(this Room room, IUserRoomField[] newRequestedFields) =>
+            SetRoomRequestedFields(room.Id, newRequestedFields);
 
         public static void SetRoomIsDataRequired(ObjectId roomId, bool newIsDataRequired)
         {
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Set("IsDataRequired", newIsDataRequired);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            collection.UpdateOne(filter, update);
         }
-        public static void SetIsDataRequired(this Room room, bool newIsDataRequired) => SetRoomIsDataRequired(room.Id, newIsDataRequired);
+        public static void SetIsDataRequired(this Room room, bool newIsDataRequired) =>
+            SetRoomIsDataRequired(room.Id, newIsDataRequired);
 
         public static void SetRoomIsActive(ObjectId roomId, bool newIsActive)
         {
+            var collection = MongoController.GetRoomsCollection();
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Set("IsActive", newIsActive);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            collection.UpdateOne(filter, update);
         }
-        public static void SetIsActive(this Room room, bool newIsActive) => SetRoomIsActive(room.Id, newIsActive);
+        public static void SetIsActive(this Room room, bool newIsActive) =>
+            SetRoomIsActive(room.Id, newIsActive);
 
         #endregion
     }

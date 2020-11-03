@@ -22,37 +22,59 @@ namespace AqoTestingServer
             //MongoController.client.DropDatabase("mainAQObase");
 
             PrepareDB prepareDB = new PrepareDB();
-            if (!prepareDB.CheckMainDatabaseExist())
+            var isMainDatabaseExist = prepareDB.CheckMainDatabaseExist();
+            if (isMainDatabaseExist)
+            {
+
+                Console.WriteLine("OK");
+                //prepareDB.CreateMainDatabase();
+                var testIO = new TestIO();
+                //var testsIds = testIO.AddTests(ObjectId.Parse("5f9211bd5858e9955f588f19"));
+                ////var usersIds = testIO.AddUsers();
+                //var roomsIds = testIO.AddRooms();
+                //foreach (var id in roomsIds)
+                //    Console.WriteLine(id.ToString());
+                ////Console.WriteLine(MongoIOController.GetUserById((ObjectId) DBUtils.ParseObjectId("42d3076b46319251f02bc896")) == null);
+                ////Console.WriteLine("Find user with id " + usersIds[0].ToString());
+                ////var user = MongoIOController.GetUserById(usersIds[0]);
+                ////Console.WriteLine(user.Name);
+                //using SHA512 sha512Hash = SHA512.Create();
+                //var user = MongoIOController.GetUserByData("Test Dev Login 2", sha512Hash.ComputeHash(Encoding.UTF8.GetBytes("Pass2")));
+                //if (user != null)
+                //{
+                //    Console.WriteLine(user.Name);
+                //    //MongoIOController.DeleteUserById(user.Id);
+                //}
+            }
+            else
             {
                 prepareDB.CreateMainDatabase();
             }
-            Console.WriteLine("OK");
-            //var testIO = new TestIO();
-            //UserWorker.DeleteUserByLogin("Test Dev Login 1");
-            //UserWorker.DeleteUserByLogin("Test Dev Login 2");
-            //var membersIds = testIO.AddMembers();
-            //var roomsIds = testIO.AddRooms();
-            //var mainRoom = RoomWorker.GetRoomById(roomsIds[0]);
-            //
-            // добавление мембера по id из базы (прив€зку произведет mainRoom.AddMember)
-            //mainRoom.AddMember(membersIds[0]);
-            //
-            // добавление мембера через использование экземпл€ра Ќќ¬ќ√ќ (которого еще нет в базе) пользовател€ (задавать вручную member.RoomId и использовать MemberWorker.SetMemberRoomId не требуетс€!)
-            //mainRoom.AddMember(new member...);
 
-            // ”далит мембера из теста и базы
-            //member.Delete();
-            //MemberWorker.DeleteMember(ObjectId.Parse("5fa0a46a5c7cfd09d8b19286"));
-            //MemberWorker.DeleteMember(member);
+            //var user = UserWorker.GetUserById(ObjectId.Parse("5f92b5ba5f039b5caf621df7"));
+            //user.SetName("Test Name");
+
+            //var test = TestWorker.GetTestById(ObjectId.Parse("5f92b5b95f039b5caf621df6"));
+            //test.SetTitle("test title");
+            //test.SetUserId(ObjectId.Parse("5f92b5ba5f039b5caf621df7"));
+            //test.SetActivationDate(DateTime.Now);
+            //test.SetDeactivationDate(DateTime.Now.AddDays(1));
+
+            //var room = RoomWorker.GetRoomById(ObjectId.Parse("5f92b5ba5f039b5caf621df9"));
+            /*
+            room.AddMember(new Member
+            {
+                Token = ObjectId.GenerateNewId().ToString(),
+                Login = "test new",
+                PasswordHash = "123",
+                Attempts = new Attempt[0],
+                UserData = new object(),
+            });
+            */
+            //room.RemoveMemberByToken("5f92b5b95f039b5caf621df3");
 
             //var testIO = new TestIO();
-            //UserWorker.DeleteUserByLogin("Test Dev Login 1");
-            //UserWorker.DeleteUserByLogin("Test Dev Login 2");
-            //var membersIds = testIO.AddMembers();
-            //var roomsIds = testIO.AddRooms();
-            //var mainRoom = RoomWorker.GetRoomById(roomsIds[0]);
-            //mainRoom.AddMember(membersIds[0]);
-            //mainRoom.AddMember(membersIds[1]);
+            //var usersIds = testIO.AddUsers();
 
             CreateHostBuilder(args).Build().Run();
         }

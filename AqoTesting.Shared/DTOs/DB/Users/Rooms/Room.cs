@@ -9,7 +9,7 @@ namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
         public ObjectId Id { get; set; }
         public string Name { get; set; }
         public string Domain { get; set; }
-        public ObjectId[] Members { get; set; } = new ObjectId[0];
+        public Member[] Members { get; set; } = new Member[0];
         public ObjectId[] TestIds { get; set; } = new ObjectId[0];
         public ObjectId OwnerId { get; set; }
         public bool IsDataRequired { get; set; } = false;

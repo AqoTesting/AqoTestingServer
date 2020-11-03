@@ -1,6 +1,5 @@
 ﻿using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Interfaces.DTO;
-using MongoDB.Bson;
 
 namespace AqoTesting.Shared.DTOs.API.Users.Rooms
 {
@@ -9,7 +8,7 @@ namespace AqoTesting.Shared.DTOs.API.Users.Rooms
         public string Id { get; set; }
         public string Name { get; set; }
         public string Domain { get; set; }
-        public ObjectId[] Members { get; set; }
+        public Member[] Members { get; set; }
         public string[] TestIds { get; set; }
         public string OwnerId { get; set; }
         public bool IsDataRequired { get; set; }

@@ -22,7 +22,7 @@ namespace AqoTesting.Shared.Interfaces
         Task<GetRoomDTO> EditRoom(ObjectId roomId, EditRoomDTO roomUpdates);
         Task<GetRoomDTO> EditRoom(RoomIdDTO roomIdDTO, EditRoomDTO roomUpdates);
 
-        Task RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberToken);
+        Task RemoveMemberFromRoomByTokenById(ObjectId roomId, string memberToken);
         Task RemoveMemberFromRoomByTokenById(ObjectId roomId, MemberTokenDTO memberTokenDTO);
         Task RemoveMemberFromRoomByTokenById(RoomIdDTO roomIdDTO, string memberToken);
         Task RemoveMemberFromRoomByTokenById(RoomIdDTO roomIdDTO, MemberTokenDTO memberTokenDTO);

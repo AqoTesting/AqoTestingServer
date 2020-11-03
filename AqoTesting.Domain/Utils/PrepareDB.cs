@@ -26,7 +26,6 @@ namespace AqoTesting.Domain.Utils
             mainDatabase.CreateCollection("tests");
             mainDatabase.CreateCollection("users");
             mainDatabase.CreateCollection("rooms");
-            mainDatabase.CreateCollection("members");
         }
     }
 }
