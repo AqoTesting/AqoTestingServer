@@ -118,46 +118,50 @@ namespace AqoTesting.Domain.Workers
             return isDeleteSuccessful;
         }
 
+        public static bool DeleteUserByLogin(string userLogin)
+        {
+            var filter = Builders<User>.Filter.Eq("Login", userLogin);
+            var isDeleteSuccessful = MongoController.UserCollection.DeleteOne(filter).DeletedCount == 1;
+
+            return isDeleteSuccessful;
+        }
+
         #endregion
 
         #region Props
 
         public static void SetUserLogin(ObjectId userId, string newLogin)
         {
-            var collection = MongoController.GetUsersCollection();
             var filter = Builders<User>.Filter.Eq("Id", userId);
             var update = Builders<User>.Update.Set("Login", newLogin);
-            collection.UpdateOne(filter, update);
+            MongoController.UserCollection.UpdateOne(filter, update);
         }
         public static void SetLogin(this User user, string newName)
             => SetUserLogin(user.Id, newName);
 
         public static void SetUserEmail(ObjectId userId, string newEmail)
         {
-            var collection = MongoController.GetUsersCollection();
             var filter = Builders<User>.Filter.Eq("Id", userId);
             var update = Builders<User>.Update.Set("Email", newEmail);
-            collection.UpdateOne(filter, update);
+            MongoController.UserCollection.UpdateOne(filter, update);
         }
         public static void SetEmail(this User user, string newEmail)
             => SetUserEmail(user.Id, newEmail);
 
         public static void SetUserPasswordHash(ObjectId userId, byte[] newPasswordHash)
         {
-            var collection = MongoController.GetUsersCollection();
             var filter = Builders<User>.Filter.Eq("Id", userId);
             var update = Builders<User>.Update.Set("PasswordHash", newPasswordHash);
-            collection.UpdateOne(filter, update);
+            MongoController.UserCollection.UpdateOne(filter, update);
         }
         public static void SetPasswordHash(this User user, byte[] newPasswordHash)
             => SetUserPasswordHash(user.Id, newPasswordHash);
 
         public static void SetUserName(ObjectId userId, string newName)
         {
-            var collection = MongoController.GetUsersCollection();
             var filter = Builders<User>.Filter.Eq("Id", userId);
             var update = Builders<User>.Update.Set("Name", newName);
-            collection.UpdateOne(filter, update);
+            MongoController.UserCollection.UpdateOne(filter, update);
         }
         public static void SetName(this User user, string newName)
             => SetUserName(user.Id, newName);

@@ -21,7 +21,7 @@ namespace AqoTesting.Shared.Interfaces
         Task SetRoomIsDataRequired(ObjectId roomId, bool newIsDataRequired);
         Task SetRoomIsActive(ObjectId roomId, bool newIsActive);
 
-        Task<bool> RemoveMemberFromRoomByTokenById(ObjectId roomId, string memberId);
+        Task<bool> RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId);
 
         Task<bool> DeleteRoomById(ObjectId roomId);
     }
