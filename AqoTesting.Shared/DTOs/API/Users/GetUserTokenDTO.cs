@@ -1,6 +1,6 @@
 ﻿namespace AqoTesting.Shared.DTOs.API.Users
 {
-    public class GetUserTokenDTO
+    public class GetTokenDTO
     {
         public string Token { get; set; }
     }

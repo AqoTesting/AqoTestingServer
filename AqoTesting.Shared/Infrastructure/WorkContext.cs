@@ -9,5 +9,6 @@ namespace AqoTesting.Shared.Infrastructure
     public class WorkContext : IWorkContext
     {
         public ObjectId UserId { get; set; }
+        public ObjectId MemberId { get; set; }
     }
 }

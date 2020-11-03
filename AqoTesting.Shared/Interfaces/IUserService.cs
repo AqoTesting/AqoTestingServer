@@ -1,5 +1,6 @@
 ﻿using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.DTOs.DB.Users;
+using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
 using System.Threading.Tasks;
 
@@ -15,6 +16,6 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<User> InsertUser(SignUpUserDTO signUpUserDTO);
 
-        GetUserTokenDTO GenerateUserToken(User user);
+        GetTokenDTO GenerateToken(ObjectId id, Role role);
     }
 }

@@ -62,11 +62,9 @@ namespace AqoTesting.Core.Services
             return newUser;
         }
 
-        public GetUserTokenDTO GenerateUserToken(User user)
+        public GetTokenDTO GenerateToken(ObjectId id, Role role = Role.User)
         {
-            var authorizedUser = Mapper.Map<AuthUser>(user);
-
-            var identity = GetIdentity(authorizedUser);
+            var identity = GetIdentity(id, role);
 
             var now = DateTime.UtcNow;
             // создаем JWT-токен
@@ -80,17 +78,16 @@ namespace AqoTesting.Core.Services
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            return new GetUserTokenDTO { Token = encodedJwt };
+            return new GetTokenDTO { Token = encodedJwt };
         }
 
-        private ClaimsIdentity GetIdentity(AuthUser user)
+        private ClaimsIdentity GetIdentity(ObjectId id, Role role)
         {
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                //new Claim("Login", user.Login),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
+                new Claim(ClaimTypes.NameIdentifier, id.ToString()),
+                new Claim(ClaimTypes.Role, role.ToString())
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);

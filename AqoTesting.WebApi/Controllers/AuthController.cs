@@ -23,7 +23,7 @@ namespace AqoTesting.WebApi.Controllers
         {
             var user = await _userService.GetUserByAuthData(authData);
 
-            var authorizedUser = _userService.GenerateUserToken(user);
+            var authorizedUser = _userService.GenerateToken(user.Id, Role.User);
 
             return this.ResultResponse(OperationErrorMessages.NoError, authorizedUser);
         }
@@ -41,7 +41,7 @@ namespace AqoTesting.WebApi.Controllers
 
             var newUser = await _userService.InsertUser(signUpUserDTO);
 
-            var authorizedUser = _userService.GenerateUserToken(newUser);
+            var authorizedUser = _userService.GenerateToken(newUser.Id, Role.User);
 
             return this.ResultResponse(OperationErrorMessages.NoError, authorizedUser);
         }

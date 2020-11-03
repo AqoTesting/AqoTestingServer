@@ -17,7 +17,16 @@ namespace AqoTesting.Shared.Infrastructure
 
         public override async Task TokenValidated(TokenValidatedContext context)
         {
-            _workContext.UserId = ObjectId.Parse(context.Principal.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            string role = context.Principal.Claims.Single(c => c.Type == ClaimTypes.Role).Value;
+            ObjectId id = ObjectId.Parse(context.Principal.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            if (role == "User")
+            {
+                _workContext.UserId = id;
+            } else
+            {
+                _workContext.MemberId = id;
+            }
 
             await base.TokenValidated(context);
         }

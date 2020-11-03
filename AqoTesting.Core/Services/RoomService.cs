@@ -125,5 +125,10 @@ namespace AqoTesting.Core.Services
         }
         public async Task DeleteRoomById(RoomIdDTO roomIdDTO) =>
             await DeleteRoomById(ObjectId.Parse(roomIdDTO.RoomId));
+
+        public Task RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberToken)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
