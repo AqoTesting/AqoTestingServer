@@ -65,9 +65,8 @@ namespace AqoTesting.Core.Services
         public GetTokenDTO GenerateToken(ObjectId id, Role role = Role.User)
         {
             var identity = GetIdentity(id, role);
-
             var now = DateTime.UtcNow;
-            // создаем JWT-токен
+
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
