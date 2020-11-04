@@ -164,5 +164,40 @@ namespace AqoTesting.Domain.Workers
         public static void SetIsActive(this Room room, bool newIsActive) => SetRoomIsActive(room.Id, newIsActive);
 
         #endregion
+
+        #region Fields
+
+        public static RoomField[]? GetRoomFields(ObjectId roomId)
+        {
+            var filter = Builders<Room>.Filter.Eq("Id", roomId);
+            var room = MongoController.RoomCollection.Find(filter).Project<Room>("{ Fields:1}").SingleOrDefault();
+
+            return room?.Fields;
+        }
+        public static RoomField[]? GetFields(this Room room) => GetRoomFields(room.Id);
+
+        public static RoomField? GetRoomFieldByName(ObjectId roomId, string name)
+        {
+            return null;
+        }
+
+        public static void AddFieldToRoom(ObjectId roomId, RoomField field)
+        {
+            var filter = Builders<Room>.Filter.Eq("Id", roomId);
+            var update = Builders<Room>.Update.Push("Fields", field);
+            MongoController.RoomCollection.UpdateOne(filter, update);
+        }
+        public static void AddField(this Room room, RoomField field) => AddFieldToRoom(room.Id, field);
+
+        public static void RemoveFieldFromRoom(ObjectId roomId, string fieldName)
+        {
+            var filter = Builders<Room>.Filter.Eq("Id", roomId);
+            var fieldFilter = Builders<RoomField>.Filter.Eq("Name", fieldName);
+            var update = Builders<Room>.Update.PullFilter("Fields", fieldFilter);
+            MongoController.RoomCollection.UpdateOne(filter, update);
+        }
+        public static void RemoveField(this Room room, string fieldName) => RemoveFieldFromRoom(room.Id, fieldName);
+
+        #endregion
     }
 }

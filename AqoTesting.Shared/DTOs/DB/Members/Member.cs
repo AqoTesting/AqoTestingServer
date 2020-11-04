@@ -10,8 +10,8 @@ namespace AqoTesting.Shared.DTOs.DB.Members
         public ObjectId Id { get; set; }
         public ObjectId RoomId { get; set; }
         public string Login { get; set; }
-        public string PasswordHash { get; set; }
+        public byte[] PasswordHash { get; set; }
         public Attempt[] Attempts { get; set; }
-        public object UserData { get; set; }
+        public BsonDocument Fields { get; set; }
     }
 }

@@ -177,17 +177,17 @@ namespace AqoTesting.Domain.Tests
                 {
                     //Token = ObjectId.GenerateNewId().ToString(),
                     Login = "Test Dev Login Member 1",
-                    PasswordHash = "123",
+                    PasswordHash = Sha256.Compute("123"),
                     Attempts = new Attempt[0],
-                    UserData = new object(),
+                    Fields = new BsonDocument(),
                 },
                 new Member
                 {
                     //Token = ObjectId.GenerateNewId().ToString(),
                     Login = "Test Dev Login Member 2",
-                    PasswordHash = "123",
+                    PasswordHash = Sha256.Compute("123"),
                     Attempts = new Attempt[0],
-                    UserData = new object(),
+                    Fields = new BsonDocument(),
                 }
             };
 
@@ -210,7 +210,7 @@ namespace AqoTesting.Domain.Tests
                     //TestIds = AddTests(ObjectId.Parse("5f9211bd5858e9955f588f19")),
                     //OwnerId = ObjectId.Parse("5f9211bd5858e9955f588f19"),
                     IsDataRequired = false,
-                    RequestedFields = new RequestedField[0],
+                    Fields = new RoomField[0],
                     IsActive = true
                 }
             };

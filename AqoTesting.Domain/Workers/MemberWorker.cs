@@ -88,18 +88,36 @@ namespace AqoTesting.Domain.Workers
             return null;
         }
 
-        public static object? GetMemberUserData(ObjectId roomId, string memberLogin)
+        public static BsonDocument? GetMemberFields(ObjectId roomId, string memberLogin)
         {
             var member = GetMemberFromRoom(roomId, memberLogin);
 
-            return member?.UserData;
+            return member?.Fields;
         }
 
-        public static object? GetMemberPassword(ObjectId roomId, string memberLogin)
+        public static void SetMemberFields(ObjectId roomId, string memberLogin, BsonDocument fields)
+        {
+            var roomidfilter = Builders<Member>.Filter.Eq("RoomId", roomId);
+            var loginFilter = Builders<Member>.Filter.Eq("Login", memberLogin);
+            var filter = roomidfilter & loginFilter;
+            var update = Builders<Member>.Update.Set("Fields", fields);
+            MongoController.MemberCollection.UpdateOne(filter, update);
+        }
+
+        public static byte[]? GetMemberPasswordHash(ObjectId roomId, string memberLogin)
         {
             var member = GetMemberFromRoom(roomId, memberLogin);
 
             return member?.PasswordHash;
+        }
+
+        public static void SetMemberPasswordHash(ObjectId roomId, ObjectId memberId, byte[] newPasswordHash)
+        {
+            var roomidfilter = Builders<Member>.Filter.Eq("RoomId", roomId);
+            var idFilter = Builders<Member>.Filter.Eq("Id", memberId);
+            var filter = roomidfilter & idFilter;
+            var update = Builders<Member>.Update.Set("PasswordHash", newPasswordHash);
+            MongoController.MemberCollection.UpdateOne(filter, update);
         }
 
         public static bool SetMemberRoomId(ObjectId memberId, ObjectId newRoomId)

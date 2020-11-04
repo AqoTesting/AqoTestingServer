@@ -13,7 +13,7 @@ namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
         public ObjectId[] TestIds { get; set; } = new ObjectId[0];
         public ObjectId OwnerId { get; set; }
         public bool IsDataRequired { get; set; } = false;
-        public RequestedField[] RequestedFields { get; set; } = new RequestedField[0];
+        public RoomField[] Fields { get; set; } = new RoomField[0]; //RoomWorker GetRoomFields
         public bool IsActive { get; set; } = false;
     }
 }
