@@ -17,13 +17,11 @@ namespace AqoTesting.Shared.DTOs.API.Users.Rooms
         [Required]
         public bool IsRequired { get; set; }
 
-        [RequiredIf("Type", FieldType.Input)]
         [StringLength(64, MinimumLength = 1)]
-        public string Placeholder { get; set; }
+        public string? Placeholder { get; set; }
 
-        [RequiredIf("Type", FieldType.Input)]
         [StringLength(5)]
-        public string Mask { get; set; }
+        public string? Mask { get; set; }
 
         [RequiredIf("Type", FieldType.Select)]
         [MinLength(2)]
