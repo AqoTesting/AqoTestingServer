@@ -10,10 +10,10 @@ namespace AqoTesting.Shared.Attributes
         private String PropertyName { get; set; }
         private Object DesiredValue { get; set; }
 
-        public RequiredIfAttribute(String propertyName, Object desiredvalue)
+        public RequiredIfAttribute(String propertyName, Object desiredValue)
         {
             PropertyName = propertyName;
-            DesiredValue = desiredvalue;
+            DesiredValue = desiredValue;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext context)
