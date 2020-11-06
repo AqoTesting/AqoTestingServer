@@ -3,12 +3,14 @@ using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
 using AqoTesting.Shared.DTOs.API.Users.Tests;
+using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.DTOs.DB.Users;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Models;
 using AutoMapper;
+using MongoDB.Bson;
 
 namespace AqoTesting.WebApi.Infrastructure
 {
@@ -32,12 +34,45 @@ namespace AqoTesting.WebApi.Infrastructure
                 cfg.CreateMap<User, GetUserDTO>();
 
                 // Rooms
-                cfg.CreateMap<Room, GetRoomDTO>();
-
                 cfg.CreateMap<Room, GetRoomsItemDTO>();
 
                 cfg.CreateMap<CreateRoomDTO, Room>();
 
+                cfg.CreateMap<RoomFieldDTO, RoomFieldInputData>();
+                cfg.CreateMap<RoomFieldDTO, RoomFieldSelectData>();
+
+                cfg.CreateMap<RoomField, RoomFieldDTO>()
+                    .ForMember(x => x.Placeholder,
+                        x => x.MapFrom(m =>
+                            m.Type == FieldType.Input ? m.Data.GetElement("Placeholder").Value : null
+                        ))
+                    .ForMember(x => x.Mask,
+                        x => x.MapFrom(m =>
+                            m.Type == FieldType.Input ? m.Data.GetElement("Mask").Value : null
+                        ))
+                    .ForMember(x => x.Options,
+                        x => x.MapFrom(m =>
+                            m.Type == FieldType.Select ? m.Data.GetElement("Options").Value : null
+                        ));
+
+                cfg.CreateMap<Room, GetRoomDTO>()
+                    .ForMember(x => x.Fields,
+                        x => x.MapFrom(m =>
+                            Mapper.Map<RoomFieldDTO[]>(m.Fields)
+                        ));
+
+                cfg.CreateMap<RoomFieldDTO, RoomField>()
+                    .ForMember(x => x.Data,
+                        x => x.ResolveUsing(m => {
+                            if (m.Type == FieldType.Input)
+                                return Mapper.Map<RoomFieldInputData>(m).ToBsonDocument();
+
+                            else if (m.Type == FieldType.Select)
+                                return Mapper.Map<RoomFieldSelectData>(m).ToBsonDocument();
+
+                            else
+                                return new BsonDocument();
+                        }));
 
                 // Tests
                 cfg.CreateMap<Test, GetTestsItemDTO>();

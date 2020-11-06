@@ -63,7 +63,17 @@ namespace AqoTesting.WebApi.Controllers
             var updatedRoom = await _roomService.EditRoom(roomIdDTO, roomUpdates);
 
             return this.ResultResponse<object>(OperationErrorMessages.NoError, updatedRoom);
-        }    
+        }
+
+        [Authorize(Roles = "User")]
+        [OnlyRoomOwner]
+        [HttpGet("/user/room/{RoomId}/edit")]
+        public async Task<IActionResult> GetEditRoom([FromRoute] RoomIdDTO roomIdDTO)
+        {
+            var room = await _roomService.GetEditRoomById(roomIdDTO);
+
+            return this.ResultResponse<object>(OperationErrorMessages.NoError, room);
+        }
 
         [Authorize(Roles = "User")]
         [OnlyRoomOwner]
@@ -77,10 +87,10 @@ namespace AqoTesting.WebApi.Controllers
 
         [Authorize(Roles = "User")]
         [OnlyRoomOwner]
-        [HttpDelete("/user/room/{RoomId}/member/{MemberToken}")]
-        public async Task<IActionResult> KickMember([FromRoute] RoomIdDTO roomIdDTO, [FromRoute] MemberTokenDTO memberTokenDTO)
+        [HttpDelete("/user/room/{RoomId}/member/{MemberId}")]
+        public async Task<IActionResult> KickMember([FromRoute] RoomIdDTO roomIdDTO, [FromRoute] MemberIdDTO memberTokenDTO)
         {
-            await _roomService.RemoveMemberFromRoomByTokenById(roomIdDTO, memberTokenDTO);
+            await _roomService.RemoveMemberFromRoomByIdById(roomIdDTO, memberTokenDTO);
 
             return this.ResultResponse<object>(OperationErrorMessages.NoError);
         }

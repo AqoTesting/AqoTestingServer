@@ -9,9 +9,5 @@ namespace AqoTesting.Shared.Interfaces.DTO
         FieldType Type { get; set; }
 
         bool IsRequired { get; set; }
-
-        bool IsShowTable { get; set; }
-
-        bool IsKey { get; set; }
     }
 }

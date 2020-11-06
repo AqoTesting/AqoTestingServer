@@ -4,7 +4,7 @@ using AqoTesting.Shared.Interfaces.DTO;
 
 namespace AqoTesting.Shared.DTOs.API.Users.Rooms
 {
-    public struct RoomFieldInputDTO : IUserRoomField
+    public class RoomFieldInputDTO
     {
         [Required]
         [StringLength(64, MinimumLength = 1)]
@@ -16,12 +16,10 @@ namespace AqoTesting.Shared.DTOs.API.Users.Rooms
         [Required]
         public bool IsRequired { get; set; }
 
-        [Required]
-        public bool IsShowTable { get; set; }
-
-        [Required]
-        public bool IsKey { get; set; }
-
+        [StringLength(64, MinimumLength = 1)]
         public string Placeholder { get; set; }
+
+        [StringLength(256)]
+        public string Mask { get; set; }
     }
 }

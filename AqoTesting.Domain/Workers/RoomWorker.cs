@@ -76,7 +76,7 @@ namespace AqoTesting.Domain.Workers
         }
         public static void AddMember(this Room room, Member member) => AddMemberToRoom(room.Id, member);
 
-        public static bool RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId)
+        public static bool RemoveMemberFromRoomByIdById(ObjectId roomId, ObjectId memberId)
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Pull("Members", memberId);
@@ -84,7 +84,7 @@ namespace AqoTesting.Domain.Workers
 
             return isRemovedSuccessful;
         }
-        public static void RemoveMemberById(this Room room, ObjectId memberId) => RemoveMemberFromRoomById(room.Id, memberId);
+        public static void RemoveMemberByIdById(this Room room, ObjectId memberId) => RemoveMemberFromRoomByIdById(room.Id, memberId);
 
         public static void RemoveMemberFromRoomByLogin(ObjectId roomId, string memberLogin)
         {
@@ -139,13 +139,13 @@ namespace AqoTesting.Domain.Workers
         }
         public static void SetDomain(this Room room, string newDomain) => SetRoomDomain(room.Id, newDomain);
 
-        public static void SetRoomRequestedFields(ObjectId roomId, IUserRoomField[] newRequestedFields)
+        public static void SetRoomFields(ObjectId roomId, RoomField[] newFields)
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Set("Fields", newRequestedFields);
+            var update = Builders<Room>.Update.Set("Fields", newFields);
             MongoController.RoomCollection.UpdateOne(filter, update);
         }
-        public static void SetRequestedFields(this Room room, IUserRoomField[] newRequestedFields) => SetRoomRequestedFields(room.Id, newRequestedFields);
+        public static void SetRequestedFields(this Room room, RoomField[] newFields) => SetRoomFields(room.Id, newFields);
 
         public static void SetRoomIsDataRequired(ObjectId roomId, bool newIsDataRequired)
         {

@@ -4,7 +4,7 @@ using AqoTesting.Shared.Interfaces.DTO;
 
 namespace AqoTesting.Shared.DTOs.API.Users.Rooms
 {
-    public class RoomFieldSelectDTO
+    public class RoomFieldDTO
     {
         [Required]
         [StringLength(64, MinimumLength = 1)]
@@ -16,9 +16,14 @@ namespace AqoTesting.Shared.DTOs.API.Users.Rooms
         [Required]
         public bool IsRequired { get; set; }
 
-        [Required]
+        [StringLength(64, MinimumLength = 1)]
+        public string Placeholder { get; set; }
+
+        [StringLength(5)]
+        public string Mask { get; set; }
+
         [MinLength(2)]
         [MaxLength(32)]
-        public string[] Options { get; set; }
+        public string[]? Options { get; set; } = null;
     }
 }

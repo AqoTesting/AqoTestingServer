@@ -2,7 +2,6 @@
 using AqoTesting.Domain.Workers;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Interfaces;
-using AqoTesting.Shared.Interfaces.DTO;
 using MongoDB.Bson;
 
 namespace AqoTesting.Core.Repositories
@@ -37,8 +36,8 @@ namespace AqoTesting.Core.Repositories
         public async Task SetRoomDomain(ObjectId roomId, string newDomain) =>
             await Task.Run(() => RoomWorker.SetRoomDomain(roomId, newDomain));
 
-        public async Task SetRoomRequestedFields(ObjectId roomId, IUserRoomField[] newRequestedFields) =>
-            await Task.Run(() => RoomWorker.SetRoomRequestedFields(roomId, newRequestedFields));
+        public async Task SetRoomFields(ObjectId roomId, RoomField[] newFields) =>
+            await Task.Run(() => RoomWorker.SetRoomFields(roomId, newFields));
 
         public async Task SetRoomIsDataRequired(ObjectId roomId, bool newIsDataRequired) =>
             await Task.Run(() => RoomWorker.SetRoomIsDataRequired(roomId, newIsDataRequired));
@@ -46,15 +45,10 @@ namespace AqoTesting.Core.Repositories
         public async Task SetRoomIsActive(ObjectId roomId, bool newIsActive) =>
             await Task.Run(() => RoomWorker.SetRoomIsActive(roomId, newIsActive));
 
-        /*public async Task<bool> RemoveMemberFromRoomByTokenById(ObjectId roomId, string memberId) =>
-            await Task.Run(() => RoomWorker.RemoveMemberFrКomRoomByTokenById(roomId, memberId));*/
+        public async Task<bool> RemoveMemberFromRoomByIdById(ObjectId roomId, ObjectId memberId) =>
+            await Task.Run(() => RoomWorker.RemoveMemberFromRoomByIdById(roomId, memberId));
 
         public async Task<bool> DeleteRoomById(ObjectId roomId) =>
             await Task.Run(() => RoomWorker.DeleteRoomById(roomId));
-
-        public Task<bool> RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

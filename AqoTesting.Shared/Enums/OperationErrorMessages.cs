@@ -22,5 +22,8 @@
 
         //Users
         UserNotFound = 40,
+
+        //Members
+        MemberNotFound = 50,
     }
 }

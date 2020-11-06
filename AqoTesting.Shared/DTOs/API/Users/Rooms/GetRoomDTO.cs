@@ -9,11 +9,13 @@ namespace AqoTesting.Shared.DTOs.API.Users.Rooms
         public string Id { get; set; }
         public string Name { get; set; }
         public string Domain { get; set; }
+        public string Description { get; set; }
         public ObjectId[] Members { get; set; }
         public string[] TestIds { get; set; }
         public string OwnerId { get; set; }
-        public bool IsDataRequired { get; set; }
-        public IUserRoomField[] RoomFields { get; set; }
+        public RoomFieldDTO[] Fields { get; set; }
         public bool IsActive { get; set; }
+        public bool IsApproveManually { get; set; }
+        public bool IsRegistrationEnabled { get; set; }
     }
 }

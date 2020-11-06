@@ -74,22 +74,34 @@ namespace AqoTesting.Core.Services
                 await _roomRepository.SetRoomDomain(roomId, roomUpdates.Domain);
                 somethingChanged = true;
             }
-            if (roomUpdates.Fields != null && outdatedRoom.RoomFields != roomUpdates.Fields)
+            if (roomUpdates.Description != null && outdatedRoom.Description != roomUpdates.Description)
             {
-                outdatedRoom.RoomFields = roomUpdates.Fields;
-                await _roomRepository.SetRoomRequestedFields(roomId, roomUpdates.Fields);
+                outdatedRoom.Description = roomUpdates.Description;
+                await _roomRepository.SetRoomDomain(roomId, roomUpdates.Description);
                 somethingChanged = true;
             }
-            if (roomUpdates.IsDataRequired != null && outdatedRoom.IsDataRequired != roomUpdates.IsDataRequired)
+            if (roomUpdates.Fields != null && outdatedRoom.Fields != roomUpdates.Fields)
             {
-                outdatedRoom.IsDataRequired = roomUpdates.IsDataRequired.Value;
-                await _roomRepository.SetRoomIsDataRequired(roomId, roomUpdates.IsDataRequired.Value);
+                outdatedRoom.Fields = roomUpdates.Fields;
+                await _roomRepository.SetRoomFields(roomId, Mapper.Map<RoomField[]>(roomUpdates.Fields)); // костыль
                 somethingChanged = true;
             }
             if (roomUpdates.IsActive != null && outdatedRoom.IsActive != roomUpdates.IsActive)
             {
                 outdatedRoom.IsActive = roomUpdates.IsActive.Value;
                 await _roomRepository.SetRoomIsActive(roomId, roomUpdates.IsActive.Value);
+                somethingChanged = true;
+            }
+            if (roomUpdates.IsApproveManually != null && outdatedRoom.IsApproveManually != roomUpdates.IsApproveManually)
+            {
+                outdatedRoom.IsApproveManually = roomUpdates.IsApproveManually.Value;
+                await _roomRepository.SetRoomIsActive(roomId, roomUpdates.IsApproveManually.Value);
+                somethingChanged = true;
+            }
+            if (roomUpdates.IsRegistrationEnabled != null && outdatedRoom.IsRegistrationEnabled != roomUpdates.IsRegistrationEnabled)
+            {
+                outdatedRoom.IsRegistrationEnabled = roomUpdates.IsRegistrationEnabled.Value;
+                await _roomRepository.SetRoomIsActive(roomId, roomUpdates.IsRegistrationEnabled.Value);
                 somethingChanged = true;
             }
 
@@ -101,20 +113,32 @@ namespace AqoTesting.Core.Services
         public async Task<GetRoomDTO> EditRoom(RoomIdDTO roomIdDTO, EditRoomDTO roomUpdates) =>
             await EditRoom(ObjectId.Parse(roomIdDTO.RoomId), roomUpdates);
 
-        public async Task RemoveMemberFromRoomByTokenById(ObjectId roomId, string memberToken)
+        public async Task<GetEditRoomDTO> GetEditRoomById(ObjectId roomId)
         {
-            var removed = true;
-            //var removed = await _roomRepository.RemoveMemberFromRoomByTokenById(roomId, memberToken);
+            var room = await _roomRepository.GetRoomById(roomId);
+
+            if (room == null)
+                throw new ResultException(OperationErrorMessages.RoomNotFound);
+
+            return Mapper.Map<GetEditRoomDTO>(room);
+        }
+
+        public async Task<GetEditRoomDTO> GetEditRoomById(RoomIdDTO roomIdDTO) =>
+            await GetEditRoomById(ObjectId.Parse(roomIdDTO.RoomId));
+
+        public async Task RemoveMemberFromRoomByTokenById(ObjectId roomId, ObjectId memberId)
+        {
+            var removed = await _roomRepository.RemoveMemberFromRoomByIdById(roomId, memberId);
 
             if (!removed)
                 throw new ResultException(OperationErrorMessages.TestNotFound);
         }
-        public async Task RemoveMemberFromRoomByTokenById(ObjectId roomId, MemberTokenDTO memberTokenDTO) =>
-            await RemoveMemberFromRoomByTokenById(roomId, memberTokenDTO.MemberToken);
-        public async Task RemoveMemberFromRoomByTokenById(RoomIdDTO roomIdDTO, string memberToken) =>
-            await RemoveMemberFromRoomByTokenById(ObjectId.Parse(roomIdDTO.RoomId), memberToken);
-        public async Task RemoveMemberFromRoomByTokenById(RoomIdDTO roomIdDTO, MemberTokenDTO memberTokenDTO) =>
-            await RemoveMemberFromRoomByTokenById(ObjectId.Parse(roomIdDTO.RoomId), memberTokenDTO.MemberToken);
+        public async Task RemoveMemberFromRoomByIdById(ObjectId roomId, MemberIdDTO memberIdDTO) =>
+            await RemoveMemberFromRoomByTokenById(roomId, ObjectId.Parse(memberIdDTO.MemberId));
+        public async Task RemoveMemberFromRoomByIdById(RoomIdDTO roomIdDTO, ObjectId memberId) =>
+            await RemoveMemberFromRoomByTokenById(ObjectId.Parse(roomIdDTO.RoomId), memberId);
+        public async Task RemoveMemberFromRoomByIdById(RoomIdDTO roomIdDTO, MemberIdDTO memberIdDTO) =>
+            await RemoveMemberFromRoomByTokenById(ObjectId.Parse(roomIdDTO.RoomId), ObjectId.Parse(memberIdDTO.MemberId));
 
         public async Task DeleteRoomById(ObjectId roomId)
         {
@@ -126,9 +150,12 @@ namespace AqoTesting.Core.Services
         public async Task DeleteRoomById(RoomIdDTO roomIdDTO) =>
             await DeleteRoomById(ObjectId.Parse(roomIdDTO.RoomId));
 
-        public Task RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberToken)
+        public async Task RemoveMemberFromRoomByIdById(ObjectId roomId, ObjectId memberId)
         {
-            throw new System.NotImplementedException();
+            var removed = await _roomRepository.RemoveMemberFromRoomByIdById(roomId, memberId);
+
+            if(!removed)
+                throw new ResultException(OperationErrorMessages.MemberNotFound);
         }
     }
 }

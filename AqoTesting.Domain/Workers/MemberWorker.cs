@@ -59,7 +59,7 @@ namespace AqoTesting.Domain.Workers
 
         public static bool DeleteMember(Member member)
         {
-            RoomWorker.RemoveMemberFromRoomById(member.RoomId, member.Id);
+            RoomWorker.RemoveMemberFromRoomByIdById(member.RoomId, member.Id);
             var filter = Builders<Member>.Filter.Eq("Id", member.Id);
             var isDeleteSuccessful = MongoController.MemberCollection.DeleteOne(filter).DeletedCount == 1;
 
