@@ -57,7 +57,7 @@ namespace AqoTesting.WebApi.Controllers
 
         [Authorize(Roles = "User")]
         [OnlyRoomOwner]
-        [HttpPatch("/user/room/{RoomId}")]
+        [HttpPut("/user/room/{RoomId}")]
         public async Task<IActionResult> EditRoom([FromRoute] RoomIdDTO roomIdDTO, [FromBody] PostRoomDTO updatedRoom)
         {
             var errorCode = await _roomService.EditRoom(roomIdDTO, updatedRoom);
