@@ -48,6 +48,11 @@ namespace AqoTesting.Domain.Workers
             MongoController.RoomCollection.InsertMany(rooms);
             return rooms.Select(room => room.Id).ToArray();
         }
+        public static void ReplaceRoom(ObjectId roomId, Room updated)
+        {
+            var filter = Builders<Room>.Filter.Eq("Id", roomId);
+            MongoController.RoomCollection.ReplaceOne(filter, updated);
+        }
 
         public static bool DeleteRoomById(ObjectId roomId)
         {

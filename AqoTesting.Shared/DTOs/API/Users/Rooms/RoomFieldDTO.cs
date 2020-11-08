@@ -8,11 +8,16 @@ namespace AqoTesting.Shared.DTOs.API.Users.Rooms
     public class RoomFieldDTO
     {
         [Required]
+        [StringLength(64)]
+        [RegularExpression(@"^[A-z0-9_]+$")]
+        public string Key { get; set; }
+
+        [Required]
         [StringLength(64, MinimumLength = 1)]
         public string Name { get; set; }
 
         [Required]
-        public FieldType Type { get; set; }
+        public FieldType? Type { get; set; }
 
         [Required]
         public bool IsRequired { get; set; }

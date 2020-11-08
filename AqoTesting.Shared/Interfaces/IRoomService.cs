@@ -2,6 +2,7 @@
 using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
 using System.Threading.Tasks;
 
@@ -17,13 +18,10 @@ namespace AqoTesting.Shared.Interfaces
         Task<GetRoomsItemDTO[]> GetRoomsByOwnerId(ObjectId ownerId);
         Task<GetRoomsItemDTO[]> GetRoomsByOwnerId(UserIdDTO userIdDTO);
 
-        Task<string> InsertRoom(CreateRoomDTO newRoomDto);
+        Task<string> InsertRoom(PostRoomDTO newRoomDto);
 
-        Task<GetRoomDTO> EditRoom(ObjectId roomId, EditRoomDTO roomUpdates);
-        Task<GetRoomDTO> EditRoom(RoomIdDTO roomIdDTO, EditRoomDTO roomUpdates);
-
-        Task<GetEditRoomDTO> GetEditRoomById(ObjectId roomId);
-        Task<GetEditRoomDTO> GetEditRoomById(RoomIdDTO roomIdDTO);
+        Task<OperationErrorMessages> EditRoom(ObjectId roomId, PostRoomDTO roomUpdates);
+        Task<OperationErrorMessages> EditRoom(RoomIdDTO roomIdDTO, PostRoomDTO roomUpdates);
 
         Task RemoveMemberFromRoomByIdById(ObjectId roomId, ObjectId memberId);
         Task RemoveMemberFromRoomByIdById(ObjectId roomId, MemberIdDTO memberIdDTO);

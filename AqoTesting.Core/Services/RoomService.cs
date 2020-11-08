@@ -26,10 +26,15 @@ namespace AqoTesting.Core.Services
         {
             var room = await _roomRepository.GetRoomById(roomId);
 
-            if (room == null)
-                throw new ResultException(OperationErrorMessages.RoomNotFound);
+            var responseRoom = Mapper.Map<GetRoomDTO>(room);
 
-            return Mapper.Map<GetRoomDTO>(room);
+            // костыль
+            if(responseRoom != null && responseRoom.Fields != null)
+                for(var i = 0; i < responseRoom.Fields.Length; i++)
+                    if (responseRoom.Fields[i].Options != null && responseRoom.Fields[i].Options.Length == 0)
+                        responseRoom.Fields[i].Options = null;
+
+            return responseRoom;
         }
         public async Task<GetRoomDTO> GetRoomById(RoomIdDTO roomIdDTO) =>
             await GetRoomById(ObjectId.Parse(roomIdDTO.RoomId));
@@ -48,83 +53,41 @@ namespace AqoTesting.Core.Services
         public async Task<GetRoomsItemDTO[]> GetRoomsByOwnerId(UserIdDTO userIdDTO) =>
             await GetRoomsByOwnerId(ObjectId.Parse(userIdDTO.UserId));
 
-        public async Task<string> InsertRoom(CreateRoomDTO newRoomDto)
+        public async Task<string> InsertRoom(PostRoomDTO postRoomDto)
         {
-            var newRoom = Mapper.Map<Room>(newRoomDto);
+            var newRoom = Mapper.Map<Room>(postRoomDto);
             newRoom.OwnerId = _workContext.UserId;
 
             return (await _roomRepository.InsertRoom(newRoom)).ToString();
         }
 
-        public async Task<GetRoomDTO> EditRoom(ObjectId roomId, EditRoomDTO roomUpdates)
+        public async Task<OperationErrorMessages> EditRoom(ObjectId roomId, PostRoomDTO postRoomDTO)
         {
-            var outdatedRoom = await this.GetRoomById(roomId);
+            var outdatedRoom = await _roomRepository.GetRoomById(roomId);
 
-            var somethingChanged = false;
+            if (outdatedRoom == null)
+                return OperationErrorMessages.RoomNotFound;
 
-            if (roomUpdates.Name != null && outdatedRoom.Name != roomUpdates.Name)
+            if (outdatedRoom.Domain != postRoomDTO.Domain)
             {
-                outdatedRoom.Name = roomUpdates.Name;
-                await _roomRepository.SetRoomName(roomId, roomUpdates.Name);
-                somethingChanged = true;
-            }
-            if (roomUpdates.Domain != null && outdatedRoom.Domain != roomUpdates.Domain)
-            {
-                outdatedRoom.Domain = roomUpdates.Domain;
-                await _roomRepository.SetRoomDomain(roomId, roomUpdates.Domain);
-                somethingChanged = true;
-            }
-            if (roomUpdates.Description != null && outdatedRoom.Description != roomUpdates.Description)
-            {
-                outdatedRoom.Description = roomUpdates.Description;
-                await _roomRepository.SetRoomDomain(roomId, roomUpdates.Description);
-                somethingChanged = true;
-            }
-            if (roomUpdates.Fields != null && outdatedRoom.Fields != roomUpdates.Fields)
-            {
-                outdatedRoom.Fields = roomUpdates.Fields;
-                await _roomRepository.SetRoomFields(roomId, Mapper.Map<RoomField[]>(roomUpdates.Fields)); // костыль
-                somethingChanged = true;
-            }
-            if (roomUpdates.IsActive != null && outdatedRoom.IsActive != roomUpdates.IsActive)
-            {
-                outdatedRoom.IsActive = roomUpdates.IsActive.Value;
-                await _roomRepository.SetRoomIsActive(roomId, roomUpdates.IsActive.Value);
-                somethingChanged = true;
-            }
-            if (roomUpdates.IsApproveManually != null && outdatedRoom.IsApproveManually != roomUpdates.IsApproveManually)
-            {
-                outdatedRoom.IsApproveManually = roomUpdates.IsApproveManually.Value;
-                await _roomRepository.SetRoomIsActive(roomId, roomUpdates.IsApproveManually.Value);
-                somethingChanged = true;
-            }
-            if (roomUpdates.IsRegistrationEnabled != null && outdatedRoom.IsRegistrationEnabled != roomUpdates.IsRegistrationEnabled)
-            {
-                outdatedRoom.IsRegistrationEnabled = roomUpdates.IsRegistrationEnabled.Value;
-                await _roomRepository.SetRoomIsActive(roomId, roomUpdates.IsRegistrationEnabled.Value);
-                somethingChanged = true;
+                var alreadyTaken = await _roomRepository.GetRoomByDomain(postRoomDTO.Domain);
+
+                if (alreadyTaken != null)
+                    return OperationErrorMessages.DomainAlreadyTaken;
             }
 
-            if (!somethingChanged)
-                throw new ResultException(OperationErrorMessages.NothingChanged);
 
-            return outdatedRoom;
+            var updatedRoom = Mapper.Map<Room>(postRoomDTO);
+
+            updatedRoom.Id = outdatedRoom.Id;
+            updatedRoom.OwnerId = outdatedRoom.OwnerId;
+
+            await _roomRepository.ReplaceRoom(roomId, updatedRoom);
+
+            return OperationErrorMessages.NoError;
         }
-        public async Task<GetRoomDTO> EditRoom(RoomIdDTO roomIdDTO, EditRoomDTO roomUpdates) =>
+        public async Task<OperationErrorMessages> EditRoom(RoomIdDTO roomIdDTO, PostRoomDTO roomUpdates) =>
             await EditRoom(ObjectId.Parse(roomIdDTO.RoomId), roomUpdates);
-
-        public async Task<GetEditRoomDTO> GetEditRoomById(ObjectId roomId)
-        {
-            var room = await _roomRepository.GetRoomById(roomId);
-
-            if (room == null)
-                throw new ResultException(OperationErrorMessages.RoomNotFound);
-
-            return Mapper.Map<GetEditRoomDTO>(room);
-        }
-
-        public async Task<GetEditRoomDTO> GetEditRoomById(RoomIdDTO roomIdDTO) =>
-            await GetEditRoomById(ObjectId.Parse(roomIdDTO.RoomId));
 
         public async Task RemoveMemberFromRoomByTokenById(ObjectId roomId, ObjectId memberId)
         {
