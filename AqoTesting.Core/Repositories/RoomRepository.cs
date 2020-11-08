@@ -30,20 +30,8 @@ namespace AqoTesting.Core.Repositories
         public async Task<ObjectId> InsertRoom(Room newRoom) =>
             await Task.Run(() => RoomWorker.InsertRoom(newRoom));
 
-        public async Task SetRoomName(ObjectId roomId, string newName) =>
-            await Task.Run(() => RoomWorker.SetRoomName(roomId, newName));
-
-        public async Task SetRoomDomain(ObjectId roomId, string newDomain) =>
-            await Task.Run(() => RoomWorker.SetRoomDomain(roomId, newDomain));
-
-        public async Task SetRoomFields(ObjectId roomId, RoomField[] newFields) =>
-            await Task.Run(() => RoomWorker.SetRoomFields(roomId, newFields));
-
-        public async Task SetRoomIsDataRequired(ObjectId roomId, bool newIsDataRequired) =>
-            await Task.Run(() => RoomWorker.SetRoomIsDataRequired(roomId, newIsDataRequired));
-
-        public async Task SetRoomIsActive(ObjectId roomId, bool newIsActive) =>
-            await Task.Run(() => RoomWorker.SetRoomIsActive(roomId, newIsActive));
+        public async Task ReplaceRoom(ObjectId roomId, Room update) =>
+            await Task.Run(() => RoomWorker.ReplaceRoom(roomId, update));
 
         public async Task<bool> RemoveMemberFromRoomByIdById(ObjectId roomId, ObjectId memberId) =>
             await Task.Run(() => RoomWorker.RemoveMemberFromRoomByIdById(roomId, memberId));

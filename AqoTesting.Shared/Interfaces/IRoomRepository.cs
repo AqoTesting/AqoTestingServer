@@ -14,15 +14,7 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<ObjectId> InsertRoom(Room newRoom);
 
-        Task SetRoomName(ObjectId roomId, string newName);
-
-        Task SetRoomDomain(ObjectId roomId, string newDomain);
-
-        Task SetRoomFields(ObjectId roomId, RoomField[] newFields);
-
-        Task SetRoomIsDataRequired(ObjectId roomId, bool newIsDataRequired);
-
-        Task SetRoomIsActive(ObjectId roomId, bool newIsActive);
+        Task ReplaceRoom(ObjectId roomId, Room update);
 
         Task<bool> RemoveMemberFromRoomByIdById(ObjectId roomId, ObjectId memberId);
 

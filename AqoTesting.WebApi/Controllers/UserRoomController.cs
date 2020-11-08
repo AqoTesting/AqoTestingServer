@@ -43,7 +43,7 @@ namespace AqoTesting.WebApi.Controllers
 
         [Authorize(Roles = "User")]
         [HttpPost("/user/room")]
-        public async Task<IActionResult> CreateRoom([FromBody] CreateRoomDTO newRoom)
+        public async Task<IActionResult> CreateRoom([FromBody] PostRoomDTO newRoom)
         {
             var domainAlreadyTaken = await _roomService.GetRoomByDomain(newRoom.Domain);
 
@@ -58,21 +58,11 @@ namespace AqoTesting.WebApi.Controllers
         [Authorize(Roles = "User")]
         [OnlyRoomOwner]
         [HttpPatch("/user/room/{RoomId}")]
-        public async Task<IActionResult> EditRoom([FromRoute] RoomIdDTO roomIdDTO, [FromBody] EditRoomDTO roomUpdates)
+        public async Task<IActionResult> EditRoom([FromRoute] RoomIdDTO roomIdDTO, [FromBody] PostRoomDTO updatedRoom)
         {
-            var updatedRoom = await _roomService.EditRoom(roomIdDTO, roomUpdates);
+            var errorCode = await _roomService.EditRoom(roomIdDTO, updatedRoom);
 
-            return this.ResultResponse<object>(OperationErrorMessages.NoError, updatedRoom);
-        }
-
-        [Authorize(Roles = "User")]
-        [OnlyRoomOwner]
-        [HttpGet("/user/room/{RoomId}/edit")]
-        public async Task<IActionResult> GetEditRoom([FromRoute] RoomIdDTO roomIdDTO)
-        {
-            var room = await _roomService.GetEditRoomById(roomIdDTO);
-
-            return this.ResultResponse<object>(OperationErrorMessages.NoError, room);
+            return this.ResultResponse<object>(errorCode);
         }
 
         [Authorize(Roles = "User")]

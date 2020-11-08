@@ -36,7 +36,7 @@ namespace AqoTesting.WebApi.Infrastructure
                 // Rooms
                 cfg.CreateMap<Room, GetRoomsItemDTO>();
 
-                cfg.CreateMap<CreateRoomDTO, Room>();
+                cfg.CreateMap<PostRoomDTO, Room>();
 
                 cfg.CreateMap<RoomFieldDTO, RoomFieldInputData>();
                 cfg.CreateMap<RoomFieldDTO, RoomFieldSelectData>();
@@ -54,12 +54,14 @@ namespace AqoTesting.WebApi.Infrastructure
                         x => x.MapFrom(m =>
                             m.Type == FieldType.Select ? m.Data.GetElement("Options").Value : null
                         ));
+                    //.ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
                 cfg.CreateMap<Room, GetRoomDTO>()
                     .ForMember(x => x.Fields,
                         x => x.MapFrom(m =>
                             Mapper.Map<RoomFieldDTO[]>(m.Fields)
                         ));
+
 
                 cfg.CreateMap<RoomFieldDTO, RoomField>()
                     .ForMember(x => x.Data,

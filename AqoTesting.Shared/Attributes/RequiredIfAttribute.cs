@@ -20,8 +20,8 @@ namespace AqoTesting.Shared.Attributes
         {
             Object instance = context.ObjectInstance;
             Type type = instance.GetType();
-            Object proprtyValue = type.GetProperty(PropertyName).GetValue(instance, null);
-            if (proprtyValue.ToString() == DesiredValue.ToString())
+            Object propertyValue = type.GetProperty(PropertyName).GetValue(instance, null);
+            if (propertyValue != null && propertyValue.ToString() == DesiredValue.ToString())
             {
                 ValidationResult result = base.IsValid(value, context);
                 return result;
