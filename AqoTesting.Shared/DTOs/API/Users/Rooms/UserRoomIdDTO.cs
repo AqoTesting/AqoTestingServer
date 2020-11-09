@@ -2,7 +2,7 @@
 
 namespace AqoTesting.Shared.DTOs.API.Users.Rooms
 {
-    public class RoomIdDTO
+    public class UserRoomIdDTO
     {
         [Required]
         [StringLength(24, MinimumLength = 24)]

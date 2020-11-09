@@ -38,7 +38,7 @@ namespace AqoTesting.Core.Services
 
             return responseTests;
         }
-        public async Task<GetTestsItemDTO[]> GetTestsByRoomId(RoomIdDTO roomIdDTO) =>
+        public async Task<GetTestsItemDTO[]> GetTestsByRoomId(UserRoomIdDTO roomIdDTO) =>
             await GetTestsByRoomId(ObjectId.Parse(roomIdDTO.RoomId));
 
         public async Task<GetTestDTO> GetTestById(ObjectId testId)

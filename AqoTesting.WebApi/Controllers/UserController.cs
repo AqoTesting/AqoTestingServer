@@ -3,6 +3,7 @@ using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
+using AqoTesting.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +22,7 @@ namespace AqoTesting.WebApi.Controllers
             _userService = userService;
         }
 
-        [Authorize(Roles = "User")]
+        [Auth(Role = Role.User)]
         [HttpGet("/user")]
         public async Task<IActionResult> GetUserProfile()
         {
@@ -30,7 +31,7 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(OperationErrorMessages.NoError, user);
         }
 
-        [Authorize(Roles = "User")]
+        [Auth(Role = Role.User)]
         [HttpGet("/user/{UserId}")]
         public async Task<IActionResult> GetUser([FromRoute] UserIdDTO userIdDTO)
         {

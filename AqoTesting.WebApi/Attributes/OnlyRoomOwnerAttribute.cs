@@ -57,7 +57,7 @@ namespace AqoTesting.WebApi.Attributes
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
             var ownerId = _workContext.UserId.ToString();
-            var room = roomService.GetRoomById((RoomIdDTO) argument).Result;
+            var room = roomService.GetUserRoomById((UserRoomIdDTO) argument).Result;
 
             if(room == null)
                 return OperationErrorMessages.RoomNotFound;

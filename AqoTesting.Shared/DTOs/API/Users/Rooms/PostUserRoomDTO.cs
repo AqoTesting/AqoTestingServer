@@ -3,7 +3,7 @@ using AqoTesting.Shared.Interfaces.DTO;
 
 namespace AqoTesting.Shared.DTOs.API.Users.Rooms
 {
-    public class PostRoomDTO
+    public class PostUserRoomDTO
     {
         [Required]
         [StringLength(64, MinimumLength = 1)]
@@ -11,13 +11,14 @@ namespace AqoTesting.Shared.DTOs.API.Users.Rooms
 
         [Required]
         [StringLength(63, MinimumLength = 1)]
+        [RegularExpression(@"^[A-z0-9_]+$")]
         public string Domain { get; set; }
 
         [StringLength(4096)]
         public string Description { get; set; }
 
         [Required]
-        public RoomFieldDTO[] Fields { get; set; }
+        public UserRoomFieldDTO[] Fields { get; set; }
 
         [Required]
         public bool? IsActive { get; set; }

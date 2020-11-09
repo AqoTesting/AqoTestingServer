@@ -39,7 +39,7 @@ namespace AqoTestingServer
             //UserWorker.DeleteUserByLogin("Test Dev Login 2");
             //var membersIds = testIO.AddMembers();
             //var roomsIds = testIO.AddRooms();
-            //var mainRoom = RoomWorker.GetRoomById(roomsIds[0]);
+            //var mainRoom = RoomWorker.GetUserRoomById(roomsIds[0]);
             //
             // добавление мембера по id из базы (привязку произведет mainRoom.AddMember)
             //mainRoom.AddMember(membersIds[0]);
@@ -58,12 +58,12 @@ namespace AqoTestingServer
             //UserWorker.DeleteUserByLogin("Test Dev Login 2");
             //var membersIds = testIO.AddMembers();
             //var roomsIds = testIO.AddRooms();
-            //var mainRoom = RoomWorker.GetRoomById(roomsIds[0]);
+            //var mainRoom = RoomWorker.GetUserRoomById(roomsIds[0]);
             //mainRoom.AddMember(membersIds[0]);
             //mainRoom.AddMember(membersIds[1]);
 
             // тест записей
-            //var mainRoom = RoomWorker.GetRoomByDomain("Test Dev Domain");
+            //var mainRoom = RoomWorker.GetUserRoomByDomain("Test Dev Domain");
             //var mainField = new RoomField
             //{
             //    Name = "Main Field",

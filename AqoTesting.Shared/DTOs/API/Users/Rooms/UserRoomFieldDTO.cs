@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AqoTesting.Shared.Attributes;
 using AqoTesting.Shared.Enums;
-using AqoTesting.Shared.Interfaces.DTO;
 
 namespace AqoTesting.Shared.DTOs.API.Users.Rooms
 {
-    public class RoomFieldDTO
+    public class UserRoomFieldDTO
     {
         [Required]
         [StringLength(64, MinimumLength = 1)]

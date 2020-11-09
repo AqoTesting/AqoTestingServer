@@ -22,30 +22,55 @@ namespace AqoTesting.WebApi.Controllers
             _roomService = roomService;
         }
 
-        [Authorize(Roles = "User")]
+        [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpGet("/user/room/{RoomId}")]
-        public async Task<IActionResult> GetRoom([FromRoute] RoomIdDTO roomIdDTO)
+        public async Task<IActionResult> GetRoomById([FromRoute] UserRoomIdDTO roomIdDTO)
         {
-            var room = await _roomService.GetRoomById(roomIdDTO);
+            var room = await _roomService.GetUserRoomById(roomIdDTO);
 
             return this.ResultResponse(OperationErrorMessages.NoError, room);
         }
 
-        [Authorize(Roles = "User")]
-        [HttpGet("/user/rooms")]
-        public async Task<IActionResult> GetRooms()
+        [Auth(Role = Role.User)]
+        [OnlyRoomOwner]
+        [HttpGet("/user/room/domain/{RoomDomain}")]
+        public async Task<IActionResult> GetRoomByDomain([FromRoute] UserRoomDomainDTO roomDomainDTO)
         {
-            var rooms = await _roomService.GetRoomsByOwnerId(_workContext.UserId);
+            var room = await _roomService.GetUserRoomByDomain(roomDomainDTO);
+
+            if (room == null)
+                return this.ResultResponse<object>(OperationErrorMessages.RoomNotFound);
+
+            return this.ResultResponse(OperationErrorMessages.NoError, room);
+        }
+
+        [Auth(Role = Role.User)]
+        [HttpGet("/user/rooms")]
+        public async Task<IActionResult> GetRoomsByOwnerId()
+        {
+            var rooms = await _roomService.GetUserRoomsByOwnerId(_workContext.UserId);
 
             return this.ResultResponse(OperationErrorMessages.NoError, rooms);
         }
 
-        [Authorize(Roles = "User")]
-        [HttpPost("/user/room")]
-        public async Task<IActionResult> CreateRoom([FromBody] PostRoomDTO newRoom)
+        [Auth(Role=Role.User)]
+        [HttpGet("/user/room/domainExists/{RoomDomain}")]
+        public async Task<IActionResult> DomainExists([FromRoute] UserRoomDomainDTO roomDomainDTO)
         {
-            var domainAlreadyTaken = await _roomService.GetRoomByDomain(newRoom.Domain);
+            var exists = await _roomService.GetUserRoomByDomain(roomDomainDTO);
+
+            var result = exists != null;
+            
+            return this.ResultResponse(OperationErrorMessages.NoError, result);
+        }
+
+
+        [Auth(Role = Role.User)]
+        [HttpPost("/user/room")]
+        public async Task<IActionResult> CreateRoom([FromBody] PostUserRoomDTO newRoom)
+        {
+            var domainAlreadyTaken = await _roomService.GetUserRoomByDomain(newRoom.Domain);
 
             if (domainAlreadyTaken != null)
                 throw new ResultException(OperationErrorMessages.DomainAlreadyTaken);
@@ -55,30 +80,30 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(OperationErrorMessages.NoError, roomId);
         }
 
-        [Authorize(Roles = "User")]
+        [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpPut("/user/room/{RoomId}")]
-        public async Task<IActionResult> EditRoom([FromRoute] RoomIdDTO roomIdDTO, [FromBody] PostRoomDTO updatedRoom)
+        public async Task<IActionResult> EditRoom([FromRoute] UserRoomIdDTO roomIdDTO, [FromBody] PostUserRoomDTO updatedRoom)
         {
             var errorCode = await _roomService.EditRoom(roomIdDTO, updatedRoom);
 
             return this.ResultResponse<object>(errorCode);
         }
 
-        [Authorize(Roles = "User")]
+        [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpDelete("/user/room/{RoomId}")]
-        public async Task<IActionResult> DeleteRoom([FromRoute] RoomIdDTO roomIdDTO)
+        public async Task<IActionResult> DeleteRoom([FromRoute] UserRoomIdDTO roomIdDTO)
         {
             await _roomService.DeleteRoomById(roomIdDTO);
 
             return this.ResultResponse<object>(OperationErrorMessages.NoError);
         }
 
-        [Authorize(Roles = "User")]
+        [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpDelete("/user/room/{RoomId}/member/{MemberId}")]
-        public async Task<IActionResult> KickMember([FromRoute] RoomIdDTO roomIdDTO, [FromRoute] MemberIdDTO memberTokenDTO)
+        public async Task<IActionResult> KickMember([FromRoute] UserRoomIdDTO roomIdDTO, [FromRoute] MemberIdDTO memberTokenDTO)
         {
             await _roomService.RemoveMemberFromRoomByIdById(roomIdDTO, memberTokenDTO);
 

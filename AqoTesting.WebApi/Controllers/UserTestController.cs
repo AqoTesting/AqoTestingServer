@@ -20,17 +20,17 @@ namespace AqoTesting.WebApi.Controllers
             _testService = testService;
         }
 
-        [Authorize(Roles = "User")]
+        [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpGet("/user/room/{RoomId}/tests")]
-        public async Task<IActionResult> GetTests([FromRoute] RoomIdDTO roomIdDTO)
+        public async Task<IActionResult> GetTests([FromRoute] UserRoomIdDTO roomIdDTO)
         {
             var tests = await _testService.GetTestsByRoomId(roomIdDTO);
 
             return this.ResultResponse(OperationErrorMessages.NoError, tests);
         }
 
-        [Authorize(Roles = "User")]
+        [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpGet("/user/test/{TestId}")]
         public async Task<IActionResult> GetTest([FromRoute] TestIdDTO testIdDTO)

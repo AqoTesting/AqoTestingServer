@@ -42,11 +42,15 @@ namespace AqoTestingServer
 
             // Load services
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoomService, RoomService>();
-            services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<ITestService, TestService>();
+            services.AddScoped<IMemberService, MemberService>();            
+
+            // Load repositories
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<ITestRepository, TestRepository>();
+            services.AddScoped<IMemberRepository, MemberRepository>();
 
             services.AddCors();
 

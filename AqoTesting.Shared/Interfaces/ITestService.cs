@@ -7,7 +7,7 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface ITestService
     {
-        Task<GetTestsItemDTO[]> GetTestsByRoomId(RoomIdDTO roomIdDTO);
+        Task<GetTestsItemDTO[]> GetTestsByRoomId(UserRoomIdDTO roomIdDTO);
 
         Task<GetTestDTO> GetTestById(TestIdDTO testIdDTO);
     }

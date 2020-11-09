@@ -5,7 +5,6 @@ namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
 {
     public class RoomField
     {
-        public string Key { get; set; }
         public string Name { get; set; }
         public FieldType Type { get; set; }
         public bool IsRequired { get; set; }

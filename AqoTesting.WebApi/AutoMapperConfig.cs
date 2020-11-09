@@ -1,5 +1,6 @@
 ﻿using System;
 using AqoTesting.Core.Utils;
+using AqoTesting.Shared.DTOs.API.Members.Rooms;
 using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
 using AqoTesting.Shared.DTOs.API.Users.Tests;
@@ -20,6 +21,8 @@ namespace AqoTesting.WebApi.Infrastructure
         {
             Mapper.Initialize(cfg =>
             {
+                cfg.AllowNullCollections = true;
+
                 // Users
                 cfg.CreateMap<SignUpUserDTO, User>()
                     .ForMember(x => x.PasswordHash,
@@ -34,36 +37,97 @@ namespace AqoTesting.WebApi.Infrastructure
                 cfg.CreateMap<User, GetUserDTO>();
 
                 // Rooms
-                cfg.CreateMap<Room, GetRoomsItemDTO>();
+                cfg.CreateMap<Room, GetUserRoomsItemDTO>();
 
-                cfg.CreateMap<PostRoomDTO, Room>();
+                cfg.CreateMap<PostUserRoomDTO, Room>();
+                
+                cfg.CreateMap<UserRoomFieldDTO, RoomFieldInputData>();
+                cfg.CreateMap<UserRoomFieldDTO, RoomFieldSelectData>();
 
-                cfg.CreateMap<RoomFieldDTO, RoomFieldInputData>();
-                cfg.CreateMap<RoomFieldDTO, RoomFieldSelectData>();
-
-                cfg.CreateMap<RoomField, RoomFieldDTO>()
+                cfg.CreateMap<RoomField, UserRoomFieldDTO>()
                     .ForMember(x => x.Placeholder,
-                        x => x.MapFrom(m =>
-                            m.Type == FieldType.Input ? m.Data.GetElement("Placeholder").Value : null
-                        ))
-                    .ForMember(x => x.Mask,
-                        x => x.MapFrom(m =>
-                            m.Type == FieldType.Input ? m.Data.GetElement("Mask").Value : null
-                        ))
-                    .ForMember(x => x.Options,
-                        x => x.MapFrom(m =>
-                            m.Type == FieldType.Select ? m.Data.GetElement("Options").Value : null
-                        ));
-                    //.ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                        x => x.ResolveUsing(m => {
+                            if (m.Type == FieldType.Input)
+                            {
+                                var value = m.Data.GetElement("Placeholder").Value;
 
-                cfg.CreateMap<Room, GetRoomDTO>()
+                                return !(value is BsonNull) ? value : null;
+                            }
+                            else
+                                return null;
+                        }))
+                    .ForMember(x => x.Mask,
+                        x => x.ResolveUsing(m => {
+                            if (m.Type == FieldType.Input)
+                            {
+                                var value = m.Data.GetElement("Mask").Value;
+
+                                return !(value is BsonNull) ? value : null;
+                            }
+                            else
+                                return null;
+                        }))
+                    .ForMember(x => x.Options,
+                        x => x.ResolveUsing(m => {
+                            if (m.Type == FieldType.Select)
+                            {
+                                var value = m.Data.GetElement("Options").Value;
+
+                                return !(value is BsonNull) ? value : null;
+                            }
+                            else
+                                return null;
+                        }));
+
+                cfg.CreateMap<RoomField, GetMemberRoomFieldDTO>()
+                    .ForMember(x => x.Placeholder,
+                        // Фу уродство, но пашет
+                        x => x.ResolveUsing(m => {
+                            if (m.Type == FieldType.Input)
+                            {
+                                var value = m.Data.GetElement("Placeholder").Value;
+
+                                return !(value is BsonNull) ? value : null;
+                            }
+                            else
+                                return null;
+                        }))
+                    .ForMember(x => x.Mask,
+                        x => x.ResolveUsing(m => {
+                            if (m.Type == FieldType.Input)
+                            {
+                                var value = m.Data.GetElement("Mask").Value;
+
+                                return !(value is BsonNull) ? value : null;
+                            }
+                            else
+                                return null;
+                        }))
+                    .ForMember(x => x.Options,
+                        x => x.ResolveUsing(m => {
+                            if (m.Type == FieldType.Select)
+                            {
+                                var value = m.Data.GetElement("Options").Value;
+
+                                return !(value is BsonNull) ? value : null;
+                            }
+                            else
+                                return null;
+                        }));
+
+                cfg.CreateMap<Room, GetUserRoomDTO>()
                     .ForMember(x => x.Fields,
                         x => x.MapFrom(m =>
-                            Mapper.Map<RoomFieldDTO[]>(m.Fields)
+                            Mapper.Map<UserRoomFieldDTO[]>(m.Fields)
                         ));
 
+                cfg.CreateMap<Room, GetMemberRoomDTO>()
+                    .ForMember(x => x.Fields,
+                        x => x.MapFrom(m =>
+                            Mapper.Map<GetMemberRoomFieldDTO[]>(m.Fields)
+                        ));
 
-                cfg.CreateMap<RoomFieldDTO, RoomField>()
+                cfg.CreateMap<UserRoomFieldDTO, RoomField>()
                     .ForMember(x => x.Data,
                         x => x.ResolveUsing(m => {
                             if (m.Type == FieldType.Input)
