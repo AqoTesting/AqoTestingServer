@@ -34,7 +34,7 @@ namespace AqoTesting.WebApi.Attributes
 
                 foreach (var parameter in parameters)
                 {
-                    if (parameter.Name != "roomIdDTO") continue;
+                    if (parameter.Name != "roomIdDTO" && parameter.Name != "roomDomainDTO") continue;
 
                     if (!context.ActionArguments.ContainsKey(parameter.Name))
                     {
@@ -44,7 +44,7 @@ namespace AqoTesting.WebApi.Attributes
 
                     var argument = context.ActionArguments[parameter.Name];
 
-                    var evalResult = EvaluateValidationAttributes(argument, context.HttpContext, _roomService);
+                    var evalResult = EvaluateValidationAttributes(argument, context.HttpContext, _roomService, parameter.Name);
                     if (evalResult != OperationErrorMessages.NoError)
                         context.Result = ResultResponceExtension.ObjectResultResponse<object>(evalResult);
                 }
@@ -52,12 +52,20 @@ namespace AqoTesting.WebApi.Attributes
             
             base.OnActionExecuting(context);
         }
-        private OperationErrorMessages EvaluateValidationAttributes(object argument, HttpContext httpContext, IRoomService roomService)
+        private OperationErrorMessages EvaluateValidationAttributes(object argument, HttpContext httpContext, IRoomService roomService, string dtoName)
         {
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
             var ownerId = _workContext.UserId.ToString();
-            var room = roomService.GetUserRoomById((UserRoomIdDTO) argument).Result;
+            GetUserRoomDTO room = null;
+
+            if (dtoName == "roomIdDTO")
+            {
+                room = roomService.GetUserRoomById((UserRoomIdDTO)argument).Result;
+            } else if(dtoName == "roomDomainDTO")
+            {
+                room = roomService.GetUserRoomByDomain((UserRoomDomainDTO)argument).Result;
+            }
 
             if(room == null)
                 return OperationErrorMessages.RoomNotFound;

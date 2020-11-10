@@ -8,20 +8,21 @@ namespace AqoTesting.Core.Repositories
 {
     public class RoomRepository : IRoomRepository
     {
-        Room _room;
+        Room _roomById;
+        Room _roomByDomain;
 
         public async Task<Room> GetRoomById(ObjectId roomId) =>
             await Task.Run(() =>
             {
-                if (_room == null) _room = RoomWorker.GetRoomById(roomId);
-                return _room;
+                if (_roomById == null) _roomById = RoomWorker.GetRoomById(roomId);
+                return _roomById;
             });
 
         public async Task<Room> GetRoomByDomain(string domain) =>
             await Task.Run(() =>
             {
-                if (_room == null) _room = RoomWorker.GetRoomByDomain(domain);
-                return _room;
+                if (_roomByDomain == null) _roomByDomain = RoomWorker.GetRoomByDomain(domain);
+                return _roomByDomain;
             });
 
         public async Task<Room[]> GetRoomsByOwnerId(ObjectId ownerId) =>
