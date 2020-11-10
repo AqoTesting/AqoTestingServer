@@ -1,6 +1,7 @@
 ﻿using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.Collections.Generic;
 
 namespace AqoTesting.Shared.DTOs.DB.Members
 {
@@ -12,6 +13,6 @@ namespace AqoTesting.Shared.DTOs.DB.Members
         public string Login { get; set; }
         public byte[] PasswordHash { get; set; }
         public Attempt[] Attempts { get; set; }
-        public BsonDocument Fields { get; set; }
+        public Dictionary<string, string> Fields { get; set; }
     }
 }

@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using AqoTesting.Domain.Utils;
 using AqoTesting.Domain.Workers;
 using AqoTesting.Shared.DTOs.DB.Members;
+using System.Collections.Generic;
 
 namespace AqoTesting.Domain.Tests
 {
@@ -179,7 +180,7 @@ namespace AqoTesting.Domain.Tests
                     Login = "Test Dev Login Member 1",
                     PasswordHash = Sha256.Compute("123"),
                     Attempts = new Attempt[0],
-                    Fields = new BsonDocument(),
+                    Fields = new Dictionary<string, string>(),
                 },
                 new Member
                 {
@@ -187,7 +188,7 @@ namespace AqoTesting.Domain.Tests
                     Login = "Test Dev Login Member 2",
                     PasswordHash = Sha256.Compute("123"),
                     Attempts = new Attempt[0],
-                    Fields = new BsonDocument(),
+                    Fields = new Dictionary<string, string>(),
                 }
             };
 

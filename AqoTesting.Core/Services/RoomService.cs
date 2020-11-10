@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API.Members;
+using AqoTesting.Core.Repositories;
+using AqoTesting.Shared.DTOs.API;
 using AqoTesting.Shared.DTOs.API.Members.Rooms;
-using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Enums;
@@ -15,11 +15,13 @@ namespace AqoTesting.Core.Services
     public class RoomService : ServiceBase, IRoomService
     {
         IRoomRepository _roomRepository;
+        IMemberRepository _memberRepository;
         IWorkContext _workContext;
 
-        public RoomService(IRoomRepository roomRespository, IWorkContext workContext)
+        public RoomService(IRoomRepository roomRespository, IMemberRepository memberRepository, IWorkContext workContext)
         {
             _roomRepository = roomRespository;
+            _memberRepository = memberRepository;
             _workContext = workContext;
         }
 
@@ -30,7 +32,7 @@ namespace AqoTesting.Core.Services
 
             return responseRoom;
         }
-        public async Task<GetUserRoomDTO> GetUserRoomById(UserRoomIdDTO roomIdDTO) =>
+        public async Task<GetUserRoomDTO> GetUserRoomById(RoomIdDTO roomIdDTO) =>
             await GetUserRoomById(ObjectId.Parse(roomIdDTO.RoomId));
 
         public async Task<GetUserRoomDTO> GetUserRoomByDomain(string roomDomain)
@@ -73,6 +75,17 @@ namespace AqoTesting.Core.Services
         public async Task<GetUserRoomsItemDTO[]> GetUserRoomsByOwnerId(UserIdDTO userIdDTO) =>
             await GetUserRoomsByOwnerId(ObjectId.Parse(userIdDTO.UserId));
 
+        public async Task<GetUserMembersItemDTO[]> GetUserMembersByRoomId(ObjectId roomId)
+        {
+            var room = await _roomRepository.GetRoomById(roomId);
+            var members = await _memberRepository.GetMembersByIds(room.Members);
+            var responseMembers = Mapper.Map<GetUserMembersItemDTO[]>(members);
+
+            return responseMembers;
+        }
+        public async Task<GetUserMembersItemDTO[]> GetUserMembersByRoomId(RoomIdDTO roomIdDTO) =>
+            await this.GetUserMembersByRoomId(ObjectId.Parse(roomIdDTO.RoomId));
+
         public async Task<string> InsertRoom(PostUserRoomDTO postRoomDto)
         {
             var newRoom = Mapper.Map<Room>(postRoomDto);
@@ -106,7 +119,7 @@ namespace AqoTesting.Core.Services
 
             return OperationErrorMessages.NoError;
         }
-        public async Task<OperationErrorMessages> EditRoom(UserRoomIdDTO roomIdDTO, PostUserRoomDTO roomUpdates) =>
+        public async Task<OperationErrorMessages> EditRoom(RoomIdDTO roomIdDTO, PostUserRoomDTO roomUpdates) =>
             await EditRoom(ObjectId.Parse(roomIdDTO.RoomId), roomUpdates);
 
         public async Task RemoveMemberFromRoomByTokenById(ObjectId roomId, ObjectId memberId)
@@ -118,9 +131,9 @@ namespace AqoTesting.Core.Services
         }
         public async Task RemoveMemberFromRoomByIdById(ObjectId roomId, MemberIdDTO memberIdDTO) =>
             await RemoveMemberFromRoomByTokenById(roomId, ObjectId.Parse(memberIdDTO.MemberId));
-        public async Task RemoveMemberFromRoomByIdById(UserRoomIdDTO roomIdDTO, ObjectId memberId) =>
+        public async Task RemoveMemberFromRoomByIdById(RoomIdDTO roomIdDTO, ObjectId memberId) =>
             await RemoveMemberFromRoomByTokenById(ObjectId.Parse(roomIdDTO.RoomId), memberId);
-        public async Task RemoveMemberFromRoomByIdById(UserRoomIdDTO roomIdDTO, MemberIdDTO memberIdDTO) =>
+        public async Task RemoveMemberFromRoomByIdById(RoomIdDTO roomIdDTO, MemberIdDTO memberIdDTO) =>
             await RemoveMemberFromRoomByTokenById(ObjectId.Parse(roomIdDTO.RoomId), ObjectId.Parse(memberIdDTO.MemberId));
 
         public async Task DeleteRoomById(ObjectId roomId)
@@ -130,7 +143,7 @@ namespace AqoTesting.Core.Services
             if (!deleted)
                 throw new ResultException(OperationErrorMessages.RoomNotFound);
         }
-        public async Task DeleteRoomById(UserRoomIdDTO roomIdDTO) =>
+        public async Task DeleteRoomById(RoomIdDTO roomIdDTO) =>
             await DeleteRoomById(ObjectId.Parse(roomIdDTO.RoomId));
 
         public async Task RemoveMemberFromRoomByIdById(ObjectId roomId, ObjectId memberId)

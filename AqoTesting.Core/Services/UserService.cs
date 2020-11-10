@@ -13,6 +13,7 @@ using AqoTesting.Shared.Infrastructure;
 using System;
 using MongoDB.Bson;
 using AutoMapper;
+using AqoTesting.Shared.DTOs.API;
 
 namespace AqoTesting.Core.Services
 {

@@ -4,14 +4,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AqoTesting.Shared.Models;
 using AqoTesting.Shared.Enums;
-using MongoDB.Bson;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
+using AqoTesting.Shared.DTOs.API;
 
 namespace AqoTesting.WebApi.Attributes
 {
@@ -61,7 +57,7 @@ namespace AqoTesting.WebApi.Attributes
 
             if (dtoName == "roomIdDTO")
             {
-                room = roomService.GetUserRoomById((UserRoomIdDTO)argument).Result;
+                room = roomService.GetUserRoomById((RoomIdDTO)argument).Result;
             } else if(dtoName == "roomDomainDTO")
             {
                 room = roomService.GetUserRoomByDomain((UserRoomDomainDTO)argument).Result;

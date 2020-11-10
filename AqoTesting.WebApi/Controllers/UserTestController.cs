@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API.Users.Rooms;
+using AqoTesting.Shared.DTOs.API;
 using AqoTesting.Shared.DTOs.API.Users.Test;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
 using AqoTesting.WebApi.Attributes;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AqoTesting.WebApi.Controllers
@@ -23,7 +22,7 @@ namespace AqoTesting.WebApi.Controllers
         [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpGet("/user/room/{RoomId}/tests")]
-        public async Task<IActionResult> GetTests([FromRoute] UserRoomIdDTO roomIdDTO)
+        public async Task<IActionResult> GetTests([FromRoute] RoomIdDTO roomIdDTO)
         {
             var tests = await _testService.GetTestsByRoomId(roomIdDTO);
 

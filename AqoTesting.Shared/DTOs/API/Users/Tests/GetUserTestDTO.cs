@@ -2,7 +2,7 @@
 
 namespace AqoTesting.Shared.DTOs.API.Users.Tests
 {
-    public class GetTestDTO
+    public class GetUserTestDTO
     {
         public string Id { get; set; }
         public string Title { get; set; }

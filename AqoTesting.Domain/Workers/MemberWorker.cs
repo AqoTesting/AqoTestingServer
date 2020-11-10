@@ -4,6 +4,7 @@ using AqoTesting.Shared.DTOs.DB.Members;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace AqoTesting.Domain.Workers
 {
@@ -24,6 +25,7 @@ namespace AqoTesting.Domain.Workers
             var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
             return member;
         }
+
         /// <summary>
         /// Получение пользователя из комнаты по логину
         /// </summary>
@@ -34,6 +36,7 @@ namespace AqoTesting.Domain.Workers
         {
             return GetMemberFromRoom(room.Id, memberLogin);
         }
+
         /// <summary>
         /// Получение пользователя по id
         /// </summary>
@@ -44,6 +47,13 @@ namespace AqoTesting.Domain.Workers
             var filter = Builders<Member>.Filter.Eq("Id", memberId);
             var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
             return member;
+        }
+
+        public static Member[] GetMembersByIds(ObjectId[] memberIds)
+        {
+            var filter = Builders<Member>.Filter.In("Id", memberIds);
+            var members = MongoController.MemberCollection.Find(filter).ToEnumerable();
+            return members.ToArray();
         }
         #endregion
 
@@ -166,7 +176,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="memberId"></param>
         /// <returns>Поля или null, если пользователь не найден</returns>
-        public static BsonDocument? GetMemberFields(ObjectId memberId)
+        public static Dictionary<string, string>? GetMemberFields(ObjectId memberId)
         {
             var member = GetMemberById(memberId);
 
@@ -178,7 +188,7 @@ namespace AqoTesting.Domain.Workers
         /// <param name="roomId"></param>
         /// <param name="memberLogin"></param>
         /// <returns>Поля или null, если пользователь не найден</returns>
-        public static BsonDocument? GetMemberFields(ObjectId roomId, string memberLogin)
+        public static Dictionary<string, string>? GetMemberFields(ObjectId roomId, string memberLogin)
         {
             var member = GetMemberFromRoom(roomId, memberLogin);
 

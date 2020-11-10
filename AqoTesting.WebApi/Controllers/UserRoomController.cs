@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AqoTesting.Shared.DTOs.API;
 using AqoTesting.Shared.DTOs.API.Members;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
 using AqoTesting.Shared.Enums;
@@ -22,10 +23,11 @@ namespace AqoTesting.WebApi.Controllers
             _roomService = roomService;
         }
 
+        #region Itself
         [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpGet("/user/room/{RoomId}")]
-        public async Task<IActionResult> GetRoomById([FromRoute] UserRoomIdDTO roomIdDTO)
+        public async Task<IActionResult> GetRoomById([FromRoute] RoomIdDTO roomIdDTO)
         {
             var room = await _roomService.GetUserRoomById(roomIdDTO);
 
@@ -54,7 +56,7 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(OperationErrorMessages.NoError, rooms);
         }
 
-        [Auth(Role=Role.User)]
+        [Auth(Role = Role.User)]
         [HttpGet("/user/room/domainExists/{RoomDomain}")]
         public async Task<IActionResult> DomainExists([FromRoute] UserRoomDomainDTO roomDomainDTO)
         {
@@ -83,7 +85,7 @@ namespace AqoTesting.WebApi.Controllers
         [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpPut("/user/room/{RoomId}")]
-        public async Task<IActionResult> EditRoom([FromRoute] UserRoomIdDTO roomIdDTO, [FromBody] PostUserRoomDTO updatedRoom)
+        public async Task<IActionResult> EditRoom([FromRoute] RoomIdDTO roomIdDTO, [FromBody] PostUserRoomDTO updatedRoom)
         {
             var errorCode = await _roomService.EditRoom(roomIdDTO, updatedRoom);
 
@@ -93,21 +95,35 @@ namespace AqoTesting.WebApi.Controllers
         [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpDelete("/user/room/{RoomId}")]
-        public async Task<IActionResult> DeleteRoom([FromRoute] UserRoomIdDTO roomIdDTO)
+        public async Task<IActionResult> DeleteRoom([FromRoute] RoomIdDTO roomIdDTO)
         {
             await _roomService.DeleteRoomById(roomIdDTO);
 
             return this.ResultResponse<object>(OperationErrorMessages.NoError);
         }
+        #endregion
 
+        #region Members
+        [Auth(Role = Role.User)]
+        [OnlyRoomOwner]
+        [HttpGet("/user/room/{RoomId}/members")]
+        public async Task<IActionResult> GetMembersByRoomId([FromRoute] RoomIdDTO roomIdDTO)
+        {
+            var members = await _roomService.GetUserMembersByRoomId(roomIdDTO);
+
+            return this.ResultResponse(OperationErrorMessages.NoError, members);
+        }
+
+        // Это надо переделать, всё завтра, хочу спать
         [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpDelete("/user/room/{RoomId}/member/{MemberId}")]
-        public async Task<IActionResult> KickMember([FromRoute] UserRoomIdDTO roomIdDTO, [FromRoute] MemberIdDTO memberTokenDTO)
+        public async Task<IActionResult> KickMember([FromRoute] RoomIdDTO roomIdDTO, [FromRoute] MemberIdDTO memberTokenDTO)
         {
             await _roomService.RemoveMemberFromRoomByIdById(roomIdDTO, memberTokenDTO);
 
             return this.ResultResponse<object>(OperationErrorMessages.NoError);
         }
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using AqoTesting.Shared.DTOs.API.Members;
+﻿using AqoTesting.Shared.DTOs.API;
+using AqoTesting.Shared.DTOs.API.Members;
 using AqoTesting.Shared.DTOs.API.Members.Rooms;
 using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
@@ -12,7 +13,7 @@ namespace AqoTesting.Shared.Interfaces
     public interface IRoomService
     {
         Task<GetUserRoomDTO> GetUserRoomById(ObjectId roomId);
-        Task<GetUserRoomDTO> GetUserRoomById(UserRoomIdDTO roomIdDTO);
+        Task<GetUserRoomDTO> GetUserRoomById(RoomIdDTO roomIdDTO);
 
         Task<GetUserRoomDTO> GetUserRoomByDomain(string roomDomain);
         Task<GetUserRoomDTO> GetUserRoomByDomain(UserRoomDomainDTO roomDomainDTO);
@@ -26,17 +27,20 @@ namespace AqoTesting.Shared.Interfaces
         Task<GetUserRoomsItemDTO[]> GetUserRoomsByOwnerId(ObjectId ownerId);
         Task<GetUserRoomsItemDTO[]> GetUserRoomsByOwnerId(UserIdDTO userIdDTO);
 
+        Task<GetUserMembersItemDTO[]> GetUserMembersByRoomId(ObjectId roomId);
+        Task<GetUserMembersItemDTO[]> GetUserMembersByRoomId(RoomIdDTO roomIdDTO);
+
         Task<string> InsertRoom(PostUserRoomDTO newRoomDto);
 
         Task<OperationErrorMessages> EditRoom(ObjectId roomId, PostUserRoomDTO roomUpdates);
-        Task<OperationErrorMessages> EditRoom(UserRoomIdDTO roomIdDTO, PostUserRoomDTO roomUpdates);
+        Task<OperationErrorMessages> EditRoom(RoomIdDTO roomIdDTO, PostUserRoomDTO roomUpdates);
 
         Task RemoveMemberFromRoomByIdById(ObjectId roomId, ObjectId memberId);
         Task RemoveMemberFromRoomByIdById(ObjectId roomId, MemberIdDTO memberIdDTO);
-        Task RemoveMemberFromRoomByIdById(UserRoomIdDTO roomIdDTO, ObjectId memberId);
-        Task RemoveMemberFromRoomByIdById(UserRoomIdDTO roomIdDTO, MemberIdDTO memberIdDTO);
+        Task RemoveMemberFromRoomByIdById(RoomIdDTO roomIdDTO, ObjectId memberId);
+        Task RemoveMemberFromRoomByIdById(RoomIdDTO roomIdDTO, MemberIdDTO memberIdDTO);
 
         Task DeleteRoomById(ObjectId roomId);
-        Task DeleteRoomById(UserRoomIdDTO roomIdDTO);
+        Task DeleteRoomById(RoomIdDTO roomIdDTO);
     }
 }

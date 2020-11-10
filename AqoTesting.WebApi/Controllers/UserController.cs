@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API.Users;
+using AqoTesting.Shared.DTOs.API;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
 using AqoTesting.WebApi.Attributes;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AqoTesting.WebApi.Controllers

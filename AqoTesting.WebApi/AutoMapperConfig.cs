@@ -4,6 +4,7 @@ using AqoTesting.Shared.DTOs.API.Members.Rooms;
 using AqoTesting.Shared.DTOs.API.Users;
 using AqoTesting.Shared.DTOs.API.Users.Rooms;
 using AqoTesting.Shared.DTOs.API.Users.Tests;
+using AqoTesting.Shared.DTOs.DB.Members;
 using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.DTOs.DB.Users;
@@ -141,8 +142,11 @@ namespace AqoTesting.WebApi.Infrastructure
                         }));
 
                 // Tests
-                cfg.CreateMap<Test, GetTestsItemDTO>();
-                cfg.CreateMap<Test, GetTestDTO>();
+                cfg.CreateMap<Test, GetUserTestsItemDTO>();
+                cfg.CreateMap<Test, GetUserTestDTO>();
+
+                // Members
+                cfg.CreateMap<Member, GetUserMembersItemDTO>();
             });
         }
     }

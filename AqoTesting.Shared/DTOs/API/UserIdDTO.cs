@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AqoTesting.Shared.DTOs.API.Members
+namespace AqoTesting.Shared.DTOs.API
 {
-    public class MemberIdDTO
+    public class UserIdDTO
     {
         [Required]
         [StringLength(24, MinimumLength = 24)]
         [RegularExpression(@"^[0-9abcdef]+$")]
-        public string MemberId { get; set; }
+        public string UserId { get; set; }
     }
 }
