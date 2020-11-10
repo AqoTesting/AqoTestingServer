@@ -34,7 +34,7 @@ namespace AqoTesting.Core.Repositories
             await Task.Run(() => RoomWorker.ReplaceRoom(roomId, update));
 
         public async Task<bool> RemoveMemberFromRoomByIdById(ObjectId roomId, ObjectId memberId) =>
-            await Task.Run(() => RoomWorker.RemoveMemberFromRoomByIdById(roomId, memberId));
+            await Task.Run(() => RoomWorker.RemoveMemberFromRoomById(roomId, memberId));
 
         public async Task<bool> DeleteRoomById(ObjectId roomId) =>
             await Task.Run(() => RoomWorker.DeleteRoomById(roomId));
