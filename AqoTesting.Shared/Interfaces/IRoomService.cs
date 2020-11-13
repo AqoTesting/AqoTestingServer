@@ -20,6 +20,7 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<GetMemberRoomDTO> GetMemberRoomById(ObjectId roomId);
         Task<GetMemberRoomDTO> GetMemberRoomById(MemberRoomIdDTO roomIdDTO);
+        Task<GetMemberRoomDTO> GetMemberRoomById(string roomId);
 
         Task<GetMemberRoomDTO> GetMemberRoomByDomain(string roomDomain);
         Task<GetMemberRoomDTO> GetMemberRoomByDomain(MemberRoomDomainDTO roomDomainDTO);

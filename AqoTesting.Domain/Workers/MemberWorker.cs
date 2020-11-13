@@ -55,6 +55,22 @@ namespace AqoTesting.Domain.Workers
             var members = MongoController.MemberCollection.Find(filter).ToEnumerable();
             return members.ToArray();
         }
+
+        /// <summary>
+        /// Получение мембера по данным авторизации
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="passwordHash"></param>
+        /// <returns>Мембер или null</returns>
+        public static Member GetMemberByAuthData(string login, byte[] passwordHash)
+        {
+            var loginFilter = Builders<Member>.Filter.Eq("Email", login) | Builders<Member>.Filter.Eq("Login", login);
+            var passwordFilter = Builders<Member>.Filter.Eq("PasswordHash", passwordHash);
+            var filter = loginFilter & passwordFilter;
+            var user = MongoController.MemberCollection.Find(filter).SingleOrDefault();
+
+            return user;
+        }
         #endregion
 
         #region CheckMemberInRoom
@@ -71,6 +87,21 @@ namespace AqoTesting.Domain.Workers
         #endregion
 
         #region IO
+        /// <summary>
+        /// Получение участника по id комнаты и полям
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="fields"></param>
+        /// <returns>Объект участника</returns>
+        public static Member GetMemberByFields(ObjectId roomId, Dictionary<string, string> fields)
+        {
+            var roomIdFilter = Builders<Member>.Filter.Eq("RoomId", roomId);
+            var fieldsFilter = Builders<Member>.Filter.Eq("Fields", fields);
+            var filter = roomIdFilter & fieldsFilter;
+            var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
+
+            return member;
+        }
         /// <summary>
         /// Вставка пользователя в базу
         /// </summary>

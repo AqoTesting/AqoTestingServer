@@ -54,6 +54,8 @@ namespace AqoTesting.Core.Services
         }
         public async Task<GetMemberRoomDTO> GetMemberRoomById(MemberRoomIdDTO roomIdDTO) =>
             await this.GetMemberRoomById(ObjectId.Parse(roomIdDTO.RoomId));
+        public async Task<GetMemberRoomDTO> GetMemberRoomById(string roomId) =>
+            await this.GetMemberRoomById(ObjectId.Parse(roomId));
 
         public async Task<GetMemberRoomDTO> GetMemberRoomByDomain(string roomDomain)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.API.Members.Rooms;
 using AqoTesting.Shared.DTOs.API.Users;
@@ -47,74 +48,31 @@ namespace AqoTesting.WebApi.Infrastructure
 
                 cfg.CreateMap<RoomField, UserRoomFieldDTO>()
                     .ForMember(x => x.Placeholder,
-                        x => x.ResolveUsing(m => {
-                            if (m.Type == FieldType.Input)
-                            {
-                                var value = m.Data.GetElement("Placeholder").Value;
-
-                                return !(value is BsonNull) ? value : null;
-                            }
-                            else
-                                return null;
-                        }))
+                        x => x.MapFrom(m =>
+                            m.Type == FieldType.Input ? m.Data["Placeholder"].AsString : null
+                        ))
                     .ForMember(x => x.Mask,
-                        x => x.ResolveUsing(m => {
-                            if (m.Type == FieldType.Input)
-                            {
-                                var value = m.Data.GetElement("Mask").Value;
-
-                                return !(value is BsonNull) ? value : null;
-                            }
-                            else
-                                return null;
-                        }))
+                        x => x.ResolveUsing(m =>
+                            m.Type == FieldType.Input ? m.Data["Mask"].AsString : null
+                        ))
                     .ForMember(x => x.Options,
-                        x => x.ResolveUsing(m => {
-                            if (m.Type == FieldType.Select)
-                            {
-                                var value = m.Data.GetElement("Options").Value;
-
-                                return !(value is BsonNull) ? value : null;
-                            }
-                            else
-                                return null;
-                        }));
+                        x => x.ResolveUsing(m =>
+                            m.Type == FieldType.Select ? m.Data["Options"].AsBsonArray.Select(item => item.AsString).ToArray() : null
+                        ));
 
                 cfg.CreateMap<RoomField, GetMemberRoomFieldDTO>()
                     .ForMember(x => x.Placeholder,
-                        // Фу уродство, но пашет
-                        x => x.ResolveUsing(m => {
-                            if (m.Type == FieldType.Input)
-                            {
-                                var value = m.Data.GetElement("Placeholder").Value;
-
-                                return !(value is BsonNull) ? value : null;
-                            }
-                            else
-                                return null;
-                        }))
+                        x => x.MapFrom(m =>
+                            m.Type == FieldType.Input ? m.Data["Placeholder"].AsString : null
+                        ))
                     .ForMember(x => x.Mask,
-                        x => x.ResolveUsing(m => {
-                            if (m.Type == FieldType.Input)
-                            {
-                                var value = m.Data.GetElement("Mask").Value;
-
-                                return !(value is BsonNull) ? value : null;
-                            }
-                            else
-                                return null;
-                        }))
+                        x => x.ResolveUsing(m =>
+                            m.Type == FieldType.Input ? m.Data["Mask"].AsString : null
+                        ))
                     .ForMember(x => x.Options,
-                        x => x.ResolveUsing(m => {
-                            if (m.Type == FieldType.Select)
-                            {
-                                var value = m.Data.GetElement("Options").Value;
-
-                                return !(value is BsonNull) ? value : null;
-                            }
-                            else
-                                return null;
-                        }));
+                        x => x.ResolveUsing(m =>
+                            m.Type == FieldType.Select ? m.Data["Options"].AsBsonArray.Select(item => item.AsString).ToArray() : null
+                        ));
 
                 cfg.CreateMap<Room, GetUserRoomDTO>()
                     .ForMember(x => x.Fields,

@@ -16,7 +16,5 @@ namespace AqoTesting.Shared.Interfaces
         Task<User> GetUserByEmail(string email);
 
         Task<User> InsertUser(SignUpUserDTO signUpUserDTO);
-
-        GetTokenDTO GenerateToken(ObjectId id, Role role);
     }
 }

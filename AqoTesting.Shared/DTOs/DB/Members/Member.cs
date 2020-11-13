@@ -13,6 +13,8 @@ namespace AqoTesting.Shared.DTOs.DB.Members
         public string Login { get; set; }
         public byte[] PasswordHash { get; set; }
         public Attempt[] Attempts { get; set; }
+        public bool IsRegistered { get; set; }
+        public bool IsChecked { get; set; }
         public Dictionary<string, string> Fields { get; set; }
     }
 }

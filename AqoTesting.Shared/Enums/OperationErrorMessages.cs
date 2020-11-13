@@ -25,5 +25,8 @@
 
         //Members
         MemberNotFound = 50,
+        FieldNotPassed = 51,
+        FieldRegexMissmatch = 52,
+        FieldOptionNotInList = 53,
     }
 }

@@ -42,7 +42,7 @@ namespace AqoTesting.Core.Services
         public async Task<User> GetUserByAuthData(SignInUserDTO authData)
         {
             var user = await _userRepository.GetUserByAuthData(authData.Login, Sha256.Compute(authData.Password));
-            if (user == null) throw new ResultException(OperationErrorMessages.WrongAuthData);
+
             return user;
         }
 
@@ -61,38 +61,6 @@ namespace AqoTesting.Core.Services
             newUser.Id = newUserId;
 
             return newUser;
-        }
-
-        public GetTokenDTO GenerateToken(ObjectId id, Role role = Role.User)
-        {
-            var identity = GetIdentity(id, role);
-            var now = DateTime.UtcNow;
-
-            var jwt = new JwtSecurityToken(
-                    issuer: AuthOptions.ISSUER,
-                    audience: AuthOptions.AUDIENCE,
-                    notBefore: now,
-                    claims: identity.Claims,
-                    expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            return new GetTokenDTO { Token = encodedJwt };
-        }
-
-        private ClaimsIdentity GetIdentity(ObjectId id, Role role)
-        {
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, id.ToString()),
-                new Claim(ClaimTypes.Role, role.ToString())
-            };
-
-            var claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-
-            return claimsIdentity;
         }
     }
 }
