@@ -1,4 +1,5 @@
-﻿using AqoTesting.Shared.Interfaces;
+﻿using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MongoDB.Bson;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace AqoTesting.Shared.Infrastructure
         {
             string role = context.Principal.Claims.Single(c => c.Type == ClaimTypes.Role).Value;
             ObjectId id = ObjectId.Parse(context.Principal.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            bool isChecked = bool.Parse(context.Principal.Claims.Single(c => c.Type == "isChecked").Value);
 
             if (role == "User")
             {
@@ -26,6 +28,7 @@ namespace AqoTesting.Shared.Infrastructure
             } else
             {
                 _workContext.MemberId = id;
+                _workContext.IsChecked = isChecked;
             }
 
             await base.TokenValidated(context);

@@ -12,9 +12,9 @@ namespace AqoTesting.Core.Utils
 {
     public static class TokenGenerator
     {
-        public static TokenDTO GenerateToken(ObjectId id, Role role = Role.User)
+        public static TokenDTO GenerateToken(ObjectId id, Role role = Role.User, bool isChecked = true)
         {
-            var identity = GetIdentity(id, role);
+            var identity = GetIdentity(id, role, isChecked);
             var now = DateTime.UtcNow;
 
             var jwt = new JwtSecurityToken(
@@ -30,14 +30,19 @@ namespace AqoTesting.Core.Utils
             return new TokenDTO { Token = encodedJwt };
         }
 
-        private static ClaimsIdentity GetIdentity(ObjectId id, Role role)
+        private static ClaimsIdentity GetIdentity(ObjectId id, Role role, bool isChecked)
         {
 
-            var claims = new List<Claim>
+            List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, id.ToString()),
                 new Claim(ClaimTypes.Role, role.ToString())
             };
+
+            if(role == Role.Member)
+            {
+                claims.Add(new Claim("isChecked", isChecked.ToString()));
+            }
 
             var claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 

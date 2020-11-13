@@ -1,4 +1,5 @@
-﻿using AqoTesting.Shared.Interfaces;
+﻿using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
@@ -10,5 +11,6 @@ namespace AqoTesting.Shared.Infrastructure
     {
         public ObjectId UserId { get; set; }
         public ObjectId MemberId { get; set; }
+        public bool IsChecked { get; set; } = true;
     }
 }
