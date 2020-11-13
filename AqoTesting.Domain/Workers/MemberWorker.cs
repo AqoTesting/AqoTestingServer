@@ -38,6 +38,29 @@ namespace AqoTesting.Domain.Workers
         }
 
         /// <summary>
+        /// Получения участников по id комнаты
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <returns></returns>
+        public static Member[]? GetMembersFromRoom(ObjectId roomId)
+        {
+            var filter = Builders<Member>.Filter.Eq("RoomId", roomId);
+            var members = MongoController.MemberCollection.Find(filter).ToList().ToArray();
+            return members;
+        }
+
+        /// <summary>
+        /// Получения участников из комнаты
+        /// </summary>
+        /// <param name="room"></param>
+        /// <returns></returns>
+        public static Member[]? GetMembersFromRoom(Room room)
+        {
+            return GetMembersFromRoom(room.Id);
+        }
+
+
+        /// <summary>
         /// Получение пользователя по id
         /// </summary>
         /// <param name="memberId"></param>
