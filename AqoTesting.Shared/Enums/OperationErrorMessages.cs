@@ -28,5 +28,7 @@
         FieldNotPassed = 51,
         FieldRegexMissmatch = 52,
         FieldOptionNotInList = 53,
+        MemberNotIsChecked = 54,
+        MemberIsChecked = 55,
     }
 }

@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using AqoTesting.Shared.Enums;
+using MongoDB.Bson;
 
 namespace AqoTesting.Shared.Interfaces
 {
@@ -6,5 +7,6 @@ namespace AqoTesting.Shared.Interfaces
     {
         ObjectId UserId { get; set; }
         ObjectId MemberId { get; set; }
-}
+        bool IsChecked { get; set; }
+    }
 }
