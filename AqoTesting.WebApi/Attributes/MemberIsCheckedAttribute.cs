@@ -12,7 +12,7 @@ namespace AqoTesting.WebApi.Attributes
         {
             var _workContext = context.HttpContext.RequestServices.GetService<IWorkContext>();
 
-            if (!_workContext.IsChecked)
+            if(!_workContext.IsChecked)
             {
                 context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.MemberNotIsChecked);
             }

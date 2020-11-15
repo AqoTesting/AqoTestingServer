@@ -1,14 +1,13 @@
-﻿using AqoTesting.Shared.DTOs.API;
-using AqoTesting.Shared.DTOs.API.Users.Test;
-using AqoTesting.Shared.DTOs.API.Users.Tests;
+﻿using AqoTesting.Shared.DTOs.API.Common;
+using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
 using System.Threading.Tasks;
 
 namespace AqoTesting.Shared.Interfaces
 {
     public interface ITestService
     {
-        Task<GetUserTestsItemDTO[]> GetTestsByRoomId(RoomIdDTO roomIdDTO);
+        Task<UserAPI_GetTestsItem_DTO[]> GetTestsByRoomId(RoomId_DTO roomIdDTO);
 
-        Task<GetUserTestDTO> GetTestById(TestIdDTO testIdDTO);
+        Task<UserAPI_GetTest_DTO> GetTestById(TestId_DTO testIdDTO);
     }
 }

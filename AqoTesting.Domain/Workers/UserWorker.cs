@@ -2,8 +2,6 @@
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using AqoTesting.Shared.DTOs.DB.Users;
 
@@ -226,10 +224,10 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="user"></param>
         /// <param name="newEmail"></param>
-        public static void SetEmail(this User user, string newEmail) 
+        public static void SetEmail(this User user, string newEmail)
         {
             user.Email = newEmail;
-            SetUserEmail(user.Id, newEmail); 
+            SetUserEmail(user.Id, newEmail);
         }
         /// <summary>
         /// Установка хеша пароля юзера

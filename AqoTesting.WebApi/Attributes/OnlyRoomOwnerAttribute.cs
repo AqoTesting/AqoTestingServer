@@ -6,8 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using AqoTesting.Shared.Models;
 using AqoTesting.Shared.Enums;
-using AqoTesting.Shared.DTOs.API.Users.Rooms;
-using AqoTesting.Shared.DTOs.API;
+using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
+using AqoTesting.Shared.DTOs.API.Common;
 
 namespace AqoTesting.WebApi.Attributes
 {
@@ -24,15 +24,15 @@ namespace AqoTesting.WebApi.Attributes
 
             var descriptor = context.ActionDescriptor as ControllerActionDescriptor;
 
-            if (descriptor != null)
+            if(descriptor != null)
             {
                 var parameters = descriptor.MethodInfo.GetParameters();
 
-                foreach (var parameter in parameters)
+                foreach(var parameter in parameters)
                 {
-                    if (parameter.Name != "roomIdDTO" && parameter.Name != "roomDomainDTO") continue;
+                    if(parameter.Name != "roomIdDTO" && parameter.Name != "roomDomainDTO") continue;
 
-                    if (!context.ActionArguments.ContainsKey(parameter.Name))
+                    if(!context.ActionArguments.ContainsKey(parameter.Name))
                     {
                         context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.EntityNotFound);
                         break;
@@ -41,11 +41,11 @@ namespace AqoTesting.WebApi.Attributes
                     var argument = context.ActionArguments[parameter.Name];
 
                     var evalResult = EvaluateValidationAttributes(argument, context.HttpContext, _roomService, parameter.Name);
-                    if (evalResult != OperationErrorMessages.NoError)
+                    if(evalResult != OperationErrorMessages.NoError)
                         context.Result = ResultResponceExtension.ObjectResultResponse<object>(evalResult);
                 }
             }
-            
+
             base.OnActionExecuting(context);
         }
         private OperationErrorMessages EvaluateValidationAttributes(object argument, HttpContext httpContext, IRoomService roomService, string dtoName)
@@ -53,14 +53,15 @@ namespace AqoTesting.WebApi.Attributes
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
             var ownerId = _workContext.UserId.ToString();
-            GetUserRoomDTO room = null;
+            UserAPI_GetRoom_DTO room = null;
 
-            if (dtoName == "roomIdDTO")
+            if(dtoName == "roomIdDTO")
             {
-                room = roomService.GetUserRoomById((RoomIdDTO)argument).Result;
-            } else if(dtoName == "roomDomainDTO")
+                room = roomService.UserAPI_GetRoomById((RoomId_DTO)argument).Result;
+            }
+            else if(dtoName == "roomDomainDTO")
             {
-                room = roomService.GetUserRoomByDomain((UserRoomDomainDTO)argument).Result;
+                room = roomService.UserAPI_GetRoomByDomain((UserAPI_RoomDomain_DTO)argument).Result;
             }
 
             if(room == null)

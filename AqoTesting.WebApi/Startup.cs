@@ -2,13 +2,9 @@ using AqoTesting.Shared.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using AqoTesting.Core.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -44,7 +40,7 @@ namespace AqoTestingServer
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<ITestService, TestService>();
-            services.AddScoped<IMemberService, MemberService>();            
+            services.AddScoped<IMemberService, MemberService>();
 
             // Load repositories
             services.AddScoped<IUserRepository, UserRepository>();
@@ -80,7 +76,8 @@ namespace AqoTestingServer
                     options.EventsType = typeof(DefaultJwtBearerEvents);
                 });
 
-            services.AddMvc(options => {
+            services.AddMvc(options =>
+            {
                 options.Filters.Add(typeof(ValidateModelAttribute));
 
                 options.EnableEndpointRouting = false;
@@ -93,7 +90,7 @@ namespace AqoTestingServer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if(env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -106,22 +103,23 @@ namespace AqoTestingServer
 
             app.UseAuthorization();
 
-            app.UseExceptionHandler(appError => appError.Run(async context => {
+            app.UseExceptionHandler(appError => appError.Run(async context =>
+            {
 
-                    var serverError = context.Features.Get<IExceptionHandlerPathFeature>()?.Error;
-                    if (serverError != null && serverError is IResultException resultException)
-                    {
-                        context.Response.StatusCode = 200;
-                        context.Response.ContentType = "application/json";
+                var serverError = context.Features.Get<IExceptionHandlerPathFeature>()?.Error;
+                if(serverError != null && serverError is IResultException resultException)
+                {
+                    context.Response.StatusCode = 200;
+                    context.Response.ContentType = "application/json";
 
-                        await context.Response.WriteAsync(JsonConvert.SerializeObject(
-                            new ResultResponse<object> { Succeeded = false, ErrorMessageCode = resultException.ErrorMessageCode },
-                            new JsonSerializerSettings
-                            {
-                                ContractResolver = new CamelCasePropertyNamesContractResolver()
-                            }
-                        ));
-                    }
+                    await context.Response.WriteAsync(JsonConvert.SerializeObject(
+                        new ResultResponse<object> { Succeeded = false, ErrorMessageCode = resultException.ErrorMessageCode },
+                        new JsonSerializerSettings
+                        {
+                            ContractResolver = new CamelCasePropertyNamesContractResolver()
+                        }
+                    ));
+                }
 
             }));
 

@@ -5,11 +5,13 @@ namespace AqoTesting.Core.Utils
 {
     public static class Sha256
     {
-        public static byte[] Compute(string password)
+        public static byte[] Compute(string data)
         {
-            byte[] bytedPassword = Encoding.UTF8.GetBytes(password);
+            byte[] bytedData = Encoding.UTF8.GetBytes(data);
+
             byte[] hash;
-            using (SHA256 sha256 = SHA256.Create()) { hash = sha256.ComputeHash(bytedPassword); }
+            using(SHA256 sha256 = SHA256.Create())
+                hash = sha256.ComputeHash(bytedData);
 
             return hash;
         }

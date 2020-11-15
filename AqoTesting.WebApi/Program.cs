@@ -1,19 +1,8 @@
 using System;
-using System.Threading.Tasks;
 using AqoTesting.Domain.Controllers;
-using AqoTesting.Domain.Tests;
 using AqoTesting.Domain.Utils;
-using AqoTesting.Domain.Workers;
-using AqoTesting.Shared.DTOs.DB;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
-using AqoTesting.Shared.Enums;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace AqoTestingServer
 {
@@ -29,7 +18,7 @@ namespace AqoTestingServer
             //MongoController.client.DropDatabase("mainAQObase");
 
             PrepareDB prepareDB = new PrepareDB();
-            if (!prepareDB.CheckMainDatabaseExist())
+            if(!prepareDB.CheckMainDatabaseExist())
             {
                 prepareDB.CreateMainDatabase();
             }
@@ -39,7 +28,7 @@ namespace AqoTestingServer
             //UserWorker.DeleteUserByLogin("Test Dev Login 2");
             //var membersIds = testIO.AddMembers();
             //var roomsIds = testIO.AddRooms();
-            //var mainRoom = RoomWorker.GetUserRoomById(roomsIds[0]);
+            //var mainRoom = RoomWorker.UserAPI_GetRoomById(roomsIds[0]);
             //
             // добавление мембера по id из базы (привязку произведет mainRoom.AddMember)
             //mainRoom.AddMember(membersIds[0]);
@@ -58,12 +47,12 @@ namespace AqoTestingServer
             //UserWorker.DeleteUserByLogin("Test Dev Login 2");
             //var membersIds = testIO.AddMembers();
             //var roomsIds = testIO.AddRooms();
-            //var mainRoom = RoomWorker.GetUserRoomById(roomsIds[0]);
+            //var mainRoom = RoomWorker.UserAPI_GetRoomById(roomsIds[0]);
             //mainRoom.AddMember(membersIds[0]);
             //mainRoom.AddMember(membersIds[1]);
 
             // тест записей
-            //var mainRoom = RoomWorker.GetUserRoomByDomain("Test Dev Domain");
+            //var mainRoom = RoomWorker.UserAPI_GetRoomByDomain("Test Dev Domain");
             //var mainField = new RoomField
             //{
             //    Name = "Main Field",

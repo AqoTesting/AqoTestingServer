@@ -1,7 +1,6 @@
 ﻿using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Utils;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 
 namespace AqoTesting.Shared.Models
 {
@@ -29,7 +28,7 @@ namespace AqoTesting.Shared.Models
 
             var result = new ResultResponse<TData>() { Data = data };
 
-            if (operationDetails != null)
+            if(operationDetails != null)
             {
                 result.Succeeded = operationDetails.Succedeed;
                 result.ErrorMessageCode = operationDetails.ErrorMessageCode;
@@ -54,7 +53,7 @@ namespace AqoTesting.Shared.Models
             result.ErrorMessageCode = messageCode;
             result.Succeeded = false;
 
-            switch (messageCode)
+            switch(messageCode)
             {
                 case OperationErrorMessages.NoError:
                     result.Succeeded = true;

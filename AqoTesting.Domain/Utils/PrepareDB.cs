@@ -7,12 +7,12 @@ namespace AqoTesting.Domain.Utils
     {
         public bool CheckMainDatabaseExist()
         {
-            using (var cursor = MongoController.client.ListDatabaseNames())
+            using(var cursor = MongoController.client.ListDatabaseNames())
             {
                 var databases = cursor.ToList();
-                foreach (var database in databases)
+                foreach(var database in databases)
                 {
-                    if (database == "mainAQObase")
+                    if(database == "mainAQObase")
                         return true;
                 }
             }

@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API;
-using AqoTesting.Shared.DTOs.API.Users.Test;
-using AqoTesting.Shared.DTOs.API.Users.Tests;
+using AqoTesting.Shared.DTOs.API.Common;
+using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
@@ -23,34 +22,34 @@ namespace AqoTesting.Core.Services
             _workContext = workContext;
         }
 
-        public async Task<GetUserTestsItemDTO[]> GetTestsByRoomId(ObjectId roomId)
+        public async Task<UserAPI_GetTestsItem_DTO[]> GetTestsByRoomId(ObjectId roomId)
         {
             var room = await _roomRepository.GetRoomById(roomId);
 
-            if (room == null)
+            if(room == null)
                 throw new ResultException(OperationErrorMessages.RoomNotFound);
 
-            var tests = await _testRepository.GetTestsByIds(room.TestIds);
+            var tests = await _testRepository.GetTestsByRoomId(room.Id);
 
-            var responseTests = Mapper.Map<GetUserTestsItemDTO[]>(tests);
+            var responseTests = Mapper.Map<UserAPI_GetTestsItem_DTO[]>(tests);
 
             return responseTests;
         }
-        public async Task<GetUserTestsItemDTO[]> GetTestsByRoomId(RoomIdDTO roomIdDTO) =>
+        public async Task<UserAPI_GetTestsItem_DTO[]> GetTestsByRoomId(RoomId_DTO roomIdDTO) =>
             await GetTestsByRoomId(ObjectId.Parse(roomIdDTO.RoomId));
 
-        public async Task<GetUserTestDTO> GetTestById(ObjectId testId)
+        public async Task<UserAPI_GetTest_DTO> GetTestById(ObjectId testId)
         {
             var test = await _testRepository.GetTestById(testId);
 
-            if (test == null)
+            if(test == null)
                 throw new ResultException(OperationErrorMessages.TestNotFound);
 
-            var responseTest = Mapper.Map<GetUserTestDTO>(test);
+            var responseTest = Mapper.Map<UserAPI_GetTest_DTO>(test);
 
             return responseTest;
         }
-        public async Task<GetUserTestDTO> GetTestById(TestIdDTO testIdDTO) =>
+        public async Task<UserAPI_GetTest_DTO> GetTestById(TestId_DTO testIdDTO) =>
             await GetTestById(ObjectId.Parse(testIdDTO.TestId));
     }
 }

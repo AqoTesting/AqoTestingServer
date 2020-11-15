@@ -1,9 +1,6 @@
-﻿using AqoTesting.Shared.DTOs.API;
-using AqoTesting.Shared.DTOs.API.Members;
-using AqoTesting.Shared.DTOs.API.Members.Rooms;
-using AqoTesting.Shared.DTOs.API.Users;
-using AqoTesting.Shared.DTOs.API.Users.Rooms;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+﻿using AqoTesting.Shared.DTOs.API.Common;
+using AqoTesting.Shared.DTOs.API.MemberAPI.Rooms;
+using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
 using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
 using System.Threading.Tasks;
@@ -12,36 +9,31 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IRoomService
     {
-        Task<GetUserRoomDTO> GetUserRoomById(ObjectId roomId);
-        Task<GetUserRoomDTO> GetUserRoomById(RoomIdDTO roomIdDTO);
+        Task<UserAPI_GetRoom_DTO> UserAPI_GetRoomById(ObjectId roomId);
+        Task<UserAPI_GetRoom_DTO> UserAPI_GetRoomById(RoomId_DTO roomIdDTO);
 
-        Task<GetUserRoomDTO> GetUserRoomByDomain(string roomDomain);
-        Task<GetUserRoomDTO> GetUserRoomByDomain(UserRoomDomainDTO roomDomainDTO);
+        Task<UserAPI_GetRoom_DTO> UserAPI_GetRoomByDomain(string roomDomain);
+        Task<UserAPI_GetRoom_DTO> UserAPI_GetRoomByDomain(UserAPI_RoomDomain_DTO roomDomainDTO);
 
-        Task<GetMemberRoomDTO> GetMemberRoomById(ObjectId roomId);
-        Task<GetMemberRoomDTO> GetMemberRoomById(MemberRoomIdDTO roomIdDTO);
-        Task<GetMemberRoomDTO> GetMemberRoomById(string roomId);
+        Task<UserAPI_GetRoomsItem_DTO[]> UserAPI_GetRoomsByOwnerId(ObjectId ownerId);
+        Task<UserAPI_GetRoomsItem_DTO[]> UserAPI_GetRoomsByOwnerId(UserId_DTO userIdDTO);
 
-        Task<GetMemberRoomDTO> GetMemberRoomByDomain(string roomDomain);
-        Task<GetMemberRoomDTO> GetMemberRoomByDomain(MemberRoomDomainDTO roomDomainDTO);
+        Task<string> UserAPI_InsertRoom(UserAPI_PostRoom_DTO postRoomDto);
 
-        Task<GetUserRoomsItemDTO[]> GetUserRoomsByOwnerId(ObjectId ownerId);
-        Task<GetUserRoomsItemDTO[]> GetUserRoomsByOwnerId(UserIdDTO userIdDTO);
+        Task<OperationErrorMessages> UserAPI_EditRoom(ObjectId roomId, UserAPI_PostRoom_DTO postRoomDTO);
+        Task<OperationErrorMessages> UserAPI_EditRoom(RoomId_DTO roomIdDTO, UserAPI_PostRoom_DTO roomUpdates);
 
-        Task<GetUserMembersItemDTO[]> GetUserMembersByRoomId(ObjectId roomId);
-        Task<GetUserMembersItemDTO[]> GetUserMembersByRoomId(RoomIdDTO roomIdDTO);
+        Task UserAPI_DeleteRoomById(ObjectId roomId);
+        Task UserAPI_DeleteRoomById(RoomId_DTO roomIdDTO);
 
-        Task<string> InsertRoom(PostUserRoomDTO newRoomDto);
+        Task UserAPI_RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId);
 
-        Task<OperationErrorMessages> EditRoom(ObjectId roomId, PostUserRoomDTO roomUpdates);
-        Task<OperationErrorMessages> EditRoom(RoomIdDTO roomIdDTO, PostUserRoomDTO roomUpdates);
 
-        Task RemoveMemberFromRoomByIdById(ObjectId roomId, ObjectId memberId);
-        Task RemoveMemberFromRoomByIdById(ObjectId roomId, MemberIdDTO memberIdDTO);
-        Task RemoveMemberFromRoomByIdById(RoomIdDTO roomIdDTO, ObjectId memberId);
-        Task RemoveMemberFromRoomByIdById(RoomIdDTO roomIdDTO, MemberIdDTO memberIdDTO);
+        Task<MemberAPI_GetRoom_DTO> MemberAPI_GetRoomById(ObjectId roomId);
+        Task<MemberAPI_GetRoom_DTO> MemberAPI_GetRoomById(RoomId_DTO roomIdDTO);
+        Task<MemberAPI_GetRoom_DTO> MemberAPI_GetRoomById(string roomId);
 
-        Task DeleteRoomById(ObjectId roomId);
-        Task DeleteRoomById(RoomIdDTO roomIdDTO);
+        Task<MemberAPI_GetRoom_DTO> MemberAPI_GetRoomByDomain(string roomDomain);
+        Task<MemberAPI_GetRoom_DTO> MemberAPI_GetRoomByDomain(MemberAPI_RoomDomain_DTO roomDomainDTO);
     }
 }

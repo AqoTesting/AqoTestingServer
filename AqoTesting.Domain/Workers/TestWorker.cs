@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using AqoTesting.Domain.Controllers;
 using AqoTesting.Shared.DTOs.DB.Tests;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -26,13 +23,13 @@ namespace AqoTesting.Domain.Workers
             return test;
         }
         /// <summary>
-        /// Получение тестов по списку id
+        /// Получение тестов по id комнаты
         /// </summary>
         /// <param name="testIds"></param>
         /// <returns>список тестов</returns>
-        public static Test[] GetTestsByIds(ObjectId[] testIds)
+        public static Test[] GetTestsByRoomId(ObjectId roomId)
         {
-            var filter = Builders<Test>.Filter.In("Id", testIds);
+            var filter = Builders<Test>.Filter.Eq("RoomId", roomId);
             var tests = MongoController.TestCollection.Find(filter).ToEnumerable();
             return tests.ToArray();
         }
@@ -55,7 +52,7 @@ namespace AqoTesting.Domain.Workers
         {
             MongoController.TestCollection.InsertMany(tests);
             var TestsIds = new List<ObjectId>();
-            foreach (var test in tests)
+            foreach(var test in tests)
                 TestsIds.Add(test.Id);
 
             return TestsIds.ToArray();
@@ -219,7 +216,7 @@ namespace AqoTesting.Domain.Workers
         public static void SetShuffle(this Test test, bool newShuffle)
         {
             test.Shuffle = newShuffle;
-            SetTestShuffle(test.Id, newShuffle); 
+            SetTestShuffle(test.Id, newShuffle);
         }
 
         #endregion

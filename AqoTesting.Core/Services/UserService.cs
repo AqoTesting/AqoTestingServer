@@ -1,19 +1,13 @@
-﻿using AqoTesting.Shared.DTOs.API.Users;
-using AqoTesting.Shared.Interfaces;
+﻿using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.DTOs.DB.Users;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AqoTesting.Core.Utils;
 using AqoTesting.Shared.Models;
 using AqoTesting.Shared.Enums;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using AqoTesting.Shared.Infrastructure;
-using System;
 using MongoDB.Bson;
 using AutoMapper;
-using AqoTesting.Shared.DTOs.API;
+using AqoTesting.Shared.DTOs.API.UserAPI.Account;
+using AqoTesting.Shared.DTOs.API.Common;
 
 namespace AqoTesting.Core.Services
 {
@@ -21,25 +15,25 @@ namespace AqoTesting.Core.Services
     {
         IUserRepository _userRepository;
 
-        public UserService(IUserRepository userRespository, IWorkContext workContext)
+        public UserService(IUserRepository userRespository)
         {
             _userRepository = userRespository;
         }
 
-        public async Task<GetUserDTO> GetUserById(ObjectId userId)
+        public async Task<UserAPI_GetProfile_DTO> GetUserById(ObjectId userId)
         {
             var user = await _userRepository.GetUserById(userId);
 
-            if (user == null) throw new ResultException(OperationErrorMessages.UserNotFound);
+            if(user == null) throw new ResultException(OperationErrorMessages.UserNotFound);
 
-            var responseUser = Mapper.Map<GetUserDTO>(user);
+            var responseUser = Mapper.Map<UserAPI_GetProfile_DTO>(user);
 
             return responseUser;
         }
-        public async Task<GetUserDTO> GetUserById(UserIdDTO userIdDTO) =>
+        public async Task<UserAPI_GetProfile_DTO> GetUserById(UserId_DTO userIdDTO) =>
             await GetUserById(ObjectId.Parse(userIdDTO.UserId));
 
-        public async Task<User> GetUserByAuthData(SignInUserDTO authData)
+        public async Task<User> GetUserByAuthData(UserAPI_SignIn_DTO authData)
         {
             var user = await _userRepository.GetUserByAuthData(authData.Login, Sha256.Compute(authData.Password));
 
@@ -52,7 +46,7 @@ namespace AqoTesting.Core.Services
         public async Task<User> GetUserByEmail(string email) =>
             await _userRepository.GetUserByEmail(email);
 
-        public async Task<User> InsertUser(SignUpUserDTO signUpUserDTO)
+        public async Task<User> InsertUser(UserAPI_SignUp_DTO signUpUserDTO)
         {
             var newUser = Mapper.Map<User>(signUpUserDTO);
 

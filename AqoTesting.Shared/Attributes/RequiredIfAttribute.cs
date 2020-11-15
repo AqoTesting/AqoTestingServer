@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace AqoTesting.Shared.Attributes
 {
@@ -21,7 +19,7 @@ namespace AqoTesting.Shared.Attributes
             Object instance = context.ObjectInstance;
             Type type = instance.GetType();
             Object propertyValue = type.GetProperty(PropertyName).GetValue(instance, null);
-            if (propertyValue != null && propertyValue.ToString() == DesiredValue.ToString())
+            if(propertyValue != null && propertyValue.ToString() == DesiredValue.ToString())
             {
                 ValidationResult result = base.IsValid(value, context);
                 return result;

@@ -10,6 +10,7 @@ namespace AqoTesting.Shared.DTOs.DB.Tests
         public ObjectId Id { get; set; }
         public string Title { get; set; }
         public ObjectId OwnerId { get; set; }
+        public ObjectId RoomId { get; set; }
         public bool IsActive { get; set; } //приоритет над датами (если true)
         public Section[] Sections { get; set; }
         public DateTime CreationDate { get; set; }

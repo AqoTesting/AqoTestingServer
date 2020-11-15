@@ -1,15 +1,13 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using AqoTesting.Core.Utils;
-using AqoTesting.Shared.DTOs.API.Members;
-using AqoTesting.Shared.DTOs.API.Members.Rooms;
-using AqoTesting.Shared.DTOs.API.Users.Rooms;
+﻿using AqoTesting.Core.Utils;
+using AqoTesting.Shared.DTOs.API.Common;
+using AqoTesting.Shared.DTOs.API.MemberAPI.Account;
+using AqoTesting.Shared.DTOs.API.UserAPI.Members;
 using AqoTesting.Shared.DTOs.DB.Members;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AutoMapper;
 using MongoDB.Bson;
+using System.Threading.Tasks;
 
 namespace AqoTesting.Core.Services
 {
@@ -24,62 +22,76 @@ namespace AqoTesting.Core.Services
             _roomRepository = roomRespository;
         }
 
-        public async Task<Member> GetMemberByAuthData(SignInMemberDTO authData)
+        #region User API
+        public async Task<UserAPI_GetMember_DTO> UserAPI_GetMemberById(ObjectId memberId)
         {
-            var member = await _memberRepository.GetMemberByAuthData(authData.Login, Sha256.Compute(authData.Password));
+            var member = await _memberRepository.GetMemberById(memberId);
+            var responseMember = Mapper.Map<UserAPI_GetMember_DTO>(member);
 
-            return member;
+            return responseMember;
         }
+        public async Task<UserAPI_GetMember_DTO> UserAPI_GetMemberById(MemberId_DTO memberIdDTO) =>
+            await this.UserAPI_GetMemberById(ObjectId.Parse(memberIdDTO.MemberId));
 
-        public async Task<(OperationErrorMessages, string)> MemberAuth(SignUpMemberDTO signUpMemberDTO)
+        public async Task<UserAPI_GetMembersItem_DTO> UserAPI_GetMembersByRoomId(ObjectId roomId)
         {
-            var room = await _roomRepository.GetRoomById(ObjectId.Parse(signUpMemberDTO.RoomId));
-            if (room == null)
+            var members = await _memberRepository.GetMembersByRoomId(roomId);
+            var responseMembers = Mapper.Map<UserAPI_GetMembersItem_DTO>(members);
+
+            return responseMembers;
+        }
+        public async Task<UserAPI_GetMembersItem_DTO> UserAPI_GetMembersByRoomId(RoomId_DTO roomIdDTO) =>
+            await this.UserAPI_GetMembersByRoomId(ObjectId.Parse(roomIdDTO.RoomId));
+
+        public async Task<(OperationErrorMessages, object)> UserAPI_MemberManualAdd(ObjectId roomId, UserAPI_PostMember_DTO postMemberDTO)
+        {
+            var room = await _roomRepository.GetRoomById(roomId);
+
+            (var fieldsValid, var errorCode, var response) = FieldsValidator.Validate(room.Fields, postMemberDTO.Fields);
+            if(!fieldsValid)
+                return (errorCode, response);
+
+            var fieldsHash = FieldsHashGenerator.Generate(postMemberDTO.Fields);
+            var alreadyExists = await _memberRepository.CheckFieldsHashExists(roomId, fieldsHash);
+            if(alreadyExists)
+                return (OperationErrorMessages.FieldsAlreadyExists, null);
+
+            var newMember = Mapper.Map<Member>(postMemberDTO);
+            newMember.RoomId = roomId;
+            newMember.FieldsHash = fieldsHash;
+
+            var newMemberId = await _memberRepository.InsertMember(newMember);
+
+            return (OperationErrorMessages.NoError, newMemberId.ToString());
+        }
+        public async Task<(OperationErrorMessages, object)> UserAPI_MemberManualAdd(RoomId_DTO roomIdDTO, UserAPI_PostMember_DTO postMemberDTO) =>
+            await this.UserAPI_MemberManualAdd(ObjectId.Parse(roomIdDTO.RoomId), postMemberDTO);
+        #endregion
+
+        #region Member API
+        public async Task<(OperationErrorMessages, string)> MemberAPI_SignIn(MemberAPI_SignIn_DTO signInDTO)
+        {
+            var room = await _roomRepository.GetRoomById(ObjectId.Parse(signInDTO.RoomId));
+            if(room == null)
                 return (OperationErrorMessages.RoomNotFound, null);
 
-            var roomFields = room.Fields;
-            var newMemberFields = signUpMemberDTO.Fields;
+            (var valid, var memberId) = await _memberRepository.GetMemberIdByAuthData(signInDTO.Login, Sha256.Compute(signInDTO.Password));
 
-            foreach (var roomField in roomFields)
-            {
-                if (newMemberFields.ContainsKey(roomField.Name))
-                {
-                    var newMemberFieldValue = newMemberFields[roomField.Name];
-
-                    if (roomField.Type == FieldType.Input)
-                    {
-                        var mask = roomField.Data["Mask"];
-                        if (mask.IsString)
-                        {
-                            var regex = new Regex(mask.AsString);
-                            if (!regex.IsMatch(newMemberFieldValue))
-                                return (OperationErrorMessages.FieldRegexMissmatch, roomField.Name);
-                        }
-                    }
-                    else if (roomField.Type == FieldType.Select)
-                    {
-                        var options = roomField.Data["Options"];
-                        if (options.IsBsonArray && !options.AsBsonArray.Select(item => item.AsString).ToArray().Contains(newMemberFieldValue))
-                            return (OperationErrorMessages.FieldOptionNotInList, roomField.Name);
-                    }
-                }
-                else if (roomField.IsRequired)
-                    return (OperationErrorMessages.FieldNotPassed, roomField.Name);
-            }
-
-            var memberByFields = await _memberRepository.GetMemberByFields(room.Id, newMemberFields);
-
-            //var fieldsExists = memberByFields != null;
-            //switch (room.IsApproveManually ? 100 : 0 + (room.IsRegistrationEnabled ? 10 : 0) + (fieldsExists ? 1 : 0))
-            //{
-            //    case 000:
-            //        return (OperationErrorMessages.MemberNotFound, null);
-
-            //    case 001:
-
-            //}
-
-            return (OperationErrorMessages.NoError, "OK");
+            if(valid)
+                return (OperationErrorMessages.NoError, TokenGenerator.GenerateToken(memberId, Role.Member, room.Id, room.IsApproveManually));
+            else
+                return (OperationErrorMessages.WrongAuthData, null);
         }
+
+        public async Task<MemberAPI_GetProfile_DTO> MemberAPI_GetMemberById(ObjectId memberId)
+        {
+            var member = await _memberRepository.GetMemberById(memberId);
+            var responseMember = Mapper.Map<MemberAPI_GetProfile_DTO>(member);
+
+            return responseMember;
+        }
+        public async Task<MemberAPI_GetProfile_DTO> MemberAPI_GetMemberById(MemberId_DTO memberIdDTO) =>
+            await this.MemberAPI_GetMemberById(ObjectId.Parse(memberIdDTO.MemberId));
+        #endregion
     }
 }

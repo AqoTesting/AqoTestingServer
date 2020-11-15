@@ -9,7 +9,7 @@ namespace AqoTesting.Domain.Utils
         {
             byte[] bytedPassword = Encoding.UTF8.GetBytes(password);
             byte[] hash;
-            using (SHA256 sha256 = SHA256.Create()) { hash = sha256.ComputeHash(bytedPassword); }
+            using(SHA256 sha256 = SHA256.Create()) { hash = sha256.ComputeHash(bytedPassword); }
 
             return hash;
         }

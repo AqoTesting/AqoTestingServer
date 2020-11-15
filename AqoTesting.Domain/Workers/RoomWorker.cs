@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AqoTesting.Domain.Controllers;
-using AqoTesting.Shared.DTOs.API.Users.Rooms;
 using AqoTesting.Shared.DTOs.DB.Members;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
-using AqoTesting.Shared.Interfaces.DTO;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -90,20 +86,20 @@ namespace AqoTesting.Domain.Workers
         {
             MemberWorker.SetMemberRoomId(memberId, roomId);
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Push("Members", memberId);
+            var update = Builders<Room>.Update.Push("MemberAPI", memberId);
             MongoController.RoomCollection.UpdateOne(filter, update);
         }
         /// <summary>
         /// Привязывает пользователя из базы к комнате, добавляет пользователя в объект комнаты
         /// </summary>
-        public static void AddMember(this Room room, ObjectId memberId)
-        {
-            var membersList = room.Members.ToList();
-            membersList.Add(memberId);
-            room.Members = membersList.ToArray();
+        //public static void AddMember(this Room room, ObjectId memberId)
+        //{
+        //    var membersList = room.Members.ToList();
+        //    membersList.Add(memberId);
+        //    room.Members = membersList.ToArray();
 
-            AddMemberToRoom(room.Id, memberId);
-        }
+        //    AddMemberToRoom(room.Id, memberId);
+        //}
         /// <summary>
         /// Добавляет нового пользователя в комнату (пользователя, которого нет в базе)
         /// </summary>
@@ -112,26 +108,26 @@ namespace AqoTesting.Domain.Workers
             member.RoomId = roomId;
             MemberWorker.InsertMember(member);
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Push("Members", member.Id);
+            var update = Builders<Room>.Update.Push("MemberAPI", member.Id);
             MongoController.RoomCollection.UpdateOne(filter, update);
         }
         /// <summary>
         /// Добавляет нового пользователя в комнату (пользователя, которого нет в базе), добавляет пользователя в объект комнаты
         /// </summary>
-        public static void AddNewMember(this Room room, Member member)
-        {
-            var membersList = room.Members.ToList();
-            membersList.Add(member.Id);
-            room.Members = membersList.ToArray();
-            AddNewMemberToRoom(room.Id, member);
-        }
+        //public static void AddNewMember(this Room room, Member member)
+        //{
+        //    var membersList = room.Members.ToList();
+        //    membersList.Add(member.Id);
+        //    room.Members = membersList.ToArray();
+        //    AddNewMemberToRoom(room.Id, member);
+        //}
         /// <summary>
         /// Удаляет пользователя из комнаты
         /// </summary>
         public static bool RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId)
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Pull("Members", memberId);
+            var update = Builders<Room>.Update.Pull("MemberAPI", memberId);
             var isRemovedSuccessful = MongoController.RoomCollection.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isRemovedSuccessful;
@@ -139,15 +135,15 @@ namespace AqoTesting.Domain.Workers
         /// <summary>
         /// Удаляет пользователя из комнаты, удаляет из объекта
         /// </summary>
-        public static void RemoveMemberByIdById(this Room room, ObjectId memberId)
-        {
-            var tmpList = new List<ObjectId>();
-            foreach (var _memberId in room.Members)
-                if (_memberId != memberId)
-                    tmpList.Add(_memberId);
-            room.Members = tmpList.ToArray();
-            RemoveMemberFromRoomById(room.Id, memberId);
-        }
+        //public static void RemoveMemberByIdById(this Room room, ObjectId memberId)
+        //{
+        //    var tmpList = new List<ObjectId>();
+        //    foreach (var _memberId in room.Members)
+        //        if (_memberId != memberId)
+        //            tmpList.Add(_memberId);
+        //    room.Members = tmpList.ToArray();
+        //    RemoveMemberFromRoomById(room.Id, memberId);
+        //}
         /// <summary>
         /// Удаляет пользователя из комнаты (по логину)
         /// </summary>
@@ -155,9 +151,9 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var member = MemberWorker.GetMemberFromRoom(roomId, memberLogin);
-            if (member != null)
+            if(member != null)
             {
-                var update = Builders<Room>.Update.Pull("Members", member.Id);
+                var update = Builders<Room>.Update.Pull("MemberAPI", member.Id);
                 MongoController.RoomCollection.UpdateOne(filter, update);
             }
         }
@@ -187,12 +183,12 @@ namespace AqoTesting.Domain.Workers
         public static bool AddTestById(this Room room, ObjectId testId)
         {
             var testAdded = AddTestToRoomById(room.Id, testId);
-            if (testAdded == true)
-            {
-                var testsList = room.TestIds.ToList();
-                testsList.Add(testId);
-                room.TestIds = testsList.ToArray();
-            }
+            //if(testAdded == true)
+            //{
+            //    var testsList = room.TestIds.ToList();
+            //    testsList.Add(testId);
+            //    room.TestIds = testsList.ToArray();
+            //}
             return testAdded;
         }
         /// <summary>
@@ -217,16 +213,16 @@ namespace AqoTesting.Domain.Workers
         public static bool RemoveTestById(this Room room, ObjectId testId)
         {
             var testRemoved = RemoveTestFromRoomById(room.Id, testId);
-            if (testRemoved == true)
-            {
-                var testsList = room.TestIds.ToList();
-                foreach (var _testId in room.TestIds)
-                {
-                    if (_testId != testId)
-                        testsList.Add(_testId);
-                }
-                room.TestIds = testsList.ToArray();
-            }
+            //if(testRemoved == true)
+            //{
+            //    var testsList = room.TestIds.ToList();
+            //    foreach(var _testId in room.TestIds)
+            //    {
+            //        if(_testId != testId)
+            //            testsList.Add(_testId);
+            //    }
+            //    room.TestIds = testsList.ToArray();
+            //}
             return testRemoved;
         }
 
@@ -403,8 +399,8 @@ namespace AqoTesting.Domain.Workers
         public static void RemoveField(this Room room, string fieldName)
         {
             var fieldsList = new List<RoomField>();
-            foreach (var field in room.Fields)
-                if (field.Name != fieldName)
+            foreach(var field in room.Fields)
+                if(field.Name != fieldName)
                     fieldsList.Add(field);
             room.Fields = fieldsList.ToArray();
             RemoveFieldFromRoom(room.Id, fieldName);

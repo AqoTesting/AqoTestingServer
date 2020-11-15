@@ -6,7 +6,7 @@ namespace AqoTesting.Domain.Utils
     {
         public static ObjectId? ParseObjectId(string stringId)
         {
-            if (ObjectId.TryParse(stringId, out ObjectId objectId))
+            if(ObjectId.TryParse(stringId, out ObjectId objectId))
                 return objectId;
             return null;
         }

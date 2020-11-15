@@ -20,15 +20,16 @@
         // Tests
         TestNotFound = 30,
 
-        //Users
+        //UserAPI
         UserNotFound = 40,
 
-        //Members
+        //MemberAPI
         MemberNotFound = 50,
         FieldNotPassed = 51,
         FieldRegexMissmatch = 52,
         FieldOptionNotInList = 53,
-        MemberNotIsChecked = 54,
-        MemberIsChecked = 55,
+        FieldsAlreadyExists = 54,
+        MemberNotIsChecked = 55,
+        MemberIsChecked = 56,
     }
 }

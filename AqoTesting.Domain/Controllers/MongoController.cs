@@ -26,9 +26,9 @@ namespace AqoTesting.Domain.Controllers
                 (options != null ? $"?options" : "");
 
             client = new MongoClient(leshaPidor);
-            if (client != null && defaultauthdb != null)
+            if(client != null && defaultauthdb != null)
             {
-                if (defaultauthdb != null)
+                if(defaultauthdb != null)
                     mainDatabase = client.GetDatabase(defaultauthdb);
                 PreInitCollections();
             }

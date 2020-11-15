@@ -8,10 +8,11 @@ namespace AqoTesting.Core.Repositories
 {
     public class TestRepository : ITestRepository
     {
-        public async Task<Test[]> GetTestsByIds(ObjectId[] testIds) =>
-            await Task.Run(() => TestWorker.GetTestsByIds(testIds));
-
+        
         public async Task<Test> GetTestById(ObjectId testId) =>
             await Task.Run(() => TestWorker.GetTestById(testId));
+
+        public async Task<Test[]> GetTestsByRoomId(ObjectId roomId) =>
+            await Task.Run(() => TestWorker.GetTestsByRoomId(roomId));
     }
 }

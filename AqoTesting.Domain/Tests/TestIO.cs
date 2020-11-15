@@ -1,13 +1,9 @@
-﻿using AqoTesting.Domain.Controllers;
-using MongoDB.Driver;
-using System;
+﻿using System;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using MongoDB.Bson;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.DTOs.DB.Users;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
-using AqoTesting.Shared.DTOs.DB;
-using System.Security.Cryptography;
 using AqoTesting.Domain.Utils;
 using AqoTesting.Domain.Workers;
 using AqoTesting.Shared.DTOs.DB.Members;
@@ -205,8 +201,7 @@ namespace AqoTesting.Domain.Tests
                 {
                     Name = "Test Dev Room",
                     Domain = "Test Dev Domain",
-                    //Members = 
-                    TestIds = AddTests(users[0]),
+                    //Member = 
                     OwnerId = users[0],
                     //TestIds = AddTests(ObjectId.Parse("5f9211bd5858e9955f588f19")),
                     //OwnerId = ObjectId.Parse("5f9211bd5858e9955f588f19"),

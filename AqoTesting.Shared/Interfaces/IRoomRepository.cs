@@ -16,7 +16,7 @@ namespace AqoTesting.Shared.Interfaces
 
         Task ReplaceRoom(ObjectId roomId, Room update);
 
-        Task<bool> RemoveMemberFromRoomByIdById(ObjectId roomId, ObjectId memberId);
+        Task<bool> RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId);
 
         Task<bool> DeleteRoomById(ObjectId roomId);
     }

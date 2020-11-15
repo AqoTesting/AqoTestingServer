@@ -1,8 +1,6 @@
 ﻿using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AqoTesting.Shared.Models
 {

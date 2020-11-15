@@ -80,67 +80,45 @@ namespace AqoTesting.Domain.Workers
         }
 
         /// <summary>
-        /// Получение мембера по данным авторизации
+        /// Проверка данных авторизации мембера
         /// </summary>
         /// <param name="login"></param>
         /// <param name="passwordHash"></param>
-        /// <returns>Мембер или null</returns>
-        public static Member? GetMemberByAuthData(string login, byte[] passwordHash)
+        /// <returns>bool</returns>
+        public static (bool, ObjectId) GetMemberIdByAuthData(string login, byte[] passwordHash)
         {
             var loginFilter = Builders<Member>.Filter.Eq("Email", login) | Builders<Member>.Filter.Eq("Login", login);
             var passwordFilter = Builders<Member>.Filter.Eq("PasswordHash", passwordHash);
             var filter = loginFilter & passwordFilter;
-            var user = MongoController.MemberCollection.Find(filter).SingleOrDefault();
+            var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
 
-            return user;
+            if(member != null)
+                return (true, member.Id);
+            else
+                return (false, default);
         }
         #endregion
 
         #region CheckMemberInRoom
         /// <summary>
-        /// Проверка находится ли пользователь в комнате
-        /// </summary>
-        /// <param name="roomId"></param>
-        /// <param name="memberLogin"></param>
-        /// <returns>true или false если пользователя не найдено</returns>
-        public static bool CheckMemberInRoom(ObjectId roomId, string memberLogin)
-        {
-            return GetMemberFromRoom(roomId, memberLogin) != null;
-        }
-        #endregion
-
-        #region IO
-        /// <summary>
-        /// Получение участника по id комнаты и полям
-        /// </summary>
-        /// <param name="roomId"></param>
-        /// <param name="fields"></param>
-        /// <returns>Объект участника</returns>
-        public static Member? GetMemberByFields(ObjectId roomId, Dictionary<string, string> fields)
-        {
-            var roomIdFilter = Builders<Member>.Filter.Eq("RoomId", roomId);
-            var fieldsFilter = Builders<Member>.Filter.Eq("Fields", fields);
-            var filter = roomIdFilter & fieldsFilter;
-            var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
-
-            return member;
-        }
-
-        /// <summary>
-        /// Получение участника по id комнаты и хешу полей
+        /// Проверка существования мембера в комнате по хешу полей
         /// </summary>
         /// <param name="roomId"></param>
         /// <param name="fieldsHash"></param>
-        /// <returns></returns>
-        public static Member? GetMemberByFields(ObjectId roomId, byte[] fieldsHash)
+        /// <returns>bool</returns>
+        public static bool CheckMemberInRoomByFieldsHash(ObjectId roomId, byte[] fieldsHash)
         {
             var roomIdFilter = Builders<Member>.Filter.Eq("RoomId", roomId);
-            var fieldsFilter = Builders<Member>.Filter.Eq("FieldsHash", fieldsHash);
-            var filter = roomIdFilter & fieldsFilter;
+            var fieldsHashFilter = Builders<Member>.Filter.Eq("FieldsHash", fieldsHash);
+            var filter = roomIdFilter & fieldsHashFilter;
             var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
 
-            return member;
+            return member != null;
         }
+
+        #endregion
+
+        #region IO
         /// <summary>
         /// Вставка пользователя в базу
         /// </summary>
@@ -149,6 +127,7 @@ namespace AqoTesting.Domain.Workers
         public static ObjectId InsertMember(Member member)
         {
             MongoController.MemberCollection.InsertOne(member);
+
             return member.Id;
         }
         /// <summary>
@@ -194,7 +173,7 @@ namespace AqoTesting.Domain.Workers
         public static bool DeleteMember(ObjectId memberId)
         {
             var member = GetMemberById(memberId);
-            if (member != null)
+            if(member != null)
                 return DeleteMember(member);
             return false;
         }
@@ -217,9 +196,9 @@ namespace AqoTesting.Domain.Workers
         public static Attempt? GetMemberAttempt(ObjectId memberId, ObjectId testId)
         {
             var member = GetMemberById(memberId);
-            if (member != null)
-                foreach (var attempt in member.Attempts)
-                    if (attempt.TestId.Equals(testId))
+            if(member != null)
+                foreach(var attempt in member.Attempts)
+                    if(attempt.TestId.Equals(testId))
                         return attempt;
 
             return null;
@@ -234,9 +213,9 @@ namespace AqoTesting.Domain.Workers
         public static Attempt? GetMemberAttempt(ObjectId roomId, string memberLogin, ObjectId testId)
         {
             var member = GetMemberFromRoom(roomId, memberLogin);
-            if (member != null)
-                foreach (var attempt in member.Attempts)
-                    if (attempt.TestId.Equals(testId))
+            if(member != null)
+                foreach(var attempt in member.Attempts)
+                    if(attempt.TestId.Equals(testId))
                         return attempt;
 
             return null;
@@ -342,7 +321,7 @@ namespace AqoTesting.Domain.Workers
         public static bool SetRoomId(this Member member, ObjectId newRoomId)
         {
             var roomIdChanged = SetMemberRoomId(member.Id, newRoomId);
-            if (roomIdChanged == true)
+            if(roomIdChanged == true)
                 member.RoomId = newRoomId;
             return roomIdChanged;
         }
@@ -370,7 +349,7 @@ namespace AqoTesting.Domain.Workers
         public static bool SetIsChecked(this Member member, bool newIsChecked)
         {
             var dbUpdateSuccessful = SetMemberIsChecked(member.Id, newIsChecked);
-            if (dbUpdateSuccessful == true)
+            if(dbUpdateSuccessful == true)
                 member.IsChecked = newIsChecked;
             return dbUpdateSuccessful;
         }
@@ -398,7 +377,7 @@ namespace AqoTesting.Domain.Workers
         public static bool SetIsRegistred(this Member member, bool newIsRegistred)
         {
             var dbUpdateSuccessful = SetMemberIsRegistered(member.Id, newIsRegistred);
-            if (dbUpdateSuccessful == true)
+            if(dbUpdateSuccessful == true)
                 member.IsRegistered = newIsRegistred;
             return dbUpdateSuccessful;
         }
@@ -425,7 +404,7 @@ namespace AqoTesting.Domain.Workers
         public static bool SetFieldsHash(this Member member, byte[] newFieldsHash)
         {
             var dbUpdateSuccessful = SetMemberFieldsHash(member.Id, newFieldsHash);
-            if (dbUpdateSuccessful == true)
+            if(dbUpdateSuccessful == true)
                 member.FieldsHash = newFieldsHash;
             return dbUpdateSuccessful;
         }
