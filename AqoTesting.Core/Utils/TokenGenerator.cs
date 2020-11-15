@@ -12,9 +12,19 @@ namespace AqoTesting.Core.Utils
 {
     public static class TokenGenerator
     {
-        public static TokenDTO GenerateToken(ObjectId id, Role role = Role.User, bool isChecked = true)
+        public static TokenDTO GenerateToken(ObjectId id, Role role)
         {
-            var identity = GetIdentity(id, role, isChecked);
+            var identity = GetIdentity(id, role, ObjectId.Empty, false);
+            return new TokenDTO { Token = GetTokenByIdentity(identity) };
+        }
+        public static TokenDTO GenerateToken(ObjectId id, Role role, ObjectId roomId, bool isChecked = true)
+        {
+            var identity = GetIdentity(id, role, roomId, isChecked);
+            return new TokenDTO { Token = GetTokenByIdentity(identity) };
+        }
+
+        private static string GetTokenByIdentity(ClaimsIdentity identity)
+        {
             var now = DateTime.UtcNow;
 
             var jwt = new JwtSecurityToken(
@@ -25,12 +35,9 @@ namespace AqoTesting.Core.Utils
                     expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            return new TokenDTO { Token = encodedJwt };
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
-
-        private static ClaimsIdentity GetIdentity(ObjectId id, Role role, bool isChecked)
+        private static ClaimsIdentity GetIdentity(ObjectId id, Role role, ObjectId roomId, bool isChecked)
         {
 
             List<Claim> claims = new List<Claim>
@@ -42,6 +49,7 @@ namespace AqoTesting.Core.Utils
             if(role == Role.Member)
             {
                 claims.Add(new Claim("isChecked", isChecked.ToString()));
+                claims.Add(new Claim("roomId", roomId.ToString()));
             }
 
             var claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);

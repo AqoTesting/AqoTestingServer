@@ -7,6 +7,7 @@ namespace AqoTesting.Shared.Interfaces
     {
         ObjectId UserId { get; set; }
         ObjectId MemberId { get; set; }
+        ObjectId RoomId { get; set; }
         bool IsChecked { get; set; }
     }
 }

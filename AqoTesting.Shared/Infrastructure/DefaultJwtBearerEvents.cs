@@ -2,6 +2,7 @@
 using AqoTesting.Shared.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MongoDB.Bson;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -18,17 +19,21 @@ namespace AqoTesting.Shared.Infrastructure
 
         public override async Task TokenValidated(TokenValidatedContext context)
         {
-            string role = context.Principal.Claims.Single(c => c.Type == ClaimTypes.Role).Value;
-            ObjectId id = ObjectId.Parse(context.Principal.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            bool isChecked = bool.Parse(context.Principal.Claims.Single(c => c.Type == "isChecked").Value);
+            Enum.TryParse(context.Principal.Claims.Single(c => c.Type == ClaimTypes.Role).Value, out Role role);
 
-            if (role == "User")
+            ObjectId id = ObjectId.Parse(context.Principal.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            if (role == Role.User)
             {
                 _workContext.UserId = id;
-            } else
+            } else if(role == Role.Member)
             {
                 _workContext.MemberId = id;
-                _workContext.IsChecked = isChecked;
+                _workContext.IsChecked = bool.Parse(context.Principal.Claims.Single(c => c.Type == "isChecked").Value);
+                _workContext.RoomId = ObjectId.Parse(context.Principal.Claims.Single(c => c.Type == "roomId").Value);
+            } else
+            {
+                context.Fail("Authentication failed");
             }
 
             await base.TokenValidated(context);
