@@ -16,5 +16,6 @@ namespace AqoTesting.Shared.DTOs.DB.Members
         public bool IsRegistered { get; set; }
         public bool IsChecked { get; set; }
         public Dictionary<string, string> Fields { get; set; }
+        public byte[] FieldsHash { get; set; }
     }
 }
