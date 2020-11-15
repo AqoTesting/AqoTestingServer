@@ -31,7 +31,7 @@ namespace AqoTesting.WebApi.Controllers
             if(member == null)
                 return this.ResultResponse<object>(OperationErrorMessages.WrongAuthData);
 
-            var authorizedMember = TokenGenerator.GenerateToken(member.Id, member.RoomId, member.IsChecked);
+            var authorizedMember = TokenGenerator.GenerateToken(member.Id, Role.Member);
 
             return this.ResultResponse(OperationErrorMessages.NoError, authorizedMember);
         }

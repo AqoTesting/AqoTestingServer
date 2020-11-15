@@ -26,7 +26,7 @@ namespace AqoTesting.WebApi.Controllers
             if (user == null)
                 return this.ResultResponse<object>(OperationErrorMessages.WrongAuthData);
 
-            var authorizedUser = TokenGenerator.GenerateToken(user.Id);
+            var authorizedUser = TokenGenerator.GenerateToken(user.Id, Role.User);
 
             return this.ResultResponse(OperationErrorMessages.NoError, authorizedUser);
         }
@@ -43,7 +43,7 @@ namespace AqoTesting.WebApi.Controllers
                 return this.ResultResponse<object>(OperationErrorMessages.EmailAlreadyTaken);
 
             var newUser = await _userService.InsertUser(signUpUserDTO);
-            var authorizedUser = TokenGenerator.GenerateToken(newUser.Id);
+            var authorizedUser = TokenGenerator.GenerateToken(newUser.Id, Role.User);
 
             return this.ResultResponse(OperationErrorMessages.NoError, authorizedUser);
         }

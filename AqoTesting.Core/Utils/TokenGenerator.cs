@@ -12,14 +12,14 @@ namespace AqoTesting.Core.Utils
 {
     public static class TokenGenerator
     {
-        public static TokenDTO GenerateToken(ObjectId id)
+        public static TokenDTO GenerateToken(ObjectId id, Role role)
         {
-            var identity = GetIdentity(id, Role.User, ObjectId.Empty, false);
+            var identity = GetIdentity(id, role, ObjectId.Empty, false);
             return new TokenDTO { Token = GetTokenByIdentity(identity) };
         }
-        public static TokenDTO GenerateToken(ObjectId id, ObjectId roomId, bool isChecked = true)
+        public static TokenDTO GenerateToken(ObjectId id, Role role, ObjectId roomId, bool isChecked = true)
         {
-            var identity = GetIdentity(id, Role.Member, roomId, isChecked);
+            var identity = GetIdentity(id, role, roomId, isChecked);
             return new TokenDTO { Token = GetTokenByIdentity(identity) };
         }
 
