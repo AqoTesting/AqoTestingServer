@@ -23,8 +23,8 @@ namespace AqoTesting.Core.Services
         public async Task<UserAPI_GetProfile_DTO> GetUserById(ObjectId userId)
         {
             var user = await _userRepository.GetUserById(userId);
-
-            if(user == null) throw new ResultException(OperationErrorMessages.UserNotFound);
+            if(user == null)
+                throw new ResultException(OperationErrorMessages.UserNotFound);
 
             var responseUser = Mapper.Map<UserAPI_GetProfile_DTO>(user);
 

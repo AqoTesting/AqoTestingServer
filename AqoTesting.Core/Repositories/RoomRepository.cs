@@ -31,8 +31,8 @@ namespace AqoTesting.Core.Repositories
         public async Task<ObjectId> InsertRoom(Room newRoom) =>
             await Task.Run(() => RoomWorker.InsertRoom(newRoom));
 
-        public async Task ReplaceRoom(ObjectId roomId, Room update) =>
-            await Task.Run(() => RoomWorker.ReplaceRoom(roomId, update));
+        public async Task ReplaceRoom(Room update) =>
+            await Task.Run(() => RoomWorker.ReplaceRoom(update));
 
         public async Task<bool> RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId) =>
             await Task.Run(() => RoomWorker.RemoveMemberFromRoomById(roomId, memberId));

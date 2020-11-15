@@ -22,23 +22,17 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/member/room/{RoomId}")]
         public async Task<IActionResult> GetRoomById([FromRoute] RoomId_DTO roomIdDTO)
         {
-            var room = await _roomService.MemberAPI_GetRoomById(roomIdDTO);
+            var (errorCode, response) = await _roomService.MemberAPI_GetRoomById(roomIdDTO);
 
-            if(room == null)
-                return this.ResultResponse<object>(OperationErrorMessages.RoomNotFound);
-
-            return this.ResultResponse(OperationErrorMessages.NoError, room);
+            return this.ResultResponse(errorCode, response);
         }
 
         [HttpGet("/member/room/domain/{RoomDomain}")]
-        public async Task<IActionResult> GetRoomByDomain([FromRoute] MemberAPI_RoomDomain_DTO roomDomainDTO)
+        public async Task<IActionResult> GetRoomByDomain([FromRoute] RoomDomain_DTO roomDomainDTO)
         {
-            var room = await _roomService.MemberAPI_GetRoomByDomain(roomDomainDTO);
+            var (errorCode, response) = await _roomService.MemberAPI_GetRoomByDomain(roomDomainDTO);
 
-            if(room == null)
-                return this.ResultResponse<object>(OperationErrorMessages.RoomNotFound);
-
-            return this.ResultResponse(OperationErrorMessages.NoError, room);
+            return this.ResultResponse(errorCode, response);
         }
     }
 }

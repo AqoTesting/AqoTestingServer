@@ -14,7 +14,7 @@ namespace AqoTesting.WebApi.Attributes
 
             if(!_workContext.IsChecked)
             {
-                context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.MemberNotIsChecked);
+                context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.MemberIsNotApproved);
             }
 
             base.OnActionExecuting(context);

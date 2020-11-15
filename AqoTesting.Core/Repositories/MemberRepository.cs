@@ -8,11 +8,13 @@ namespace AqoTesting.Core.Repositories
 {
     public class MemberRepository : IMemberRepository
     {
-        public async Task<(bool, ObjectId)> GetMemberIdByAuthData(string login, byte[] passwordHash) =>
-            await Task.Run(() => MemberWorker.GetMemberIdByAuthData(login, passwordHash));
+        public async Task<Member> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash) =>
+            await Task.Run(() => MemberWorker.GetMemberByAuthData(roomId, login, passwordHash));
 
-        public async Task<bool> CheckFieldsHashExists(ObjectId roomId, byte[] fieldsHash) =>
-            await Task.Run(() => MemberWorker.CheckMemberInRoomByFieldsHash(roomId, fieldsHash));
+        public async Task<bool> CheckLoginTaken(ObjectId roomId, string login) =>
+            await Task.Run(() => MemberWorker.CheckMemberInRoomByLogin(roomId, login));
+        public async Task<bool> CheckEmailTaken(ObjectId roomId, string email) =>
+            await Task.Run(() => MemberWorker.CheckMemberInRoomByEmail(roomId, email));
 
         public async Task<Member> GetMemberById(ObjectId memberId) =>
             await Task.Run(() => MemberWorker.GetMemberById(memberId));
@@ -23,7 +25,13 @@ namespace AqoTesting.Core.Repositories
         public async Task<Member[]> GetMembersByRoomId(ObjectId roomId) =>
             await Task.Run(() => MemberWorker.GetMembersFromRoom(roomId));
 
+        public async Task<Member> GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash) =>
+            await Task.Run(() => MemberWorker.GetMemberByFieldsHash(roomId, fieldsHash));
+
         public async Task<ObjectId> InsertMember(Member newMember) =>
             await Task.Run(() => MemberWorker.InsertMember(newMember));
+
+        public async Task ReplaceMember(Member member) =>
+            await Task.Run(() => MemberWorker.ReplaceMember(member));
     }
 }

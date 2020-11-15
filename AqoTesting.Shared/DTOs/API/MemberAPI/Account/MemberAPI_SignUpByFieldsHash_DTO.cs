@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AqoTesting.Shared.DTOs.API.MemberAPI.Account
 {
-    public class MemberAPI_SignUp_DTO
+    public class MemberAPI_SignUpByFieldsHash_DTO
     {
         [Required]
         [StringLength(32, MinimumLength = 1)]
@@ -24,7 +24,8 @@ namespace AqoTesting.Shared.DTOs.API.MemberAPI.Account
         public string? RoomId { get; set; }
 
         [Required]
-        //[StringLength(512)]
-        public Dictionary<string, string>? Fields { get; set; }
+        [StringLength(64, MinimumLength = 64)]
+        [RegularExpression(@"^[0-9abcdef]+$")]
+        public string? FieldsHash { get; set; }
     }
 }

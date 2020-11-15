@@ -20,7 +20,7 @@ namespace AqoTesting.WebApi.Attributes
 
             if(_workContext.IsChecked)
             {
-                context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.MemberIsChecked);
+                context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.MemberIsApproved);
             }
 
             base.OnActionExecuting(context);

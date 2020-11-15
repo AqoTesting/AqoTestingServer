@@ -36,7 +36,7 @@ namespace AqoTesting.WebApi.Controllers
         [HttpPost("/user/room/{RoomId}/member")]
         public async Task<IActionResult> AddMember([FromRoute] RoomId_DTO roomIdDTO, [FromBody] UserAPI_PostMember_DTO addMemberDTO)
         {
-            (var errorCode, var response) = await _memberService.UserAPI_MemberManualAdd(roomIdDTO, addMemberDTO);
+            var (errorCode, response) = await _memberService.UserAPI_ManualMemberAdd(roomIdDTO, addMemberDTO);
 
             return this.ResultResponse(errorCode, response);
         }

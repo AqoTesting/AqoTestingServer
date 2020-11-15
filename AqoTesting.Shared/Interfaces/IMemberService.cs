@@ -9,18 +9,23 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IMemberService
     {
-        Task<(OperationErrorMessages, string)> MemberAPI_SignIn(MemberAPI_SignIn_DTO signInDTO);
+        Task<(OperationErrorMessages, object)> UserAPI_GetMemberById(ObjectId memberId);
+        Task<(OperationErrorMessages, object)> UserAPI_GetMemberById(MemberId_DTO memberIdDTO);
 
-        Task<UserAPI_GetMember_DTO> UserAPI_GetMemberById(ObjectId memberId);
-        Task<UserAPI_GetMember_DTO> UserAPI_GetMemberById(MemberId_DTO memberIdDTO);
+        Task<(OperationErrorMessages, object)> UserAPI_GetMembersByRoomId(ObjectId roomId);
+        Task<(OperationErrorMessages, object)> UserAPI_GetMembersByRoomId(RoomId_DTO roomIdDTO);
 
-        Task<UserAPI_GetMembersItem_DTO> UserAPI_GetMembersByRoomId(ObjectId roomId);
-        Task<UserAPI_GetMembersItem_DTO> UserAPI_GetMembersByRoomId(RoomId_DTO roomIdDTO);
+        Task<(OperationErrorMessages, object)> UserAPI_ManualMemberAdd(ObjectId roomId, UserAPI_PostMember_DTO postMemberDTO);
+        Task<(OperationErrorMessages, object)> UserAPI_ManualMemberAdd(RoomId_DTO roomIdDTO, UserAPI_PostMember_DTO postMemberDTO);
 
-        Task<(OperationErrorMessages, object)> UserAPI_MemberManualAdd(ObjectId roomId, UserAPI_PostMember_DTO postMemberDTO);
-        Task<(OperationErrorMessages, object)> UserAPI_MemberManualAdd(RoomId_DTO roomIdDTO, UserAPI_PostMember_DTO postMemberDTO);
 
-        Task<MemberAPI_GetProfile_DTO> MemberAPI_GetMemberById(ObjectId memberId);
-        Task<MemberAPI_GetProfile_DTO> MemberAPI_GetMemberById(MemberId_DTO memberIdDTO);
+        Task<(OperationErrorMessages, object)> MemberAPI_SignIn(MemberAPI_SignIn_DTO signInDTO);
+
+        Task<(OperationErrorMessages, object)> MemberAPI_SignUpByFields(MemberAPI_SignUpByFields_DTO signUpDTO);
+
+        Task<(OperationErrorMessages, object)> MemberAPI_SignUpByFieldsHash(MemberAPI_SignUpByFieldsHash_DTO signUpDTO);
+
+        Task<(OperationErrorMessages, object)> MemberAPI_GetMemberById(ObjectId memberId);
+        Task<(OperationErrorMessages, object)> MemberAPI_GetMemberById(MemberId_DTO memberIdDTO);
     }
 }

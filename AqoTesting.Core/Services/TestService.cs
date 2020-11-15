@@ -22,7 +22,8 @@ namespace AqoTesting.Core.Services
             _workContext = workContext;
         }
 
-        public async Task<UserAPI_GetTestsItem_DTO[]> GetTestsByRoomId(ObjectId roomId)
+        #region UserAPI
+        public async Task<UserAPI_GetTestsItem_DTO[]> UserAPI_GetTestsByRoomId(ObjectId roomId)
         {
             var room = await _roomRepository.GetRoomById(roomId);
 
@@ -35,10 +36,10 @@ namespace AqoTesting.Core.Services
 
             return responseTests;
         }
-        public async Task<UserAPI_GetTestsItem_DTO[]> GetTestsByRoomId(RoomId_DTO roomIdDTO) =>
-            await GetTestsByRoomId(ObjectId.Parse(roomIdDTO.RoomId));
+        public async Task<UserAPI_GetTestsItem_DTO[]> UserAPI_GetTestsByRoomId(RoomId_DTO roomIdDTO) =>
+            await UserAPI_GetTestsByRoomId(ObjectId.Parse(roomIdDTO.RoomId));
 
-        public async Task<UserAPI_GetTest_DTO> GetTestById(ObjectId testId)
+        public async Task<UserAPI_GetTest_DTO> UserAPI_GetTestById(ObjectId testId)
         {
             var test = await _testRepository.GetTestById(testId);
 
@@ -49,7 +50,8 @@ namespace AqoTesting.Core.Services
 
             return responseTest;
         }
-        public async Task<UserAPI_GetTest_DTO> GetTestById(TestId_DTO testIdDTO) =>
-            await GetTestById(ObjectId.Parse(testIdDTO.TestId));
+        public async Task<UserAPI_GetTest_DTO> UserAPI_GetTestById(TestId_DTO testIdDTO) =>
+            await UserAPI_GetTestById(ObjectId.Parse(testIdDTO.TestId));
+        #endregion
     }
 }

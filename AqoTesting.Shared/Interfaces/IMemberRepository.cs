@@ -6,9 +6,10 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IMemberRepository
     {
-        Task<(bool, ObjectId)> GetMemberIdByAuthData(string login, byte[] passwordHash);
-
-        Task<bool> CheckFieldsHashExists(ObjectId roomId, byte[] fieldsHash);
+        Task<Member> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash);
+        
+        Task<bool> CheckLoginTaken(ObjectId roomId, string login);
+        Task<bool> CheckEmailTaken(ObjectId roomId, string email);
 
         Task<Member> GetMemberById(ObjectId memberId);
 
@@ -16,6 +17,10 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<Member[]> GetMembersByRoomId(ObjectId roomId);
 
+        Task<Member> GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash);
+
         Task<ObjectId> InsertMember(Member newMember);
+
+        Task ReplaceMember(Member updatedMember);
     }
 }

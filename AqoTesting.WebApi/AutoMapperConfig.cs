@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using AqoTesting.Core.Utils;
+using AqoTesting.Shared.DTOs.API.MemberAPI.Account;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Rooms;
 using AqoTesting.Shared.DTOs.API.UserAPI.Account;
 using AqoTesting.Shared.DTOs.API.UserAPI.Members;
@@ -26,7 +27,7 @@ namespace AqoTesting.WebApi.Infrastructure
             {
                 cfg.AllowNullCollections = true;
 
-                // Users
+                #region Users
                 cfg.CreateMap<UserAPI_SignUp_DTO, User>()
                     .ForMember(x => x.PasswordHash,
                         x => x.MapFrom(m => Sha256.Compute(m.Password)))
@@ -38,8 +39,9 @@ namespace AqoTesting.WebApi.Infrastructure
                         x => x.MapFrom(m => Role.User));
 
                 cfg.CreateMap<User, UserAPI_GetProfile_DTO>();
+                #endregion
 
-                // Rooms
+                #region Rooms
                 cfg.CreateMap<Room, UserAPI_GetRoomsItem_DTO>();
 
                 cfg.CreateMap<UserAPI_PostRoom_DTO, Room>();
@@ -70,30 +72,10 @@ namespace AqoTesting.WebApi.Infrastructure
                             return options.IsBsonArray ? options.AsBsonArray.Select(item => item.AsString).ToArray() : null;
                         }));
 
-                cfg.CreateMap<RoomField, MemberAPI_GetRoomField_DTO>()
-                    .ForMember(x => x.Placeholder,
-                        x => x.MapFrom(m =>
-                            m.Type == FieldType.Input ? m.Data["Placeholder"].AsString : null
-                        ))
-                    .ForMember(x => x.Mask,
-                        x => x.ResolveUsing(m =>
-                            m.Type == FieldType.Input ? m.Data["Mask"].AsString : null
-                        ))
-                    .ForMember(x => x.Options,
-                        x => x.ResolveUsing(m =>
-                            m.Type == FieldType.Select ? m.Data["Options"].AsBsonArray.Select(item => item.AsString).ToArray() : null
-                        ));
-
                 cfg.CreateMap<Room, UserAPI_GetRoom_DTO>()
                     .ForMember(x => x.Fields,
                         x => x.MapFrom(m =>
                             Mapper.Map<UserAPI_RoomField_DTO[]>(m.Fields)
-                        ));
-
-                cfg.CreateMap<Room, MemberAPI_GetRoom_DTO>()
-                    .ForMember(x => x.Fields,
-                        x => x.MapFrom(m =>
-                            Mapper.Map<MemberAPI_GetRoomField_DTO[]>(m.Fields)
                         ));
 
                 cfg.CreateMap<UserAPI_RoomField_DTO, RoomField>()
@@ -110,16 +92,52 @@ namespace AqoTesting.WebApi.Infrastructure
                                 return new BsonDocument();
                         }));
 
-                // Tests
+                cfg.CreateMap<RoomField, MemberAPI_GetRoomField_DTO>()
+                    .ForMember(x => x.Placeholder,
+                        x => x.ResolveUsing(m =>
+                        {
+                            if(m.Type != FieldType.Input) return null;
+                            var placeholder = m.Data["Placeholder"];
+                            return m.Type == FieldType.Input && placeholder.IsString ? placeholder.AsString : null;
+                        }))
+                    .ForMember(x => x.Mask,
+                        x => x.ResolveUsing(m =>
+                        {
+                            if(m.Type != FieldType.Input) return null;
+                            var mask = m.Data["Mask"];
+                            return mask.IsString ? mask.AsString : null;
+                        }))
+                    .ForMember(x => x.Options,
+                        x => x.ResolveUsing(m =>
+                        {
+                            if(m.Type != FieldType.Select) return null;
+                            var options = m.Data["Options"];
+                            return options.IsBsonArray ? options.AsBsonArray.Select(item => item.AsString).ToArray() : null;
+                        }));
+
+                cfg.CreateMap<Room, MemberAPI_GetRoom_DTO>()
+                    .ForMember(x => x.Fields,
+                        x => x.MapFrom(m =>
+                            Mapper.Map<MemberAPI_GetRoomField_DTO[]>(m.Fields)
+                        ));
+                #endregion
+
+                #region Tests
                 cfg.CreateMap<Test, UserAPI_GetTestsItem_DTO>();
                 cfg.CreateMap<Test, UserAPI_GetTest_DTO>();
+                #endregion
 
-                // Members
+                #region Members
                 cfg.CreateMap<Member, UserAPI_GetMembersItem_DTO>();
 
-                cfg.CreateMap<UserAPI_PostMember_DTO, Member>()
-                    .ForMember(x => x.IsChecked,
-                        x => x.MapFrom(m => true));
+                cfg.CreateMap<UserAPI_PostMember_DTO, Member>();
+
+                cfg.CreateMap<MemberAPI_SignUpByFields_DTO, Member>()
+                    .ForMember(x => x.RoomId,
+                        x => x.MapFrom(m =>
+                            ObjectId.Parse(m.RoomId)
+                        ));
+                #endregion
             });
         }
     }

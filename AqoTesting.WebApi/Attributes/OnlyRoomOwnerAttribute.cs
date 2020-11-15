@@ -8,6 +8,8 @@ using AqoTesting.Shared.Models;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
 using AqoTesting.Shared.DTOs.API.Common;
+using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+using MongoDB.Bson;
 
 namespace AqoTesting.WebApi.Attributes
 {
@@ -20,7 +22,8 @@ namespace AqoTesting.WebApi.Attributes
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var _roomService = context.HttpContext.RequestServices.GetService<IRoomService>();
+            //var _roomService = context.HttpContext.RequestServices.GetService<IRoomService>();
+            var _roomRepository = context.HttpContext.RequestServices.GetService<IRoomRepository>();
 
             var descriptor = context.ActionDescriptor as ControllerActionDescriptor;
 
@@ -40,7 +43,7 @@ namespace AqoTesting.WebApi.Attributes
 
                     var argument = context.ActionArguments[parameter.Name];
 
-                    var evalResult = EvaluateValidationAttributes(argument, context.HttpContext, _roomService, parameter.Name);
+                    var evalResult = EvaluateValidationAttributes(argument, context.HttpContext, _roomRepository, parameter.Name);
                     if(evalResult != OperationErrorMessages.NoError)
                         context.Result = ResultResponceExtension.ObjectResultResponse<object>(evalResult);
                 }
@@ -48,20 +51,21 @@ namespace AqoTesting.WebApi.Attributes
 
             base.OnActionExecuting(context);
         }
-        private OperationErrorMessages EvaluateValidationAttributes(object argument, HttpContext httpContext, IRoomService roomService, string dtoName)
+        private OperationErrorMessages EvaluateValidationAttributes(object argument, HttpContext httpContext, IRoomRepository roomRepository, string dtoName)
         {
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
-            var ownerId = _workContext.UserId.ToString();
-            UserAPI_GetRoom_DTO room = null;
+            var ownerId = _workContext.UserId;
+
+            var room = new Room();
 
             if(dtoName == "roomIdDTO")
             {
-                room = roomService.UserAPI_GetRoomById((RoomId_DTO)argument).Result;
+                room = roomRepository.GetRoomById(ObjectId.Parse(((RoomId_DTO)argument).RoomId)).Result;
             }
             else if(dtoName == "roomDomainDTO")
             {
-                room = roomService.UserAPI_GetRoomByDomain((UserAPI_RoomDomain_DTO)argument).Result;
+                room = roomRepository.GetRoomByDomain(((RoomDomain_DTO)argument).RoomDomain).Result;
             }
 
             if(room == null)

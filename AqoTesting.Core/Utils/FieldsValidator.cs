@@ -1,4 +1,5 @@
-﻿using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+﻿using AqoTesting.Shared.DTOs.API.Common;
+using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Enums;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace AqoTesting.Core.Utils
 {
     public static class FieldsValidator
     {
-        public static (bool, OperationErrorMessages, string) Validate(RoomField[] patternFields, Dictionary<string, string> inputFields)
+        public static (bool, OperationErrorMessages, object) Validate(RoomField[] patternFields, Dictionary<string, string> inputFields)
         {
             foreach(var patternField in patternFields)
             {
@@ -24,18 +25,18 @@ namespace AqoTesting.Core.Utils
                         {
                             var regex = new Regex(mask.AsString);
                             if(!regex.IsMatch(inputFieldValue))
-                                return (false, OperationErrorMessages.FieldRegexMissmatch, patternField.Name);
+                                return (false, OperationErrorMessages.FieldRegexMissmatch, new Error_DTO { ErrorSubject = patternField.Name });
                         }
                     }
                     else if(patternField.Type == FieldType.Select)
                     {
                         var options = patternField.Data["Options"];
                         if(options.IsBsonArray && !options.AsBsonArray.Select(item => item.AsString).ToArray().Contains(inputFieldValue))
-                            return (false, OperationErrorMessages.FieldOptionNotInList, patternField.Name);
+                            return (false, OperationErrorMessages.FieldOptionNotInList, new Error_DTO { ErrorSubject = patternField.Name });
                     }
                 }
                 else if(patternField.IsRequired)
-                    return (false, OperationErrorMessages.FieldNotPassed, patternField.Name);
+                    return (false, OperationErrorMessages.FieldNotPassed, new Error_DTO { ErrorSubject = patternField.Name });
             }
 
             return (true, OperationErrorMessages.NoError, null);

@@ -44,7 +44,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         public static ObjectId InsertRoom(Room room)
         {
-            MongoController.RoomCollection.InsertOne(room);
+            MongoController.RoomCollection?.InsertOne(room);
             return room.Id;
         }
         /// <summary>
@@ -52,28 +52,28 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         public static ObjectId[] InsertRooms(Room[] rooms)
         {
-            MongoController.RoomCollection.InsertMany(rooms);
+            MongoController.RoomCollection?.InsertMany(rooms);
             return rooms.Select(room => room.Id).ToArray();
         }
         /// <summary>
         /// Полная перезапись комнаты (Бу-э-э-э)
         /// </summary>
-        public static void ReplaceRoom(ObjectId roomId, Room updated)
+        public static void ReplaceRoom(Room updatedRoom)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            MongoController.RoomCollection.ReplaceOne(filter, updated);
+            var filter = Builders<Room>.Filter.Eq("Id", updatedRoom.Id);
+            MongoController.RoomCollection?.ReplaceOne(filter, updatedRoom);
         }
         /// <summary>
         /// Всё еще полная перезапись, но красивее
         /// </summary>
-        public static void UpdateInDB(this Room room) => ReplaceRoom(room.Id, room);
+        public static void UpdateInDB(this Room room) => ReplaceRoom(room);
         /// <summary>
         /// Удаление комнаты по Id
         /// </summary>
         public static bool DeleteRoomById(ObjectId roomId)
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var isDeleteSuccessful = MongoController.RoomCollection.DeleteOne(filter).DeletedCount == 1;
+            var isDeleteSuccessful = MongoController.RoomCollection?.DeleteOne(filter).DeletedCount == 1;
             return isDeleteSuccessful;
         }
         #endregion
@@ -87,7 +87,7 @@ namespace AqoTesting.Domain.Workers
             MemberWorker.SetMemberRoomId(memberId, roomId);
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Push("MemberAPI", memberId);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
         /// Привязывает пользователя из базы к комнате, добавляет пользователя в объект комнаты
@@ -109,7 +109,7 @@ namespace AqoTesting.Domain.Workers
             MemberWorker.InsertMember(member);
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Push("MemberAPI", member.Id);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
         /// Добавляет нового пользователя в комнату (пользователя, которого нет в базе), добавляет пользователя в объект комнаты
@@ -128,7 +128,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Pull("MemberAPI", memberId);
-            var isRemovedSuccessful = MongoController.RoomCollection.UpdateOne(filter, update).ModifiedCount == 1;
+            var isRemovedSuccessful = MongoController.RoomCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isRemovedSuccessful;
         }
@@ -154,7 +154,7 @@ namespace AqoTesting.Domain.Workers
             if(member != null)
             {
                 var update = Builders<Room>.Update.Pull("MemberAPI", member.Id);
-                MongoController.RoomCollection.UpdateOne(filter, update);
+                MongoController.RoomCollection?.UpdateOne(filter, update);
             }
         }
         /// <summary>
@@ -173,7 +173,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Push("TestIds", testId);
-            var isUpdatedSuccessful = MongoController.RoomCollection.UpdateOne(filter, update).ModifiedCount == 1;
+            var isUpdatedSuccessful = MongoController.RoomCollection?.UpdateOne(filter, update).ModifiedCount == 1;
             return isUpdatedSuccessful;
         }
         /// <summary>
@@ -201,7 +201,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Pull("TestIds", testId);
-            var isUpdatedSuccessful = MongoController.RoomCollection.UpdateOne(filter, update).ModifiedCount == 1;
+            var isUpdatedSuccessful = MongoController.RoomCollection?.UpdateOne(filter, update).ModifiedCount == 1;
             return isUpdatedSuccessful;
         }
         /// <summary>
@@ -238,7 +238,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Set("Name", newName);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
         /// Устанавливает имя комнаты
@@ -259,7 +259,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Set("Domain", newDomain);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
         /// Устанавливает домен комнаты
@@ -280,7 +280,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Set("Fields", newFields);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
         /// Устанавливает поля комнаты
@@ -301,7 +301,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Set("IsDataRequired", newIsDataRequired);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
         /// Устанавливает нужна ли дополнительная информация в комнате
@@ -322,7 +322,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Set("IsActive", newIsActive);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
         /// Устанавливает активна ли комната
@@ -365,7 +365,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var update = Builders<Room>.Update.Push("Fields", field);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
         /// Добавляет поле в комнату
@@ -389,7 +389,7 @@ namespace AqoTesting.Domain.Workers
             var filter = Builders<Room>.Filter.Eq("Id", roomId);
             var fieldFilter = Builders<RoomField>.Filter.Eq("Name", fieldName);
             var update = Builders<Room>.Update.PullFilter("Fields", fieldFilter);
-            MongoController.RoomCollection.UpdateOne(filter, update);
+            MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
         /// Удаляет поле из комнаты

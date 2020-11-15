@@ -23,7 +23,7 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/user/room/{RoomId}/tests")]
         public async Task<IActionResult> GetTests([FromRoute] RoomId_DTO roomIdDTO)
         {
-            var tests = await _testService.GetTestsByRoomId(roomIdDTO);
+            var tests = await _testService.UserAPI_GetTestsByRoomId(roomIdDTO);
 
             return this.ResultResponse(OperationErrorMessages.NoError, tests);
         }
@@ -33,7 +33,7 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/user/test/{TestId}")]
         public async Task<IActionResult> GetTest([FromRoute] TestId_DTO testIdDTO)
         {
-            var test = await _testService.GetTestById(testIdDTO);
+            var test = await _testService.UserAPI_GetTestById(testIdDTO);
 
             return this.ResultResponse(OperationErrorMessages.NoError, test);
         }

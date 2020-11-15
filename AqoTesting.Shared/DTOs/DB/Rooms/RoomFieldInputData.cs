@@ -2,7 +2,7 @@
 {
     public class RoomFieldInputData
     {
-        public string Placeholder { get; set; }
-        public string Mask { get; set; }
+        public string? Placeholder { get; set; }
+        public string? Mask { get; set; }
     }
 }

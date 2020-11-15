@@ -5,7 +5,6 @@
         NoError = 0,
         InvalidModel = 1,
         EntityNotFound = 3,
-        NothingChanged = 4,
 
         // Auth
         WrongAuthData = 10,
@@ -20,16 +19,22 @@
         // Tests
         TestNotFound = 30,
 
-        //UserAPI
+        // Users
         UserNotFound = 40,
 
-        //MemberAPI
+        // Members
         MemberNotFound = 50,
-        FieldNotPassed = 51,
-        FieldRegexMissmatch = 52,
-        FieldOptionNotInList = 53,
-        FieldsAlreadyExists = 54,
-        MemberNotIsChecked = 55,
-        MemberIsChecked = 56,
+        MemberAlreadyExists = 51,
+
+        FieldNotPassed = 52,
+        FieldRegexMissmatch = 53,
+        FieldOptionNotInList = 54,
+        FieldsAlreadyExists = 55,
+
+        MemberIsNotApproved = 56,
+        MemberIsApproved = 57,
+
+        RegistrationDisabled = 58,
+        RegistrationEnabled = 59,
     }
 }

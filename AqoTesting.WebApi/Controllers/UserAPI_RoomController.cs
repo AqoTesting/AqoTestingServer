@@ -26,42 +26,37 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/user/room/{RoomId}")]
         public async Task<IActionResult> GetRoomById([FromRoute] RoomId_DTO roomIdDTO)
         {
-            var room = await _roomService.UserAPI_GetRoomById(roomIdDTO);
+            var (errorCode, response) = await _roomService.UserAPI_GetRoomById(roomIdDTO);
 
-            return this.ResultResponse(OperationErrorMessages.NoError, room);
+            return this.ResultResponse(errorCode, response);
         }
 
         [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpGet("/user/room/domain/{RoomDomain}")]
-        public async Task<IActionResult> GetRoomByDomain([FromRoute] UserAPI_RoomDomain_DTO roomDomainDTO)
+        public async Task<IActionResult> GetRoomByDomain([FromRoute] RoomDomain_DTO roomDomainDTO)
         {
-            var room = await _roomService.UserAPI_GetRoomByDomain(roomDomainDTO);
+            var (errorCode, response) = await _roomService.UserAPI_GetRoomByDomain(roomDomainDTO);
 
-            if(room == null)
-                return this.ResultResponse<object>(OperationErrorMessages.RoomNotFound);
-
-            return this.ResultResponse(OperationErrorMessages.NoError, room);
+            return this.ResultResponse(errorCode, response);
         }
 
         [Auth(Role = Role.User)]
         [HttpGet("/user/rooms")]
         public async Task<IActionResult> GetRoomsByOwnerId()
         {
-            var rooms = await _roomService.UserAPI_GetRoomsByOwnerId(_workContext.UserId);
+            var (errorCode, response) = await _roomService.UserAPI_GetRoomsByOwnerId(_workContext.UserId);
 
-            return this.ResultResponse(OperationErrorMessages.NoError, rooms);
+            return this.ResultResponse(errorCode, response);
         }
 
         [Auth(Role = Role.User)]
         [HttpGet("/user/room/domainExists/{RoomDomain}")]
-        public async Task<IActionResult> DomainExists([FromRoute] UserAPI_RoomDomain_DTO roomDomainDTO)
+        public async Task<IActionResult> DomainExists([FromRoute] RoomDomain_DTO roomDomainDTO)
         {
-            var exists = await _roomService.UserAPI_GetRoomByDomain(roomDomainDTO);
+            var (errorCode, response) = await _roomService.UserAPI_GetRoomByDomain(roomDomainDTO);
 
-            var result = exists != null;
-
-            return this.ResultResponse(OperationErrorMessages.NoError, result);
+            return this.ResultResponse(errorCode, response);
         }
 
 
@@ -69,14 +64,9 @@ namespace AqoTesting.WebApi.Controllers
         [HttpPost("/user/room")]
         public async Task<IActionResult> CreateRoom([FromBody] UserAPI_PostRoom_DTO newRoom)
         {
-            var domainAlreadyTaken = await _roomService.UserAPI_GetRoomByDomain(newRoom.Domain);
+            var (errorCode, response) = await _roomService.UserAPI_InsertRoom(newRoom);
 
-            if(domainAlreadyTaken != null)
-                throw new ResultException(OperationErrorMessages.DomainAlreadyTaken);
-
-            var roomId = await _roomService.UserAPI_InsertRoom(newRoom);
-
-            return this.ResultResponse(OperationErrorMessages.NoError, roomId);
+            return this.ResultResponse(errorCode, response);
         }
 
         [Auth(Role = Role.User)]
@@ -94,9 +84,9 @@ namespace AqoTesting.WebApi.Controllers
         [HttpDelete("/user/room/{RoomId}")]
         public async Task<IActionResult> DeleteRoom([FromRoute] RoomId_DTO roomIdDTO)
         {
-            await _roomService.UserAPI_DeleteRoomById(roomIdDTO);
+            var errorCode = await _roomService.UserAPI_DeleteRoomById(roomIdDTO);
 
-            return this.ResultResponse<object>(OperationErrorMessages.NoError);
+            return this.ResultResponse<object>(errorCode);
         }
     }
 }

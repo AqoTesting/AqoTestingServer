@@ -85,37 +85,67 @@ namespace AqoTesting.Domain.Workers
         /// <param name="login"></param>
         /// <param name="passwordHash"></param>
         /// <returns>bool</returns>
-        public static (bool, ObjectId) GetMemberIdByAuthData(string login, byte[] passwordHash)
+        public static Member GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash)
         {
+            var roomIdFilter = Builders<Member>.Filter.Eq("RoomId", roomId);
             var loginFilter = Builders<Member>.Filter.Eq("Email", login) | Builders<Member>.Filter.Eq("Login", login);
             var passwordFilter = Builders<Member>.Filter.Eq("PasswordHash", passwordHash);
-            var filter = loginFilter & passwordFilter;
+            var filter = roomIdFilter & loginFilter & passwordFilter;
+
             var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
 
-            if(member != null)
-                return (true, member.Id);
-            else
-                return (false, default);
+            return member;
         }
-        #endregion
 
-        #region CheckMemberInRoom
         /// <summary>
-        /// Проверка существования мембера в комнате по хешу полей
+        /// Получение мембера по хешу полей
         /// </summary>
         /// <param name="roomId"></param>
         /// <param name="fieldsHash"></param>
         /// <returns>bool</returns>
-        public static bool CheckMemberInRoomByFieldsHash(ObjectId roomId, byte[] fieldsHash)
+        public static Member GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash)
         {
             var roomIdFilter = Builders<Member>.Filter.Eq("RoomId", roomId);
             var fieldsHashFilter = Builders<Member>.Filter.Eq("FieldsHash", fieldsHash);
             var filter = roomIdFilter & fieldsHashFilter;
             var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
 
+            return member;
+        }
+        #endregion
+
+        #region CheckMemberInRoom
+        /// <summary>
+        /// Проверка существования мембера в комнате по логину
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="login"></param>
+        /// <returns>bool</returns>
+        public static bool CheckMemberInRoomByLogin(ObjectId roomId, string login)
+        {
+            var roomIdFilter = Builders<Member>.Filter.Eq("RoomId", roomId);
+            var loginFilter = Builders<Member>.Filter.Eq("Login", login);
+            var filter = roomIdFilter & loginFilter;
+            var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
+
             return member != null;
         }
 
+        /// <summary>
+        /// Проверка существования мембера в комнате по имейлу
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="email"></param>
+        /// <returns>bool</returns>
+        public static bool CheckMemberInRoomByEmail(ObjectId roomId, string email)
+        {
+            var roomIdFilter = Builders<Member>.Filter.Eq("RoomId", roomId);
+            var emailFilter = Builders<Member>.Filter.Eq("Email", email);
+            var filter = roomIdFilter & emailFilter;
+            var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
+
+            return member != null;
+        }
         #endregion
 
         #region IO
@@ -126,7 +156,7 @@ namespace AqoTesting.Domain.Workers
         /// <returns>id пользователя в базе</returns>
         public static ObjectId InsertMember(Member member)
         {
-            MongoController.MemberCollection.InsertOne(member);
+            MongoController.MemberCollection?.InsertOne(member);
 
             return member.Id;
         }
@@ -143,7 +173,7 @@ namespace AqoTesting.Domain.Workers
         /// <returns>id пользователей в базе</returns>
         public static ObjectId[] InsertMembers(Member[] members)
         {
-            MongoController.MemberCollection.InsertMany(members);
+            MongoController.MemberCollection?.InsertMany(members);
             return members.Select(members => members.Id).ToArray();
         }
         /// <summary>
@@ -152,6 +182,17 @@ namespace AqoTesting.Domain.Workers
         /// <param name="members"></param>
         /// <returns>id пользователей в базе</returns>
         public static ObjectId[] Insert(this Member[] members) => InsertMembers(members);
+
+        /// <summary>
+        /// Полная перезапись мембера (сам Бу-э-э-э)
+        /// </summary>
+        /// <param name="updatedMember"
+        public static void ReplaceMember(Member updatedMember)
+        {
+            var filter = Builders<Member>.Filter.Eq("Id", updatedMember.Id);
+            MongoController.MemberCollection?.ReplaceOne(filter, updatedMember);
+        }
+
         /// <summary>
         /// Удаление пользователя из базы
         /// </summary>
@@ -161,7 +202,7 @@ namespace AqoTesting.Domain.Workers
         {
             RoomWorker.RemoveMemberFromRoomById(member.RoomId, member.Id);
             var filter = Builders<Member>.Filter.Eq("Id", member.Id);
-            var isDeleteSuccessful = MongoController.MemberCollection.DeleteOne(filter).DeletedCount == 1;
+            var isDeleteSuccessful = MongoController.MemberCollection?.DeleteOne(filter).DeletedCount == 1;
 
             return isDeleteSuccessful;
         }
@@ -252,7 +293,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Member>.Filter.Eq("Id", memberId);
             var update = Builders<Member>.Update.Set("Fields", fields);
-            MongoController.MemberCollection.UpdateOne(filter, update);
+            MongoController.MemberCollection?.UpdateOne(filter, update);
         }
         /// <summary>
         /// Получение хеша пароля пользователя
@@ -286,7 +327,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Member>.Filter.Eq("Id", memberId);
             var update = Builders<Member>.Update.Set("PasswordHash", newPasswordHash);
-            MongoController.MemberCollection.UpdateOne(filter, update);
+            MongoController.MemberCollection?.UpdateOne(filter, update);
         }
         /// <summary>
         /// Установка хеша пароля пользователя
@@ -308,7 +349,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Member>.Filter.Eq("Id", memberId);
             var update = Builders<Member>.Update.Set("RoomId", newRoomId);
-            var isModifySuccessful = MongoController.MemberCollection.UpdateOne(filter, update).ModifiedCount == 1;
+            var isModifySuccessful = MongoController.MemberCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isModifySuccessful;
         }
@@ -336,7 +377,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Member>.Filter.Eq("Id", memberId);
             var update = Builders<Member>.Update.Set("IsChecked", newIsChecked);
-            var isModifySuccessful = MongoController.MemberCollection.UpdateOne(filter, update).ModifiedCount == 1;
+            var isModifySuccessful = MongoController.MemberCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isModifySuccessful;
         }
@@ -364,7 +405,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Member>.Filter.Eq("Id", memberId);
             var update = Builders<Member>.Update.Set("IsRegistered", newIsRegistred);
-            var isModifySuccessful = MongoController.MemberCollection.UpdateOne(filter, update).ModifiedCount == 1;
+            var isModifySuccessful = MongoController.MemberCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isModifySuccessful;
         }
@@ -391,7 +432,7 @@ namespace AqoTesting.Domain.Workers
         {
             var filter = Builders<Member>.Filter.Eq("Id", memberId);
             var update = Builders<Member>.Update.Set("FieldsHash", newFieldsHash);
-            var isModifySuccessful = MongoController.MemberCollection.UpdateOne(filter, update).ModifiedCount == 1;
+            var isModifySuccessful = MongoController.MemberCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isModifySuccessful;
         }
