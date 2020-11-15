@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AqoTesting.WebApi.Attributes
 {
-    public class MemberIsNotChecked : ActionFilterAttribute
+    public class MemberIsNotCheckedAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
