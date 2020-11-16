@@ -29,18 +29,10 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(errorCode, response);
         }
 
-        [HttpPost("/member/signup/fields")]
-        public async Task<IActionResult> SignUpByFields([FromBody] MemberAPI_SignUpByFields_DTO signUpDTO)
+        [HttpPost("/member/signup")]
+        public async Task<IActionResult> SignUpByFields([FromBody] MemberAPI_SignUp_DTO signUpDTO)
         {
-            (var errorCode, var response) = await _memberService.MemberAPI_SignUpByFields(signUpDTO);
-
-            return this.ResultResponse(errorCode, response);
-        }
-
-        [HttpPost("/member/signup/fieldsHash")]
-        public async Task<IActionResult> SignUpByFieldsHash([FromBody] MemberAPI_SignUpByFieldsHash_DTO signUpDTO)
-        {
-            (var errorCode, var response) = await _memberService.MemberAPI_SignUpByFieldsHash(signUpDTO);
+            (var errorCode, var response) = await _memberService.MemberAPI_SignUp(signUpDTO);
 
             return this.ResultResponse(errorCode, response);
         }

@@ -74,7 +74,7 @@ namespace AqoTesting.Core.Services
                 return (OperationErrorMessages.FieldsAlreadyExists, null);
 
             var newMember = Mapper.Map<Member>(postMemberDTO);
-            newMember.IsApproved = true;
+            newMember.IsApproved = !room.IsApproveManually;
             newMember.OwnerId = room.OwnerId;
             newMember.RoomId = roomId;
             newMember.FieldsHash = fieldsHash;
@@ -133,7 +133,7 @@ namespace AqoTesting.Core.Services
 
             var member = await _memberRepository.GetMemberByAuthData(ObjectId.Parse(signInDTO.RoomId), signInDTO.Login, Sha256.Compute(signInDTO.Password));
 
-            if(member == null)
+            if(member == null || !member.IsRegistered)
                 return (OperationErrorMessages.WrongAuthData, null);
 
             var memberToken = TokenGenerator.GenerateToken(member.Id, Role.Member, room.Id, member.IsApproved);
@@ -142,17 +142,13 @@ namespace AqoTesting.Core.Services
             return (OperationErrorMessages.NoError, memberTokenDTO);
         }
 
-        public async Task<(OperationErrorMessages, object)> MemberAPI_SignUpByFields(MemberAPI_SignUpByFields_DTO signUpDTO)
+        public async Task<(OperationErrorMessages, object)> MemberAPI_SignUp(MemberAPI_SignUp_DTO signUpDTO)
         {
             var roomId = ObjectId.Parse(signUpDTO.RoomId);
 
             var room = await _roomRepository.GetRoomById(roomId);
             if(room == null)
                 return (OperationErrorMessages.RoomNotFound, null);
-
-            // Попытка зарегаться по полям с отключённой регистрацией
-            if(!room.IsRegistrationEnabled)
-                return (OperationErrorMessages.RegistrationDisabled, null);
             
             // Fields validation
             (var fieldsValid, var errorCode, var response) = FieldsValidator.Validate(room.Fields, signUpDTO.Fields);
@@ -169,61 +165,47 @@ namespace AqoTesting.Core.Services
 
             // Check fields hash exists
             var fieldsHash = FieldsHashGenerator.Generate(signUpDTO.Fields);
-            var alreadyExists = await _memberRepository.GetMemberByFieldsHash(roomId, fieldsHash);
-            if(alreadyExists != null)
-                return (OperationErrorMessages.MemberAlreadyExists, null);
-
-            var newMember = Mapper.Map<Member>(signUpDTO);
-            newMember.PasswordHash = Sha256.Compute(signUpDTO.Password);
-            newMember.OwnerId = room.OwnerId;
-            newMember.IsApproved = !room.IsApproveManually;
-            newMember.FieldsHash = fieldsHash;
-
-            var newMemberId = await _memberRepository.InsertMember(newMember);
-
-            var newMemberToken = TokenGenerator.GenerateToken(newMemberId, Role.Member, roomId, newMember.IsApproved);
-            var newMemberTokenDTO = new Token_DTO { Token = newMemberToken };
-
-            return (OperationErrorMessages.NoError, newMemberTokenDTO);
-        }
-
-        public async Task<(OperationErrorMessages, object)> MemberAPI_SignUpByFieldsHash(MemberAPI_SignUpByFieldsHash_DTO signUpDTO)
-        {
-            var roomId = ObjectId.Parse(signUpDTO.RoomId);
-
-            var room = await _roomRepository.GetRoomById(roomId);
-            if(room == null)
-                return (OperationErrorMessages.RoomNotFound, null);
-
-            // Попытка зарегаться по хешу со включённой регистрацией
-            if(!room.IsRegistrationEnabled)
-                return (OperationErrorMessages.RegistrationEnabled, null);
-
-            // Check login or email taken
-            var loginTaken = await _memberRepository.CheckLoginTaken(roomId, signUpDTO.Login);
-            if(loginTaken)
-                return (OperationErrorMessages.LoginAlreadyTaken, null);
-            var emailTaken = await _memberRepository.CheckEmailTaken(roomId, signUpDTO.Email);
-            if(emailTaken)
-                return (OperationErrorMessages.EmailAlreadyTaken, null);
-
-            // Добавил ли юзер мембера с такими полями
-            var fieldsHash = Hex.StringToBytes(signUpDTO.FieldsHash);
             var member = await _memberRepository.GetMemberByFieldsHash(roomId, fieldsHash);
-            if(member == null)
-                return (OperationErrorMessages.MemberNotFound, null);
+            
+            ObjectId memberId;
 
-            member.Login = signUpDTO.Login;
-            member.PasswordHash = Sha256.Compute(signUpDTO.Password);
-            member.Email = signUpDTO.Email;
-            member.IsRegistered = true;
+            if (room.IsRegistrationEnabled)
+            {
+                if(member != null)
+                    return (OperationErrorMessages.MemberAlreadyExists, null);
 
-            await _memberRepository.ReplaceMember(member);
+                member = Mapper.Map<Member>(signUpDTO);
+                member.PasswordHash = Sha256.Compute(signUpDTO.Password);
+                member.OwnerId = room.OwnerId;
 
-            var newMemberToken = TokenGenerator.GenerateToken(member.Id, Role.Member, roomId, true);
-            var newMemberTokenDTO = new Token_DTO { Token = newMemberToken };
+                member.IsRegistered = true;
+                member.IsApproved = !room.IsApproveManually;
 
-            return (OperationErrorMessages.NoError, newMemberTokenDTO);
+                member.FieldsHash = fieldsHash;
+
+                memberId = await _memberRepository.InsertMember(member);
+            }
+            else
+            {
+                if (member == null)
+                    return (OperationErrorMessages.MemberNotFound, null);
+
+                member.Login = signUpDTO.Login;
+                member.PasswordHash = Sha256.Compute(signUpDTO.Password);
+                member.Email = signUpDTO.Email;
+
+                member.IsRegistered = true;
+                member.IsApproved = !room.IsApproveManually;
+
+                await _memberRepository.ReplaceMember(member);
+
+                memberId = member.Id;
+            }
+
+            var memberToken = TokenGenerator.GenerateToken(memberId, Role.Member, roomId, member.IsApproved);
+            var memberTokenDTO = new Token_DTO { Token = memberToken };
+
+            return (OperationErrorMessages.NoError, memberTokenDTO);
         }
 
         public async Task<(OperationErrorMessages, object)> MemberAPI_GetMemberById(ObjectId memberId)

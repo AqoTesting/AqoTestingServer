@@ -133,7 +133,7 @@ namespace AqoTesting.WebApi.Infrastructure
 
                 cfg.CreateMap<UserAPI_PostMember_DTO, Member>();
 
-                cfg.CreateMap<MemberAPI_SignUpByFields_DTO, Member>()
+                cfg.CreateMap<MemberAPI_SignUp_DTO, Member>()
                     .ForMember(x => x.PasswordHash,
                         x => x.MapFrom(m =>
                             Sha256.Compute(m.Password)    

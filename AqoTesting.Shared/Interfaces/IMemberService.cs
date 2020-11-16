@@ -18,12 +18,10 @@ namespace AqoTesting.Shared.Interfaces
         Task<(OperationErrorMessages, object)> UserAPI_ManualMemberAdd(ObjectId roomId, UserAPI_PostMember_DTO postMemberDTO);
         Task<(OperationErrorMessages, object)> UserAPI_ManualMemberAdd(RoomId_DTO roomIdDTO, UserAPI_PostMember_DTO postMemberDTO);
 
-
         Task<(OperationErrorMessages, object)> MemberAPI_SignIn(MemberAPI_SignIn_DTO signInDTO);
 
-        Task<(OperationErrorMessages, object)> MemberAPI_SignUpByFields(MemberAPI_SignUpByFields_DTO signUpDTO);
+        Task<(OperationErrorMessages, object)> MemberAPI_SignUp(MemberAPI_SignUp_DTO signUpDTO);
 
-        Task<(OperationErrorMessages, object)> MemberAPI_SignUpByFieldsHash(MemberAPI_SignUpByFieldsHash_DTO signUpDTO);
 
         Task<(OperationErrorMessages, object)> MemberAPI_GetMemberById(ObjectId memberId);
         Task<(OperationErrorMessages, object)> MemberAPI_GetMemberById(MemberId_DTO memberIdDTO);
