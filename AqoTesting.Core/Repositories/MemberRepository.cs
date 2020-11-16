@@ -33,5 +33,11 @@ namespace AqoTesting.Core.Repositories
 
         public async Task ReplaceMember(Member member) =>
             await Task.Run(() => MemberWorker.ReplaceMember(member));
+
+        public async Task<bool> SetIsRegistered(ObjectId memberId, bool newValue) =>
+            await Task.Run(() => MemberWorker.SetIsRegistered(memberId, newValue));
+
+        public async Task<bool> SetIsApproved(ObjectId memberId, bool newValue) =>
+            await Task.Run(() => MemberWorker.SetIsApproved(memberId, newValue));
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Account;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Rooms;
+using AqoTesting.Shared.DTOs.API.MemberAPI.Tests;
 using AqoTesting.Shared.DTOs.API.UserAPI.Account;
 using AqoTesting.Shared.DTOs.API.UserAPI.Members;
 using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
@@ -133,6 +134,10 @@ namespace AqoTesting.WebApi.Infrastructure
                 cfg.CreateMap<UserAPI_PostMember_DTO, Member>();
 
                 cfg.CreateMap<MemberAPI_SignUpByFields_DTO, Member>()
+                    .ForMember(x => x.PasswordHash,
+                        x => x.MapFrom(m =>
+                            Sha256.Compute(m.Password)    
+                        ))
                     .ForMember(x => x.RoomId,
                         x => x.MapFrom(m =>
                             ObjectId.Parse(m.RoomId)

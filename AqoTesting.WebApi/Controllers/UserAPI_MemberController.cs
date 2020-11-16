@@ -51,5 +51,25 @@ namespace AqoTesting.WebApi.Controllers
 
         //    return this.ResultResponse<object>(OperationErrorMessages.NoError);
         //}
+
+        [Auth(Role = Role.User)]
+        [OnlyRoomOwner]
+        [HttpPatch("/user/member/{MemberId}/unregister")]
+        public async Task<IActionResult> Unregister([FromRoute] MemberId_DTO memberIdDTO)
+        {
+            var (errorCode, response) = await _memberService.UserAPI_Unregister(memberIdDTO);
+
+            return this.ResultResponse(errorCode, response);
+        }
+
+        [Auth(Role = Role.User)]
+        [OnlyRoomOwner]
+        [HttpPatch("/user/member/{MemberId}/approve")]
+        public async Task<IActionResult> Approve([FromRoute] MemberId_DTO memberIdDTO)
+        {
+            var (errorCode, response) = await _memberService.UserAPI_Approve(memberIdDTO);
+
+            return this.ResultResponse(errorCode, response);
+        }
     }
 }

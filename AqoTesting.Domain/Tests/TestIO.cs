@@ -37,7 +37,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
-                                    Type = (QuestionTypeEnum) 1,
+                                    Type = (QuestionTypes) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
@@ -45,7 +45,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
-                                    Type = (QuestionTypeEnum) 1,
+                                    Type = (QuestionTypes) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
@@ -60,7 +60,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
-                                    Type = (QuestionTypeEnum) 1,
+                                    Type = (QuestionTypes) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
@@ -68,7 +68,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
-                                    Type = (QuestionTypeEnum) 1,
+                                    Type = (QuestionTypes) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
@@ -95,7 +95,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
-                                    Type = (QuestionTypeEnum) 1,
+                                    Type = (QuestionTypes) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
@@ -103,7 +103,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
-                                    Type = (QuestionTypeEnum) 1,
+                                    Type = (QuestionTypes) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
@@ -118,7 +118,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
-                                    Type = (QuestionTypeEnum) 1,
+                                    Type = (QuestionTypes) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
@@ -126,7 +126,7 @@ namespace AqoTesting.Domain.Tests
                                     Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
-                                    Type = (QuestionTypeEnum) 1,
+                                    Type = (QuestionTypes) 1,
                                     OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }

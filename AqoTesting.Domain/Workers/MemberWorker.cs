@@ -284,17 +284,7 @@ namespace AqoTesting.Domain.Workers
 
             return member?.Fields;
         }
-        /// <summary>
-        /// Установка полей пользователя
-        /// </summary>
-        /// <param name="memberId"></param>
-        /// <param name="fields"></param>
-        public static void SetMemberFields(ObjectId memberId, BsonDocument fields)
-        {
-            var filter = Builders<Member>.Filter.Eq("Id", memberId);
-            var update = Builders<Member>.Update.Set("Fields", fields);
-            MongoController.MemberCollection?.UpdateOne(filter, update);
-        }
+
         /// <summary>
         /// Получение хеша пароля пользователя
         /// </summary>
@@ -307,6 +297,7 @@ namespace AqoTesting.Domain.Workers
 
             return member?.PasswordHash;
         }
+
         /// <summary>
         /// Получение хеша пароля пользователя
         /// </summary>
@@ -318,37 +309,38 @@ namespace AqoTesting.Domain.Workers
 
             return member?.PasswordHash;
         }
+
         /// <summary>
         /// Установка хеша пароля пользователя
         /// </summary>
         /// <param name="memberId"></param>
-        /// <param name="newPasswordHash"></param>
-        public static void SetMemberPasswordHash(ObjectId memberId, byte[] newPasswordHash)
+        /// <param name="newValue"></param>
+        public static void SetMemberPasswordHash(ObjectId memberId, byte[] newValue)
         {
             var filter = Builders<Member>.Filter.Eq("Id", memberId);
-            var update = Builders<Member>.Update.Set("PasswordHash", newPasswordHash);
+            var update = Builders<Member>.Update.Set("PasswordHash", newValue);
             MongoController.MemberCollection?.UpdateOne(filter, update);
         }
         /// <summary>
         /// Установка хеша пароля пользователя
         /// </summary>
         /// <param name="member"></param>
-        /// <param name="newPasswordHash"></param>
-        public static void SetPasswordHash(this Member member, byte[] newPasswordHash)
+        /// <param name="newValue"></param>
+        public static void SetPasswordHash(this Member member, byte[] newValue)
         {
-            member.PasswordHash = newPasswordHash;
-            SetMemberPasswordHash(member.Id, newPasswordHash);
+            member.PasswordHash = newValue;
+            SetMemberPasswordHash(member.Id, newValue);
         }
         /// <summary>
         /// Установка id комнаты к которой относится пользователь (только для использования внутри "ДОМЕНА" или отладки!!!)
         /// </summary>
         /// <param name="memberId"></param>
-        /// <param name="newRoomId"></param>
+        /// <param name="newValue"></param>
         /// <returns></returns>
-        public static bool SetMemberRoomId(ObjectId memberId, ObjectId newRoomId)
+        public static bool SetMemberRoomId(ObjectId memberId, ObjectId newValue)
         {
             var filter = Builders<Member>.Filter.Eq("Id", memberId);
-            var update = Builders<Member>.Update.Set("RoomId", newRoomId);
+            var update = Builders<Member>.Update.Set("RoomId", newValue);
             var isModifySuccessful = MongoController.MemberCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isModifySuccessful;
@@ -357,41 +349,41 @@ namespace AqoTesting.Domain.Workers
         /// Установка id комнаты к которой относится пользователь (только для использования внутри "ДОМЕНА" или отладки!!!)
         /// </summary>
         /// <param name="member"></param>
-        /// <param name="newRoomId"></param>
+        /// <param name="newValue"></param>
         /// <returns></returns>
-        public static bool SetRoomId(this Member member, ObjectId newRoomId)
+        public static bool SetRoomId(this Member member, ObjectId newValue)
         {
-            var roomIdChanged = SetMemberRoomId(member.Id, newRoomId);
+            var roomIdChanged = SetMemberRoomId(member.Id, newValue);
             if(roomIdChanged == true)
-                member.RoomId = newRoomId;
+                member.RoomId = newValue;
             return roomIdChanged;
         }
 
         /// <summary>
-        /// Устанавливает IsChecked параметр пользователя
+        /// Устанавливает IsApproved параметр пользователя
         /// </summary>
         /// <param name="memberId"></param>
-        /// <param name="newIsChecked"></param>
+        /// <param name="newValue"></param>
         /// <returns></returns>
-        public static bool SetMemberIsChecked(ObjectId memberId, bool newIsChecked)
+        public static bool SetIsApproved(ObjectId memberId, bool newValue)
         {
             var filter = Builders<Member>.Filter.Eq("Id", memberId);
-            var update = Builders<Member>.Update.Set("IsChecked", newIsChecked);
+            var update = Builders<Member>.Update.Set("IsApproved", newValue);
             var isModifySuccessful = MongoController.MemberCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isModifySuccessful;
         }
         /// <summary>
-        /// Устанавливает IsChecked параметр пользователя
+        /// Устанавливает IsApproved параметр пользователя
         /// </summary>
         /// <param name="member"></param>
-        /// <param name="newIsChecked"></param>
+        /// <param name="newValue"></param>
         /// <returns></returns>
-        public static bool SetIsChecked(this Member member, bool newIsChecked)
+        public static bool SetIsApproved(this Member member, bool newValue)
         {
-            var dbUpdateSuccessful = SetMemberIsChecked(member.Id, newIsChecked);
+            var dbUpdateSuccessful = SetIsApproved(member.Id, newValue);
             if(dbUpdateSuccessful == true)
-                member.IsChecked = newIsChecked;
+                member.IsApproved = newValue;
             return dbUpdateSuccessful;
         }
 
@@ -399,12 +391,12 @@ namespace AqoTesting.Domain.Workers
         /// Устанавливает IsRegistred параметр пользователя
         /// </summary>
         /// <param name="memberId"></param>
-        /// <param name="newIsRegistred"></param>
+        /// <param name="newValue"></param>
         /// <returns></returns>
-        public static bool SetMemberIsRegistered(ObjectId memberId, bool newIsRegistred)
+        public static bool SetIsRegistered(ObjectId memberId, bool newValue)
         {
             var filter = Builders<Member>.Filter.Eq("Id", memberId);
-            var update = Builders<Member>.Update.Set("IsRegistered", newIsRegistred);
+            var update = Builders<Member>.Update.Set("IsRegistered", newValue);
             var isModifySuccessful = MongoController.MemberCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isModifySuccessful;
@@ -413,40 +405,54 @@ namespace AqoTesting.Domain.Workers
         /// Устанавливает IsRegistred параметр пользователя
         /// </summary>
         /// <param name="member"></param>
-        /// <param name="newIsRegistred"></param>
+        /// <param name="newValue"></param>
         /// <returns></returns>
-        public static bool SetIsRegistred(this Member member, bool newIsRegistred)
+        public static bool SetIsRegistered(this Member member, bool newValue)
         {
-            var dbUpdateSuccessful = SetMemberIsRegistered(member.Id, newIsRegistred);
+            var dbUpdateSuccessful = SetIsRegistered(member.Id, newValue);
             if(dbUpdateSuccessful == true)
-                member.IsRegistered = newIsRegistred;
+                member.IsRegistered = newValue;
             return dbUpdateSuccessful;
         }
+
+        /// <summary>
+        /// Установка полей пользователя
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <param name="newValue"></param>
+        public static void SetMemberFields(ObjectId memberId, BsonDocument newValue)
+        {
+            var filter = Builders<Member>.Filter.Eq("Id", memberId);
+            var update = Builders<Member>.Update.Set("Fields", newValue);
+            MongoController.MemberCollection?.UpdateOne(filter, update);
+        }
+
         /// <summary>
         /// Устанавливает FieldsHash параметр пользователя
         /// </summary>
         /// <param name="memberId"></param>
-        /// <param name="newFieldsHash"></param>
+        /// <param name="newValue"></param>
         /// <returns></returns>
-        public static bool SetMemberFieldsHash(ObjectId memberId, byte[] newFieldsHash)
+        public static bool SetMemberFieldsHash(ObjectId memberId, byte[] newValue)
         {
             var filter = Builders<Member>.Filter.Eq("Id", memberId);
-            var update = Builders<Member>.Update.Set("FieldsHash", newFieldsHash);
+            var update = Builders<Member>.Update.Set("FieldsHash", newValue);
             var isModifySuccessful = MongoController.MemberCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isModifySuccessful;
         }
+
         /// <summary>
         /// Устанавливает FieldsHash параметр пользователя
         /// </summary>
         /// <param name="member"></param>
-        /// <param name="newFieldsHash"></param>
+        /// <param name="newValue"></param>
         /// <returns></returns>
-        public static bool SetFieldsHash(this Member member, byte[] newFieldsHash)
+        public static bool SetFieldsHash(this Member member, byte[] newValue)
         {
-            var dbUpdateSuccessful = SetMemberFieldsHash(member.Id, newFieldsHash);
+            var dbUpdateSuccessful = SetMemberFieldsHash(member.Id, newValue);
             if(dbUpdateSuccessful == true)
-                member.FieldsHash = newFieldsHash;
+                member.FieldsHash = newValue;
             return dbUpdateSuccessful;
         }
         #endregion

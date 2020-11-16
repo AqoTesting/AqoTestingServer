@@ -22,5 +22,8 @@ namespace AqoTesting.Shared.Interfaces
         Task<ObjectId> InsertMember(Member newMember);
 
         Task ReplaceMember(Member updatedMember);
+
+        Task<bool> SetIsRegistered(ObjectId memberId, bool newValue);
+        Task<bool> SetIsApproved(ObjectId memberId, bool newValue);
     }
 }

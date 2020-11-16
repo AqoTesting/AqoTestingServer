@@ -1,6 +1,6 @@
 ﻿namespace AqoTesting.Shared.Enums
 {
-    public enum QuestionTypeEnum : byte
+    public enum QuestionTypes : byte
     {
         Info = 0,
         MultipleResponse = 1,

@@ -27,5 +27,11 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<(OperationErrorMessages, object)> MemberAPI_GetMemberById(ObjectId memberId);
         Task<(OperationErrorMessages, object)> MemberAPI_GetMemberById(MemberId_DTO memberIdDTO);
+
+        Task<(OperationErrorMessages, object)> UserAPI_Unregister(ObjectId memberId);
+        Task<(OperationErrorMessages, object)> UserAPI_Unregister(MemberId_DTO memberIdDTO);
+
+        Task<(OperationErrorMessages, object)> UserAPI_Approve(ObjectId memberId);
+        Task<(OperationErrorMessages, object)> UserAPI_Approve(MemberId_DTO memberIdDTO);
     }
 }

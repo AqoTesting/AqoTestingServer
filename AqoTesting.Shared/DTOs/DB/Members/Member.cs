@@ -9,13 +9,14 @@ namespace AqoTesting.Shared.DTOs.DB.Members
     {
         [BsonId]
         public ObjectId Id { get; set; }
+        public ObjectId OwnerId { get; set; }
         public ObjectId RoomId { get; set; }
         public string? Login { get; set; }
         public byte[]? PasswordHash { get; set; }
         public string? Email { get; set; }
         public Attempt[] Attempts { get; set; } = new Attempt[0];
         public bool IsRegistered { get; set; }
-        public bool IsChecked { get; set; }
+        public bool IsApproved { get; set; }
         public Dictionary<string, string>? Fields { get; set; }
         public byte[]? FieldsHash { get; set; }
     }

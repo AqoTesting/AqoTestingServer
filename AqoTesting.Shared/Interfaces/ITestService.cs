@@ -1,13 +1,23 @@
 ﻿using AqoTesting.Shared.DTOs.API.Common;
-using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
+using AqoTesting.Shared.Enums;
+using MongoDB.Bson;
 using System.Threading.Tasks;
 
 namespace AqoTesting.Shared.Interfaces
 {
     public interface ITestService
     {
-        Task<UserAPI_GetTestsItem_DTO[]> UserAPI_GetTestsByRoomId(RoomId_DTO roomIdDTO);
+        Task<(OperationErrorMessages, object)> UserAPI_GetTestsByRoomId(ObjectId roomId);
+        Task<(OperationErrorMessages, object)> UserAPI_GetTestsByRoomId(RoomId_DTO roomIdDTO);
 
-        Task<UserAPI_GetTest_DTO> UserAPI_GetTestById(TestId_DTO testIdDTO);
+        Task<(OperationErrorMessages, object)> UserAPI_GetTestById(ObjectId testId);
+        Task<(OperationErrorMessages, object)> UserAPI_GetTestById(TestId_DTO testIdDTO);
+
+
+        Task<(OperationErrorMessages, object)> MemberAPI_GetTestsByRoomId(ObjectId roomId);
+        Task<(OperationErrorMessages, object)> MemberAPI_GetTestsByRoomId(RoomId_DTO roomIdDTO);
+
+        Task<(OperationErrorMessages, object)> MemberAPI_GetTestById(ObjectId testId);
+        Task<(OperationErrorMessages, object)> MemberAPI_GetTestById(TestId_DTO testIdDTO);
     }
 }

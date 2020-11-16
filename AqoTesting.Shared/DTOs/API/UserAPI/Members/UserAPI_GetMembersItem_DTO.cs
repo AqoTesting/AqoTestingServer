@@ -9,7 +9,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Members
         public string? Login { get; set; }
         public string? Email { get; set; }
         public bool IsRegistered { get; set; }
-        public bool IsChecked { get; set; }
+        public bool IsApproved { get; set; }
         public Dictionary<string, string>? Fields { get; set; }
     }
 }

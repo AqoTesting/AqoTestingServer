@@ -7,34 +7,39 @@
         EntityNotFound = 3,
 
         // Auth
-        WrongAuthData = 10,
-        LoginAlreadyTaken = 11,
-        EmailAlreadyTaken = 12,
+        WrongAuthData = 100,
+        LoginAlreadyTaken = 101,
+        EmailAlreadyTaken = 102,
 
         // Rooms
-        DomainAlreadyTaken = 20,
-        RoomNotFound = 21,
-        RoomAccessError = 22,
+        DomainAlreadyTaken = 200,
+        RoomNotFound = 201,
+        RoomAccessError = 202,
+        RoomRegistrationEnabled = 203,
 
         // Tests
-        TestNotFound = 30,
+        TestNotFound = 300,
 
         // Users
-        UserNotFound = 40,
+        UserNotFound = 400,
 
         // Members
-        MemberNotFound = 50,
-        MemberAlreadyExists = 51,
+        MemberNotFound = 500,
+        MemberAlreadyExists = 501,
+        MemberAccessError = 502,
 
-        FieldNotPassed = 52,
-        FieldRegexMissmatch = 53,
-        FieldOptionNotInList = 54,
-        FieldsAlreadyExists = 55,
+        FieldNotPassed = 503,
+        FieldRegexMissmatch = 504,
+        FieldOptionNotInList = 505,
+        FieldsAlreadyExists = 506,
 
-        MemberIsNotApproved = 56,
-        MemberIsApproved = 57,
+        MemberIsNotApproved = 507,
+        MemberIsApproved = 508,
 
-        RegistrationDisabled = 58,
-        RegistrationEnabled = 59,
+        MemberIsNotRegistered = 509,
+        MemberIsRegistered = 510,
+
+        RegistrationDisabled = 511,
+        RegistrationEnabled = 512,
     }
 }

@@ -4,6 +4,7 @@ using AqoTesting.Shared.DTOs.API.MemberAPI.Rooms;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
+using AqoTesting.WebApi.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AqoTesting.WebApi.Controllers
@@ -13,10 +14,21 @@ namespace AqoTesting.WebApi.Controllers
     {
 
         IRoomService _roomService;
+        IWorkContext _workContext;
 
-        public MemberAPI_RoomController(IRoomService roomService)
+        public MemberAPI_RoomController(IRoomService roomService, IWorkContext workContext)
         {
             _roomService = roomService;
+            _workContext = workContext;
+        }
+
+        [Auth(Role = Role.Member)]
+        [HttpGet("/member/room")]
+        public async Task<IActionResult> GetRoom()
+        {
+            var (errorCode, response) = await _roomService.MemberAPI_GetRoomById(_workContext.RoomId);
+
+            return this.ResultResponse(errorCode, response);
         }
 
         [HttpGet("/member/room/{RoomId}")]
