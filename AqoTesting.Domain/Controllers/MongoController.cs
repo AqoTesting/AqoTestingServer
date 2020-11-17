@@ -15,6 +15,7 @@ namespace AqoTesting.Domain.Controllers
         public static IMongoCollection<Test>? TestCollection;
         public static IMongoCollection<User>? UserCollection;
         public static IMongoCollection<Member>? MemberCollection;
+        public static IMongoCollection<Attempt>? AttemptCollection;
 
 
         public static MongoClient? ConnectToDB(string? username, string? password, string host, ushort? port, string? defaultauthdb, string? options)
@@ -42,6 +43,7 @@ namespace AqoTesting.Domain.Controllers
             TestCollection = GetTestsCollection();
             UserCollection = GetUsersCollection();
             MemberCollection = GetMembersCollection();
+            AttemptCollection = GetAttemptsCollection();
         }
 
         //ниже нет защиты, все вызовы должны проводится после успешного коннекта
@@ -50,5 +52,6 @@ namespace AqoTesting.Domain.Controllers
         public static IMongoCollection<Test> GetTestsCollection() => mainDatabase.GetCollection<Test>("tests");
         public static IMongoCollection<User> GetUsersCollection() => mainDatabase.GetCollection<User>("users");
         public static IMongoCollection<Member> GetMembersCollection() => mainDatabase.GetCollection<Member>("members");
+        public static IMongoCollection<Attempt> GetAttemptsCollection() => mainDatabase.GetCollection<Attempt>("attempts");
     }
 }

@@ -14,7 +14,6 @@ namespace AqoTesting.Shared.DTOs.DB.Members
         public string? Login { get; set; }
         public byte[]? PasswordHash { get; set; }
         public string? Email { get; set; }
-        public Attempt[] Attempts { get; set; } = new Attempt[0];
         public bool IsRegistered { get; set; }
         public bool IsApproved { get; set; }
         public Dictionary<string, string>? Fields { get; set; }

@@ -2,10 +2,9 @@
 {
     public enum QuestionTypes : byte
     {
-        Info = 0,
-        MultipleResponse = 1,
-        MultipleChoice = 2,
-        TypeIn = 3,
-        Numeric = 4
+        SingleChoice = 0,
+        MultipleChoice = 1,
+        Matching = 2,
+        Sequence = 3
     }
 }

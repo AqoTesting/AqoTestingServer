@@ -229,38 +229,47 @@ namespace AqoTesting.Domain.Workers
 
         #region Common
         /// <summary>
-        /// Получение попытки прохождения теста
+        /// Получение попыток прохождения теста
         /// </summary>
         /// <param name="memberId"></param>
         /// <param name="testId"></param>
-        /// <returns>попытка или null</returns>
-        public static Attempt? GetMemberAttempt(ObjectId memberId, ObjectId testId)
+        /// <returns></returns>
+        public static Attempt[]? GetMemberAttempts(ObjectId memberId, ObjectId testId)
         {
-            var member = GetMemberById(memberId);
-            if(member != null)
-                foreach(var attempt in member.Attempts)
-                    if(attempt.TestId.Equals(testId))
-                        return attempt;
-
-            return null;
+            var memberFilter = Builders<Attempt>.Filter.Eq("MemberId", memberId);
+            var testFilter = Builders<Attempt>.Filter.Eq("TestId", testId);
+            var filter = memberFilter & testFilter;
+            var attempts = MongoController.AttemptCollection.Find(filter).ToList().ToArray();
+            return attempts;
         }
+
+        public static Attempt[]? GetMemberAttempts(this Member member, ObjectId testId)
+        {
+            return GetMemberAttempts(member.Id, testId);
+        }
+
         /// <summary>
-        /// Получение попытки прохождения теста
+        /// Получение всех попыток прохождения всех тестов пользователя
         /// </summary>
-        /// <param name="roomId"></param>
-        /// <param name="memberLogin"></param>
-        /// <param name="testId"></param>
-        /// <returns>попытка или null</returns>
-        public static Attempt? GetMemberAttempt(ObjectId roomId, string memberLogin, ObjectId testId)
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        public static Attempt[]? GetMemberAttempts(ObjectId memberId)
         {
-            var member = GetMemberFromRoom(roomId, memberLogin);
-            if(member != null)
-                foreach(var attempt in member.Attempts)
-                    if(attempt.TestId.Equals(testId))
-                        return attempt;
-
-            return null;
+            var filter = Builders<Attempt>.Filter.Eq("MemberId", memberId);
+            var attempts = MongoController.AttemptCollection.Find(filter).ToList().ToArray();
+            return attempts;
         }
+
+        /// <summary>
+        /// Получение всех попыток прохождения всех тестов пользователя
+        /// </summary>
+        /// <param name="member"></param>
+        /// <returns></returns>
+        public static Attempt[]? GetMemberAttempts(this Member member)
+        {
+            return GetMemberAttempts(member.Id);
+        }
+
         /// <summary>
         /// Получение полей пользователя
         /// </summary>
