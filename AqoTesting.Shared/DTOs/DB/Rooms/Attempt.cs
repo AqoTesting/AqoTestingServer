@@ -8,7 +8,7 @@ namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
     public class Attempt
     {
         [BsonId]
-        public ObjectId AttemptId { get; set; }
+        public ObjectId Id { get; set; }
         public ObjectId TestId { get; set; }
         public ObjectId MemberId { get; set; }
         public int Seed { get; set; }
