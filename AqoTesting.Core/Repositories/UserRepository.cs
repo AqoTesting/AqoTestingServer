@@ -8,8 +8,13 @@ namespace AqoTesting.Core.Repositories
 {
     public class UserRepository : IUserRepository
     {
+        ICacheRepository _cache;
+        public UserRepository(ICacheRepository cache)
+        {
+            _cache = cache;
+        }
         public async Task<User> GetUserById(ObjectId userId) =>
-            await Task.Run(() => UserWorker.GetUserById(userId));
+            await Task.Run(async () => await _cache.Get<User>($"User:{userId}", () =>  UserWorker.GetUserById(userId)));
 
         public async Task<User> GetUserByAuthData(string login, byte[] passwordHash) =>
             await Task.Run(() => UserWorker.GetUserByAuthData(login, passwordHash));

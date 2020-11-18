@@ -12,10 +12,10 @@ namespace AqoTesting.WebApi.Attributes
         {
             var _workContext = context.HttpContext.RequestServices.GetService<IWorkContext>();
 
-            if(!_workContext.IsChecked)
-            {
-                context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.MemberIsNotApproved);
-            }
+            //if(!_workContext.IsChecked)
+            //{
+            //    context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.MemberIsNotApproved);
+           // }
 
             base.OnActionExecuting(context);
         }

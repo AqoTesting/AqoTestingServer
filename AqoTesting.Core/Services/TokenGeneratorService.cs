@@ -1,6 +1,7 @@
 ﻿using AqoTesting.Shared.DTOs.API;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Infrastructure;
+using AqoTesting.Shared.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using System;
@@ -8,24 +9,29 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace AqoTesting.Core.Utils
+namespace AqoTesting.Core.Services
 {
-    public static class TokenGenerator
+    public class TokenGeneratorService : ITokenGeneratorService
     {
-        public static string GenerateToken(ObjectId id, Role role)
+        private readonly ITokenRepository _tokenRepository;
+        public TokenGeneratorService(ITokenRepository tokenRepository)
+        {
+            _tokenRepository = tokenRepository;
+        }
+        public string GenerateToken(ObjectId id, Role role)
         {
             var identity = GetIdentity(id, role, ObjectId.Empty, false);
 
-            return GetTokenByIdentity(identity);
+            return GetTokenByIdentity(identity, role, id);
         }
-        public static string GenerateToken(ObjectId id, Role role, ObjectId roomId, bool isChecked = true)
+        public string GenerateToken(ObjectId id, Role role, ObjectId roomId, bool isChecked = true)
         {
             var identity = GetIdentity(id, role, roomId, isChecked);
 
-            return GetTokenByIdentity(identity);
+            return GetTokenByIdentity(identity, role, id);
         }
 
-        private static string GetTokenByIdentity(ClaimsIdentity identity)
+        private string GetTokenByIdentity(ClaimsIdentity identity, Role role, ObjectId id)
         {
             var now = DateTime.UtcNow;
 
@@ -37,18 +43,20 @@ namespace AqoTesting.Core.Utils
                     expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
+            _tokenRepository.Add(role, id, jwt, AuthOptions.LIFETIME * 60);
+
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
-        private static ClaimsIdentity GetIdentity(ObjectId id, Role role, ObjectId roomId, bool isChecked)
+        private ClaimsIdentity GetIdentity(ObjectId id, Role role, ObjectId roomId, bool isChecked)
         {
 
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, id.ToString()),
+                new Claim("id", id.ToString()),
                 new Claim(ClaimTypes.Role, role.ToString())
             };
 
-            if(role == Role.Member)
+            if (role == Role.Member)
             {
                 claims.Add(new Claim("isChecked", isChecked.ToString()));
                 claims.Add(new Claim("roomId", roomId.ToString()));

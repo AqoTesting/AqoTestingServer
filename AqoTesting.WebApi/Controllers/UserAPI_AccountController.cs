@@ -16,11 +16,13 @@ namespace AqoTesting.WebApi.Controllers
 
         IUserService _userService;
         IWorkContext _workContext;
+        ITokenGeneratorService _tokenGeneratorService;
 
-        public UserAPI_AccountController(IUserService userService, IWorkContext workContext)
+        public UserAPI_AccountController(IUserService userService, IWorkContext workContext, ITokenGeneratorService tokenGeneratorService)
         {
             _userService = userService;
             _workContext = workContext;
+            _tokenGeneratorService = tokenGeneratorService;
         }
 
         [HttpPost("/user/signin")]
@@ -30,7 +32,7 @@ namespace AqoTesting.WebApi.Controllers
             if(user == null)
                 return this.ResultResponse<object>(OperationErrorMessages.WrongAuthData);
 
-            var userToken = TokenGenerator.GenerateToken(user.Id, Role.User);
+            var userToken = _tokenGeneratorService.GenerateToken(user.Id, Role.User);
             var responseUserToken = new Token_DTO { Token = userToken };
 
             return this.ResultResponse(OperationErrorMessages.NoError, responseUserToken);
@@ -48,7 +50,7 @@ namespace AqoTesting.WebApi.Controllers
                 return this.ResultResponse<object>(OperationErrorMessages.EmailAlreadyTaken);
 
             var newUser = await _userService.InsertUser(signUpUserDTO);
-            var newUserToken = TokenGenerator.GenerateToken(newUser.Id, Role.User);
+            var newUserToken = _tokenGeneratorService.GenerateToken(newUser.Id, Role.User);
             var reponseNewUserToken = new Token_DTO { Token = newUserToken };
 
             return this.ResultResponse(OperationErrorMessages.NoError, reponseNewUserToken);

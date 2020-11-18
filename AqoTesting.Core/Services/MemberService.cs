@@ -16,12 +16,14 @@ namespace AqoTesting.Core.Services
         IMemberRepository _memberRepository;
         IRoomRepository _roomRepository;
         IWorkContext _workContext;
+        ITokenGeneratorService _tokenGeneratorService;
 
-        public MemberService(IRoomRepository roomRespository, IMemberRepository memberRepository, IWorkContext workContext)
+        public MemberService(IRoomRepository roomRespository, IMemberRepository memberRepository, IWorkContext workContext, ITokenGeneratorService tokenGeneratorService)
         {
             _memberRepository = memberRepository;
             _roomRepository = roomRespository;
             _workContext = workContext;
+            _tokenGeneratorService = tokenGeneratorService;
         }
 
         #region User API
@@ -136,7 +138,7 @@ namespace AqoTesting.Core.Services
             if(member == null || !member.IsRegistered)
                 return (OperationErrorMessages.WrongAuthData, null);
 
-            var memberToken = TokenGenerator.GenerateToken(member.Id, Role.Member, room.Id, member.IsApproved);
+            var memberToken = _tokenGeneratorService.GenerateToken(member.Id, Role.Member, room.Id, member.IsApproved);
             var memberTokenDTO = new Token_DTO { Token = memberToken };
 
             return (OperationErrorMessages.NoError, memberTokenDTO);
@@ -202,7 +204,7 @@ namespace AqoTesting.Core.Services
                 memberId = member.Id;
             }
 
-            var memberToken = TokenGenerator.GenerateToken(memberId, Role.Member, roomId, member.IsApproved);
+            var memberToken = _tokenGeneratorService.GenerateToken(memberId, Role.Member, roomId, member.IsApproved);
             var memberTokenDTO = new Token_DTO { Token = memberToken };
 
             return (OperationErrorMessages.NoError, memberTokenDTO);

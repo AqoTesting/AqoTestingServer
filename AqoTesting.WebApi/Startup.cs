@@ -33,6 +33,9 @@ namespace AqoTestingServer
         {
             services.AddControllers();
 
+            // Add our Config object so it can be injected
+            services.Configure<RedisConnectionConfig>(Configuration.GetSection("RedisConnection"));
+
             services.AddScoped<IWorkContext, WorkContext>();
             services.AddScoped<DefaultJwtBearerEvents>();
 
@@ -47,6 +50,9 @@ namespace AqoTestingServer
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<ITestRepository, TestRepository>();
             services.AddScoped<IMemberRepository, MemberRepository>();
+            services.AddSingleton<ICacheRepository, CacheRepository>();
+            services.AddSingleton<ITokenRepository, TokenRepository>();
+            services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
 
             services.AddCors();
 

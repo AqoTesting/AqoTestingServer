@@ -8,6 +8,11 @@ namespace AqoTesting.Core.Repositories
 {
     public class MemberRepository : IMemberRepository
     {
+        ICacheRepository _cache;
+        public MemberRepository(ICacheRepository cache)
+        {
+            _cache = cache;
+        }
         public async Task<Member> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash) =>
             await Task.Run(() => MemberWorker.GetMemberByAuthData(roomId, login, passwordHash));
 
@@ -17,7 +22,7 @@ namespace AqoTesting.Core.Repositories
             await Task.Run(() => MemberWorker.CheckMemberInRoomByEmail(roomId, email));
 
         public async Task<Member> GetMemberById(ObjectId memberId) =>
-            await Task.Run(() => MemberWorker.GetMemberById(memberId));
+            await Task.Run(async () => await _cache.Get<Member>($"Member:{memberId}", () =>   MemberWorker.GetMemberById(memberId)));
 
         public async Task<Member[]> GetMembersByIds(ObjectId[] memberIds) =>
             await Task.Run(() => MemberWorker.GetMembersByIds(memberIds));

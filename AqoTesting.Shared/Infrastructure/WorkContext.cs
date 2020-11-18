@@ -12,6 +12,5 @@ namespace AqoTesting.Shared.Infrastructure
         public ObjectId UserId { get; set; }
         public ObjectId MemberId { get; set; }
         public ObjectId RoomId { get; set; } = ObjectId.Empty;
-        public bool IsChecked { get; set; } = true;
     }
 }
