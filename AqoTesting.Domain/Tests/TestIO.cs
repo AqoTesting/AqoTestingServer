@@ -38,7 +38,7 @@ namespace AqoTesting.Domain.Tests
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
-                                    OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
+                                    //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
                                 {
@@ -46,7 +46,7 @@ namespace AqoTesting.Domain.Tests
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
-                                    OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
+                                    //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
                         },
@@ -61,7 +61,7 @@ namespace AqoTesting.Domain.Tests
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
-                                    OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
+                                    //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
                                 {
@@ -69,7 +69,7 @@ namespace AqoTesting.Domain.Tests
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
-                                    OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
+                                    //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
                         }
@@ -96,7 +96,7 @@ namespace AqoTesting.Domain.Tests
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
-                                    OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
+                                    //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
                                 {
@@ -104,7 +104,7 @@ namespace AqoTesting.Domain.Tests
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
-                                    OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
+                                    //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
                         },
@@ -119,7 +119,7 @@ namespace AqoTesting.Domain.Tests
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
-                                    OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
+                                    //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
                                 new Question
                                 {
@@ -127,7 +127,7 @@ namespace AqoTesting.Domain.Tests
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
-                                    OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
+                                    //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 }
                             }
                         }
@@ -175,7 +175,7 @@ namespace AqoTesting.Domain.Tests
                     //Token = ObjectId.GenerateNewId().ToString(),
                     Login = "Test Dev Login Member 1",
                     PasswordHash = Sha256.Compute("123"),
-                    Attempts = new Attempt[0],
+                    //Attempts = new Attempt[0],
                     Fields = new Dictionary<string, string>(),
                 },
                 new Member
@@ -183,7 +183,7 @@ namespace AqoTesting.Domain.Tests
                     //Token = ObjectId.GenerateNewId().ToString(),
                     Login = "Test Dev Login Member 2",
                     PasswordHash = Sha256.Compute("123"),
-                    Attempts = new Attempt[0],
+                    //Attempts = new Attempt[0],
                     Fields = new Dictionary<string, string>(),
                 }
             };

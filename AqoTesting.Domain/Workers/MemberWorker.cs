@@ -204,6 +204,9 @@ namespace AqoTesting.Domain.Workers
             var filter = Builders<Member>.Filter.Eq("Id", member.Id);
             var isDeleteSuccessful = MongoController.MemberCollection?.DeleteOne(filter).DeletedCount == 1;
 
+            if (isDeleteSuccessful == true)
+                AttemptWorker.DeleteAllMemberAttempts(member.Id);
+
             return isDeleteSuccessful;
         }
         /// <summary>
