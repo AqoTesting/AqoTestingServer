@@ -9,19 +9,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AqoTesting.Shared.DTOs.API.MemberAPI.Account;
 
 namespace AqoTesting.WebApi.Attributes
 {
-    public class MemberIsNotCheckedAttribute : ActionFilterAttribute
+    public class MemberIsNotApprovedAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var _workContext = context.HttpContext.RequestServices.GetService<IWorkContext>();
+            var _memberService = context.HttpContext.RequestServices.GetService<IMemberService>();
+            var (result, member) =  _memberService.MemberAPI_GetMemberById(_workContext.MemberId).Result;
 
-            //if(_workContext.IsChecked)
-            //{
-            //    context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.MemberIsApproved);
-            //}
+            if (result == OperationErrorMessages.NoError && (member as MemberAPI_GetProfile_DTO).IsApproved)
+            {
+                context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.MemberIsApproved);
+            }
 
             base.OnActionExecuting(context);
         }
