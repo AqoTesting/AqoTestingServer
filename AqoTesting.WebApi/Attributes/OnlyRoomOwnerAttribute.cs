@@ -10,6 +10,7 @@ using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
 using AqoTesting.Shared.DTOs.API.Common;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using MongoDB.Bson;
+using System.Threading.Tasks;
 
 namespace AqoTesting.WebApi.Attributes
 {
@@ -20,7 +21,7 @@ namespace AqoTesting.WebApi.Attributes
         {
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             //var _roomService = context.HttpContext.RequestServices.GetService<IRoomService>();
             var _roomRepository = context.HttpContext.RequestServices.GetService<IRoomRepository>();
@@ -43,15 +44,15 @@ namespace AqoTesting.WebApi.Attributes
 
                     var argument = context.ActionArguments[parameter.Name];
 
-                    var evalResult = EvaluateValidationAttributes(argument, context.HttpContext, _roomRepository, parameter.Name);
+                    var evalResult = await EvaluateValidationAttributes(argument, context.HttpContext, _roomRepository, parameter.Name);
                     if(evalResult != OperationErrorMessages.NoError)
                         context.Result = ResultResponceExtension.ObjectResultResponse<object>(evalResult);
                 }
             }
 
-            base.OnActionExecuting(context);
+            await base.OnActionExecutionAsync(context, next);
         }
-        private OperationErrorMessages EvaluateValidationAttributes(object argument, HttpContext httpContext, IRoomRepository roomRepository, string dtoName)
+        private async Task<OperationErrorMessages> EvaluateValidationAttributes(object argument, HttpContext httpContext, IRoomRepository roomRepository, string dtoName)
         {
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
@@ -61,11 +62,11 @@ namespace AqoTesting.WebApi.Attributes
 
             if(dtoName == "roomIdDTO")
             {
-                room = roomRepository.GetRoomById(ObjectId.Parse(((RoomId_DTO)argument).RoomId)).Result;
+                room = await roomRepository.GetRoomById(ObjectId.Parse(((RoomId_DTO)argument).RoomId));
             }
             else if(dtoName == "roomDomainDTO")
             {
-                room = roomRepository.GetRoomByDomain(((RoomDomain_DTO)argument).RoomDomain).Result;
+                room = await roomRepository.GetRoomByDomain(((RoomDomain_DTO)argument).RoomDomain);
             }
 
             if(room == null)

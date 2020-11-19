@@ -15,18 +15,18 @@ namespace AqoTesting.WebApi.Attributes
 {
     public class MemberIsNotApprovedAttribute : ActionFilterAttribute
     {
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var _workContext = context.HttpContext.RequestServices.GetService<IWorkContext>();
             var _memberService = context.HttpContext.RequestServices.GetService<IMemberService>();
-            var (result, member) =  _memberService.MemberAPI_GetMemberById(_workContext.MemberId).Result;
+            var (result, member) =  await _memberService.MemberAPI_GetMemberById(_workContext.MemberId);
 
             if (result == OperationErrorMessages.NoError && (member as MemberAPI_GetProfile_DTO).IsApproved)
             {
                 context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.MemberIsApproved);
             }
 
-            base.OnActionExecuting(context);
+            await base.OnActionExecutionAsync(context, next);
         }
     }
 }
