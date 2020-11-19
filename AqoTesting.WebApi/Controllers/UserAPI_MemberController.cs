@@ -26,9 +26,9 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/user/room/{RoomId}/members")]
         public async Task<IActionResult> GetMembersByRoomId([FromRoute] RoomId_DTO roomIdDTO)
         {
-            var members = await _memberService.UserAPI_GetMembersByRoomId(roomIdDTO);
+            var (errorCode, members) = await _memberService.UserAPI_GetMembersByRoomId(roomIdDTO);
 
-            return this.ResultResponse(OperationErrorMessages.NoError, members);
+            return this.ResultResponse(errorCode, members);
         }
 
         [Auth(Role = Role.User)]
