@@ -1,15 +1,20 @@
-﻿using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+﻿using AqoTesting.Core.Utils;
+using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace AqoTesting.Shared.DTOs.DB.Members
 {
     public class Member
     {
         [BsonId]
+        [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId Id { get; set; }
+        [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId OwnerId { get; set; }
+        [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId RoomId { get; set; }
         public string? Login { get; set; }
         public byte[]? PasswordHash { get; set; }
