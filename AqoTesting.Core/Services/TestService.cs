@@ -1,7 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.API.Common;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Tests;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
+using AqoTesting.Shared.DTOs.DB.Attempts;
+using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
@@ -37,7 +43,7 @@ namespace AqoTesting.Core.Services
 
             return (OperationErrorMessages.NoError, getTestsItemDTOs);
         }
-        public async Task<(OperationErrorMessages, object)> UserAPI_GetTestsByRoomId(RoomId_DTO roomIdDTO) =>
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetTestsByRoomId(CommonAPI_RoomId_DTO roomIdDTO) =>
             await UserAPI_GetTestsByRoomId(ObjectId.Parse(roomIdDTO.RoomId));
 
         public async Task<(OperationErrorMessages, object)> UserAPI_GetTestById(ObjectId testId)
@@ -51,8 +57,24 @@ namespace AqoTesting.Core.Services
 
             return (OperationErrorMessages.NoError, getTestDTO);
         }
-        public async Task<(OperationErrorMessages, object)> UserAPI_GetTestById(TestId_DTO testIdDTO) =>
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetTestById(CommonAPI_TestId_DTO testIdDTO) =>
             await UserAPI_GetTestById(ObjectId.Parse(testIdDTO.TestId));
+
+        public async Task<(OperationErrorMessages, object)> UserAPI_CreateTest(CommonAPI_RoomId_DTO roomIdDTO, UserAPI_PostTest_DTO postTestDTO)
+        {
+            var (valid, errorCode, response) = SectionsValidator.Validate(postTestDTO.Sections);
+
+            if (!valid)
+                return (errorCode, response);
+
+            /*var newTest = Mapper.Map<TestsDB_Test_DTO>(postTestDTO);
+            newTest.OwnerId = _workContext.UserId;
+            newTest.RoomId = ObjectId.Parse(roomIdDTO.RoomId);
+            newTest.CreationDate = DateTime.UtcNow;
+
+            return (OperationErrorMessages.NoError, newTest);*/
+            return (OperationErrorMessages.NoError, "OK");
+        }
         #endregion
 
         #region MemberAPI
@@ -69,7 +91,7 @@ namespace AqoTesting.Core.Services
 
             return (OperationErrorMessages.NoError, getTestsItemDTOs);
         }
-        public async Task<(OperationErrorMessages, object)> MemberAPI_GetTestsByRoomId(RoomId_DTO roomIdDTO) =>
+        public async Task<(OperationErrorMessages, object)> MemberAPI_GetTestsByRoomId(CommonAPI_RoomId_DTO roomIdDTO) =>
             await MemberAPI_GetTestsByRoomId(ObjectId.Parse(roomIdDTO.RoomId));
 
         public async Task<(OperationErrorMessages, object)> MemberAPI_GetTestById(ObjectId testId)
@@ -83,7 +105,7 @@ namespace AqoTesting.Core.Services
 
             return (OperationErrorMessages.NoError, getTestDTO);
         }
-        public async Task<(OperationErrorMessages, object)> MemberAPI_GetTestById(TestId_DTO testIdDTO) =>
+        public async Task<(OperationErrorMessages, object)> MemberAPI_GetTestById(CommonAPI_TestId_DTO testIdDTO) =>
             await MemberAPI_GetTestById(ObjectId.Parse(testIdDTO.TestId));
         #endregion
     }

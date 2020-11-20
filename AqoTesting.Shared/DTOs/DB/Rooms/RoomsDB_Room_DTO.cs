@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
 {
-    public class Room
+    public class RoomsDB_Room_DTO
     {
         [BsonId]
         [JsonConverter(typeof(ObjectIdConverter))]
@@ -17,7 +17,7 @@ namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
         [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId OwnerId { get; set; }
         public bool IsDataRequired { get; set; } = false;
-        public RoomField[] Fields { get; set; } = new RoomField[0]; //RoomWorker GetRoomFields
+        public RoomsDB_Field_DTO[] Fields { get; set; } = new RoomsDB_Field_DTO[0]; //RoomWorker GetRoomFields
         public bool IsActive { get; set; }
         public bool IsApproveManually { get; set; }
         public bool IsRegistrationEnabled { get; set; }

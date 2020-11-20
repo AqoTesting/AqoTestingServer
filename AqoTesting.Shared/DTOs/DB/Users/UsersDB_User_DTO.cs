@@ -6,7 +6,7 @@ using AqoTesting.Core.Utils;
 
 namespace AqoTesting.Shared.DTOs.DB.Users
 {
-    public class User
+    public class UsersDB_User_DTO
     {
         [BsonId]
         [JsonConverter(typeof(ObjectIdConverter))]

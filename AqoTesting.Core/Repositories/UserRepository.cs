@@ -13,19 +13,19 @@ namespace AqoTesting.Core.Repositories
         {
             _cache = cache;
         }
-        public async Task<User> GetUserById(ObjectId userId) =>
-            await Task.Run(async () => await _cache.Get<User>($"User:{userId}", () =>  UserWorker.GetUserById(userId)));
+        public async Task<UsersDB_User_DTO> GetUserById(ObjectId userId) =>
+            await _cache.Get<UsersDB_User_DTO>($"User:{userId}", () => UserWorker.GetUserById(userId));
 
-        public async Task<User> GetUserByAuthData(string login, byte[] passwordHash) =>
+        public async Task<UsersDB_User_DTO> GetUserByAuthData(string login, byte[] passwordHash) =>
             await Task.Run(() => UserWorker.GetUserByAuthData(login, passwordHash));
 
-        public async Task<User> GetUserByLogin(string login) =>
+        public async Task<UsersDB_User_DTO> GetUserByLogin(string login) =>
             await Task.Run(() => UserWorker.GetUserByLogin(login));
 
-        public async Task<User> GetUserByEmail(string email) =>
+        public async Task<UsersDB_User_DTO> GetUserByEmail(string email) =>
             await Task.Run(() => UserWorker.GetUserByEmail(email));
 
-        public async Task<ObjectId> InsertUser(User user) =>
+        public async Task<ObjectId> InsertUser(UsersDB_User_DTO user) =>
             await Task.Run(() => UserWorker.InsertUser(user));
     }
 }

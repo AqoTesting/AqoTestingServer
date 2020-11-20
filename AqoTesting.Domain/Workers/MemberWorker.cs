@@ -5,6 +5,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Linq;
 using System.Collections.Generic;
+using AqoTesting.Shared.DTOs.DB.Attempts;
 
 namespace AqoTesting.Domain.Workers
 {
@@ -17,10 +18,10 @@ namespace AqoTesting.Domain.Workers
         /// <param name="roomId"></param>
         /// <param name="memberLogin"></param>
         /// <returns>пользователь или null</returns>
-        public static Member? GetMemberFromRoom(ObjectId roomId, string memberLogin)
+        public static MembersDB_Member_DTO? GetMemberFromRoom(ObjectId roomId, string memberLogin)
         {
-            var loginFilter = Builders<Member>.Filter.Eq("Login", memberLogin);
-            var roomidfilter = Builders<Member>.Filter.Eq("RoomId", roomId);
+            var loginFilter = Builders<MembersDB_Member_DTO>.Filter.Eq("Login", memberLogin);
+            var roomidfilter = Builders<MembersDB_Member_DTO>.Filter.Eq("RoomId", roomId);
             var filter = loginFilter & roomidfilter;
             var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
             return member;
@@ -32,7 +33,7 @@ namespace AqoTesting.Domain.Workers
         /// <param name="room"></param>
         /// <param name="memberLogin"></param>
         /// <returns>пользователь или null</returns>
-        public static Member? GetMemberFromRoom(Room room, string memberLogin)
+        public static MembersDB_Member_DTO? GetMemberFromRoom(RoomsDB_Room_DTO room, string memberLogin)
         {
             return GetMemberFromRoom(room.Id, memberLogin);
         }
@@ -42,9 +43,9 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="roomId"></param>
         /// <returns></returns>
-        public static Member[]? GetMembersFromRoom(ObjectId roomId)
+        public static MembersDB_Member_DTO[]? GetMembersFromRoom(ObjectId roomId)
         {
-            var filter = Builders<Member>.Filter.Eq("RoomId", roomId);
+            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("RoomId", roomId);
             var members = MongoController.MemberCollection.Find(filter).ToList().ToArray();
             return members;
         }
@@ -54,7 +55,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="room"></param>
         /// <returns></returns>
-        public static Member[]? GetMembersFromRoom(Room room)
+        public static MembersDB_Member_DTO[]? GetMembersFromRoom(RoomsDB_Room_DTO room)
         {
             return GetMembersFromRoom(room.Id);
         }
@@ -65,16 +66,16 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="memberId"></param>
         /// <returns>пользователь или null</returns>
-        public static Member? GetMemberById(ObjectId memberId)
+        public static MembersDB_Member_DTO? GetMemberById(ObjectId memberId)
         {
-            var filter = Builders<Member>.Filter.Eq("Id", memberId);
+            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", memberId);
             var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
             return member;
         }
 
-        public static Member[] GetMembersByIds(ObjectId[] memberIds)
+        public static MembersDB_Member_DTO[] GetMembersByIds(ObjectId[] memberIds)
         {
-            var filter = Builders<Member>.Filter.In("Id", memberIds);
+            var filter = Builders<MembersDB_Member_DTO>.Filter.In("Id", memberIds);
             var members = MongoController.MemberCollection.Find(filter).ToEnumerable();
             return members.ToArray();
         }
@@ -85,11 +86,11 @@ namespace AqoTesting.Domain.Workers
         /// <param name="login"></param>
         /// <param name="passwordHash"></param>
         /// <returns>bool</returns>
-        public static Member GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash)
+        public static MembersDB_Member_DTO GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash)
         {
-            var roomIdFilter = Builders<Member>.Filter.Eq("RoomId", roomId);
-            var loginFilter = Builders<Member>.Filter.Eq("Email", login) | Builders<Member>.Filter.Eq("Login", login);
-            var passwordFilter = Builders<Member>.Filter.Eq("PasswordHash", passwordHash);
+            var roomIdFilter = Builders<MembersDB_Member_DTO>.Filter.Eq("RoomId", roomId);
+            var loginFilter = Builders<MembersDB_Member_DTO>.Filter.Eq("Email", login) | Builders<MembersDB_Member_DTO>.Filter.Eq("Login", login);
+            var passwordFilter = Builders<MembersDB_Member_DTO>.Filter.Eq("PasswordHash", passwordHash);
             var filter = roomIdFilter & loginFilter & passwordFilter;
 
             var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
@@ -103,10 +104,10 @@ namespace AqoTesting.Domain.Workers
         /// <param name="roomId"></param>
         /// <param name="fieldsHash"></param>
         /// <returns>bool</returns>
-        public static Member GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash)
+        public static MembersDB_Member_DTO GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash)
         {
-            var roomIdFilter = Builders<Member>.Filter.Eq("RoomId", roomId);
-            var fieldsHashFilter = Builders<Member>.Filter.Eq("FieldsHash", fieldsHash);
+            var roomIdFilter = Builders<MembersDB_Member_DTO>.Filter.Eq("RoomId", roomId);
+            var fieldsHashFilter = Builders<MembersDB_Member_DTO>.Filter.Eq("FieldsHash", fieldsHash);
             var filter = roomIdFilter & fieldsHashFilter;
             var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
 
@@ -123,8 +124,8 @@ namespace AqoTesting.Domain.Workers
         /// <returns>bool</returns>
         public static bool CheckMemberInRoomByLogin(ObjectId roomId, string login)
         {
-            var roomIdFilter = Builders<Member>.Filter.Eq("RoomId", roomId);
-            var loginFilter = Builders<Member>.Filter.Eq("Login", login);
+            var roomIdFilter = Builders<MembersDB_Member_DTO>.Filter.Eq("RoomId", roomId);
+            var loginFilter = Builders<MembersDB_Member_DTO>.Filter.Eq("Login", login);
             var filter = roomIdFilter & loginFilter;
             var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
 
@@ -139,8 +140,8 @@ namespace AqoTesting.Domain.Workers
         /// <returns>bool</returns>
         public static bool CheckMemberInRoomByEmail(ObjectId roomId, string email)
         {
-            var roomIdFilter = Builders<Member>.Filter.Eq("RoomId", roomId);
-            var emailFilter = Builders<Member>.Filter.Eq("Email", email);
+            var roomIdFilter = Builders<MembersDB_Member_DTO>.Filter.Eq("RoomId", roomId);
+            var emailFilter = Builders<MembersDB_Member_DTO>.Filter.Eq("Email", email);
             var filter = roomIdFilter & emailFilter;
             var member = MongoController.MemberCollection.Find(filter).SingleOrDefault();
 
@@ -154,7 +155,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="member"></param>
         /// <returns>id пользователя в базе</returns>
-        public static ObjectId InsertMember(Member member)
+        public static ObjectId InsertMember(MembersDB_Member_DTO member)
         {
             MongoController.MemberCollection?.InsertOne(member);
 
@@ -165,13 +166,13 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="member"></param>
         /// <returns>id пользователя в базе</returns>
-        public static ObjectId Insert(this Member member) => InsertMember(member);
+        public static ObjectId Insert(this MembersDB_Member_DTO member) => InsertMember(member);
         /// <summary>
         /// Вставка списка пользователей в базу
         /// </summary>
         /// <param name="members"></param>
         /// <returns>id пользователей в базе</returns>
-        public static ObjectId[] InsertMembers(Member[] members)
+        public static ObjectId[] InsertMembers(MembersDB_Member_DTO[] members)
         {
             MongoController.MemberCollection?.InsertMany(members);
             return members.Select(members => members.Id).ToArray();
@@ -181,15 +182,15 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="members"></param>
         /// <returns>id пользователей в базе</returns>
-        public static ObjectId[] Insert(this Member[] members) => InsertMembers(members);
+        public static ObjectId[] Insert(this MembersDB_Member_DTO[] members) => InsertMembers(members);
 
         /// <summary>
         /// Полная перезапись мембера (сам Бу-э-э-э)
         /// </summary>
         /// <param name="updatedMember"
-        public static void ReplaceMember(Member updatedMember)
+        public static void ReplaceMember(MembersDB_Member_DTO updatedMember)
         {
-            var filter = Builders<Member>.Filter.Eq("Id", updatedMember.Id);
+            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", updatedMember.Id);
             MongoController.MemberCollection?.ReplaceOne(filter, updatedMember);
         }
 
@@ -198,10 +199,10 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="member"></param>
         /// <returns>Успех</returns>
-        public static bool DeleteMember(Member member)
+        public static bool DeleteMember(MembersDB_Member_DTO member)
         {
             RoomWorker.RemoveMemberFromRoomById(member.RoomId, member.Id);
-            var filter = Builders<Member>.Filter.Eq("Id", member.Id);
+            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", member.Id);
             var isDeleteSuccessful = MongoController.MemberCollection?.DeleteOne(filter).DeletedCount == 1;
 
             if (isDeleteSuccessful == true)
@@ -226,7 +227,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="member"></param>
         /// <returns>Успех</returns>
-        public static bool DeleteFromDB(this Member member) => DeleteMember(member);
+        public static bool DeleteFromDB(this MembersDB_Member_DTO member) => DeleteMember(member);
 
         #endregion
 
@@ -237,16 +238,16 @@ namespace AqoTesting.Domain.Workers
         /// <param name="memberId"></param>
         /// <param name="testId"></param>
         /// <returns></returns>
-        public static Attempt[]? GetMemberAttempts(ObjectId memberId, ObjectId testId)
+        public static AttemptsDB_Attempt_DTO[]? GetMemberAttempts(ObjectId memberId, ObjectId testId)
         {
-            var memberFilter = Builders<Attempt>.Filter.Eq("MemberId", memberId);
-            var testFilter = Builders<Attempt>.Filter.Eq("TestId", testId);
+            var memberFilter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("MemberId", memberId);
+            var testFilter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("TestId", testId);
             var filter = memberFilter & testFilter;
             var attempts = MongoController.AttemptCollection.Find(filter).ToList().ToArray();
             return attempts;
         }
 
-        public static Attempt[]? GetMemberAttempts(this Member member, ObjectId testId)
+        public static AttemptsDB_Attempt_DTO[]? GetMemberAttempts(this MembersDB_Member_DTO member, ObjectId testId)
         {
             return GetMemberAttempts(member.Id, testId);
         }
@@ -256,9 +257,9 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="memberId"></param>
         /// <returns></returns>
-        public static Attempt[]? GetMemberAttempts(ObjectId memberId)
+        public static AttemptsDB_Attempt_DTO[]? GetMemberAttempts(ObjectId memberId)
         {
-            var filter = Builders<Attempt>.Filter.Eq("MemberId", memberId);
+            var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("MemberId", memberId);
             var attempts = MongoController.AttemptCollection.Find(filter).ToList().ToArray();
             return attempts;
         }
@@ -268,7 +269,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="member"></param>
         /// <returns></returns>
-        public static Attempt[]? GetMemberAttempts(this Member member)
+        public static AttemptsDB_Attempt_DTO[]? GetMemberAttempts(this MembersDB_Member_DTO member)
         {
             return GetMemberAttempts(member.Id);
         }
@@ -329,8 +330,8 @@ namespace AqoTesting.Domain.Workers
         /// <param name="newValue"></param>
         public static void SetMemberPasswordHash(ObjectId memberId, byte[] newValue)
         {
-            var filter = Builders<Member>.Filter.Eq("Id", memberId);
-            var update = Builders<Member>.Update.Set("PasswordHash", newValue);
+            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", memberId);
+            var update = Builders<MembersDB_Member_DTO>.Update.Set("PasswordHash", newValue);
             MongoController.MemberCollection?.UpdateOne(filter, update);
         }
         /// <summary>
@@ -338,7 +339,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="member"></param>
         /// <param name="newValue"></param>
-        public static void SetPasswordHash(this Member member, byte[] newValue)
+        public static void SetPasswordHash(this MembersDB_Member_DTO member, byte[] newValue)
         {
             member.PasswordHash = newValue;
             SetMemberPasswordHash(member.Id, newValue);
@@ -351,8 +352,8 @@ namespace AqoTesting.Domain.Workers
         /// <returns></returns>
         public static bool SetMemberRoomId(ObjectId memberId, ObjectId newValue)
         {
-            var filter = Builders<Member>.Filter.Eq("Id", memberId);
-            var update = Builders<Member>.Update.Set("RoomId", newValue);
+            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", memberId);
+            var update = Builders<MembersDB_Member_DTO>.Update.Set("RoomId", newValue);
             var isModifySuccessful = MongoController.MemberCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isModifySuccessful;
@@ -363,7 +364,7 @@ namespace AqoTesting.Domain.Workers
         /// <param name="member"></param>
         /// <param name="newValue"></param>
         /// <returns></returns>
-        public static bool SetRoomId(this Member member, ObjectId newValue)
+        public static bool SetRoomId(this MembersDB_Member_DTO member, ObjectId newValue)
         {
             var roomIdChanged = SetMemberRoomId(member.Id, newValue);
             if(roomIdChanged == true)
@@ -379,8 +380,8 @@ namespace AqoTesting.Domain.Workers
         /// <returns></returns>
         public static bool SetIsApproved(ObjectId memberId, bool newValue)
         {
-            var filter = Builders<Member>.Filter.Eq("Id", memberId);
-            var update = Builders<Member>.Update.Set("IsApproved", newValue);
+            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", memberId);
+            var update = Builders<MembersDB_Member_DTO>.Update.Set("IsApproved", newValue);
             var isModifySuccessful = MongoController.MemberCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isModifySuccessful;
@@ -391,7 +392,7 @@ namespace AqoTesting.Domain.Workers
         /// <param name="member"></param>
         /// <param name="newValue"></param>
         /// <returns></returns>
-        public static bool SetIsApproved(this Member member, bool newValue)
+        public static bool SetIsApproved(this MembersDB_Member_DTO member, bool newValue)
         {
             var dbUpdateSuccessful = SetIsApproved(member.Id, newValue);
             if(dbUpdateSuccessful == true)
@@ -407,8 +408,8 @@ namespace AqoTesting.Domain.Workers
         /// <returns></returns>
         public static bool SetIsRegistered(ObjectId memberId, bool newValue)
         {
-            var filter = Builders<Member>.Filter.Eq("Id", memberId);
-            var update = Builders<Member>.Update.Set("IsRegistered", newValue);
+            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", memberId);
+            var update = Builders<MembersDB_Member_DTO>.Update.Set("IsRegistered", newValue);
             var isModifySuccessful = MongoController.MemberCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isModifySuccessful;
@@ -419,7 +420,7 @@ namespace AqoTesting.Domain.Workers
         /// <param name="member"></param>
         /// <param name="newValue"></param>
         /// <returns></returns>
-        public static bool SetIsRegistered(this Member member, bool newValue)
+        public static bool SetIsRegistered(this MembersDB_Member_DTO member, bool newValue)
         {
             var dbUpdateSuccessful = SetIsRegistered(member.Id, newValue);
             if(dbUpdateSuccessful == true)
@@ -434,8 +435,8 @@ namespace AqoTesting.Domain.Workers
         /// <param name="newValue"></param>
         public static void SetMemberFields(ObjectId memberId, BsonDocument newValue)
         {
-            var filter = Builders<Member>.Filter.Eq("Id", memberId);
-            var update = Builders<Member>.Update.Set("Fields", newValue);
+            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", memberId);
+            var update = Builders<MembersDB_Member_DTO>.Update.Set("Fields", newValue);
             MongoController.MemberCollection?.UpdateOne(filter, update);
         }
 
@@ -447,8 +448,8 @@ namespace AqoTesting.Domain.Workers
         /// <returns></returns>
         public static bool SetMemberFieldsHash(ObjectId memberId, byte[] newValue)
         {
-            var filter = Builders<Member>.Filter.Eq("Id", memberId);
-            var update = Builders<Member>.Update.Set("FieldsHash", newValue);
+            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", memberId);
+            var update = Builders<MembersDB_Member_DTO>.Update.Set("FieldsHash", newValue);
             var isModifySuccessful = MongoController.MemberCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isModifySuccessful;
@@ -460,7 +461,7 @@ namespace AqoTesting.Domain.Workers
         /// <param name="member"></param>
         /// <param name="newValue"></param>
         /// <returns></returns>
-        public static bool SetFieldsHash(this Member member, byte[] newValue)
+        public static bool SetFieldsHash(this MembersDB_Member_DTO member, byte[] newValue)
         {
             var dbUpdateSuccessful = SetMemberFieldsHash(member.Id, newValue);
             if(dbUpdateSuccessful == true)

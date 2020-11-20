@@ -24,7 +24,7 @@ namespace AqoTesting.WebApi.Controllers
         [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpGet("/user/room/{RoomId}/members")]
-        public async Task<IActionResult> GetMembersByRoomId([FromRoute] RoomId_DTO roomIdDTO)
+        public async Task<IActionResult> GetMembersByRoomId([FromRoute] CommonAPI_RoomId_DTO roomIdDTO)
         {
             var (errorCode, members) = await _memberService.UserAPI_GetMembersByRoomId(roomIdDTO);
 
@@ -34,7 +34,7 @@ namespace AqoTesting.WebApi.Controllers
         [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpPost("/user/room/{RoomId}/member")]
-        public async Task<IActionResult> AddMember([FromRoute] RoomId_DTO roomIdDTO, [FromBody] UserAPI_PostMember_DTO addMemberDTO)
+        public async Task<IActionResult> AddMember([FromRoute] CommonAPI_RoomId_DTO roomIdDTO, [FromBody] UserAPI_PostMember_DTO addMemberDTO)
         {
             var (errorCode, response) = await _memberService.UserAPI_ManualMemberAdd(roomIdDTO, addMemberDTO);
 
@@ -55,7 +55,7 @@ namespace AqoTesting.WebApi.Controllers
         [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpPatch("/user/member/{MemberId}/unregister")]
-        public async Task<IActionResult> Unregister([FromRoute] MemberId_DTO memberIdDTO)
+        public async Task<IActionResult> Unregister([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
         {
             var (errorCode, response) = await _memberService.UserAPI_Unregister(memberIdDTO);
 
@@ -65,7 +65,7 @@ namespace AqoTesting.WebApi.Controllers
         [Auth(Role = Role.User)]
         [OnlyRoomOwner]
         [HttpPatch("/user/member/{MemberId}/approve")]
-        public async Task<IActionResult> Approve([FromRoute] MemberId_DTO memberIdDTO)
+        public async Task<IActionResult> Approve([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
         {
             var (errorCode, response) = await _memberService.UserAPI_Approve(memberIdDTO);
 

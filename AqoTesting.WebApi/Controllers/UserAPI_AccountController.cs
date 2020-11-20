@@ -33,7 +33,7 @@ namespace AqoTesting.WebApi.Controllers
                 return this.ResultResponse<object>(OperationErrorMessages.WrongAuthData);
 
             var userToken = _tokenGeneratorService.GenerateToken(user.Id, Role.User);
-            var responseUserToken = new Token_DTO { Token = userToken };
+            var responseUserToken = new CommonAPI_Token_DTO { Token = userToken };
 
             return this.ResultResponse(OperationErrorMessages.NoError, responseUserToken);
         }
@@ -51,7 +51,7 @@ namespace AqoTesting.WebApi.Controllers
 
             var newUser = await _userService.InsertUser(signUpUserDTO);
             var newUserToken = _tokenGeneratorService.GenerateToken(newUser.Id, Role.User);
-            var reponseNewUserToken = new Token_DTO { Token = newUserToken };
+            var reponseNewUserToken = new CommonAPI_Token_DTO { Token = newUserToken };
 
             return this.ResultResponse(OperationErrorMessages.NoError, reponseNewUserToken);
         }
@@ -67,7 +67,7 @@ namespace AqoTesting.WebApi.Controllers
 
         [Auth(Role = Role.User)]
         [HttpGet("/user/{UserId}")]
-        public async Task<IActionResult> GetUser([FromRoute] UserId_DTO userIdDTO)
+        public async Task<IActionResult> GetUser([FromRoute] CommonAPI_UserId_DTO userIdDTO)
         {
             var user = await _userService.GetUserById(userIdDTO);
 

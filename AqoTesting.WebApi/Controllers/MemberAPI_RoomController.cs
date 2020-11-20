@@ -32,7 +32,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [HttpGet("/member/room/{RoomId}")]
-        public async Task<IActionResult> GetRoomById([FromRoute] RoomId_DTO roomIdDTO)
+        public async Task<IActionResult> GetRoomById([FromRoute] CommonAPI_RoomId_DTO roomIdDTO)
         {
             var (errorCode, response) = await _roomService.MemberAPI_GetRoomById(roomIdDTO);
 
@@ -40,7 +40,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [HttpGet("/member/room/domain/{RoomDomain}")]
-        public async Task<IActionResult> GetRoomByDomain([FromRoute] RoomDomain_DTO roomDomainDTO)
+        public async Task<IActionResult> GetRoomByDomain([FromRoute] CommonAPI_RoomDomain_DTO roomDomainDTO)
         {
             var (errorCode, response) = await _roomService.MemberAPI_GetRoomByDomain(roomDomainDTO);
 

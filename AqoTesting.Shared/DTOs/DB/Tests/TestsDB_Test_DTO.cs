@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AqoTesting.Shared.DTOs.DB.Tests
 {
-    public class Test
+    public class TestsDB_Test_DTO
     {
         [BsonId]
         public ObjectId Id { get; set; }
@@ -13,9 +13,9 @@ namespace AqoTesting.Shared.DTOs.DB.Tests
         public ObjectId RoomId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public Document[] Documents {get; set; }
+        public TestsDB_Document_DTO[] Documents {get; set; }
         public bool IsActive { get; set; } //приоритет над датами (если true)
-        public Section[] Sections { get; set; }
+        public TestsDB_Section_DTO[] Sections { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? ActivationDate { get; set; }
         public DateTime? DeactivationDate { get; set; }

@@ -6,22 +6,22 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IMemberRepository
     {
-        Task<Member> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash);
+        Task<MembersDB_Member_DTO> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash);
         
         Task<bool> CheckLoginTaken(ObjectId roomId, string login);
         Task<bool> CheckEmailTaken(ObjectId roomId, string email);
 
-        Task<Member> GetMemberById(ObjectId memberId);
+        Task<MembersDB_Member_DTO> GetMemberById(ObjectId memberId);
 
-        Task<Member[]> GetMembersByIds(ObjectId[] memberIds);
+        Task<MembersDB_Member_DTO[]> GetMembersByIds(ObjectId[] memberIds);
 
-        Task<Member[]> GetMembersByRoomId(ObjectId roomId);
+        Task<MembersDB_Member_DTO[]> GetMembersByRoomId(ObjectId roomId);
 
-        Task<Member> GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash);
+        Task<MembersDB_Member_DTO> GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash);
 
-        Task<ObjectId> InsertMember(Member newMember);
+        Task<ObjectId> InsertMember(MembersDB_Member_DTO newMember);
 
-        Task ReplaceMember(Member updatedMember);
+        Task ReplaceMember(MembersDB_Member_DTO updatedMember);
 
         Task<bool> SetIsRegistered(ObjectId memberId, bool newValue);
         Task<bool> SetIsApproved(ObjectId memberId, bool newValue);

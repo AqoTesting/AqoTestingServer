@@ -15,27 +15,27 @@ namespace AqoTesting.Domain.Workers
         /// <summary>
         /// Поиск комнаты по id, вернет комнату или null в случае если она не найдена.
         /// </summary>
-        public static Room GetRoomById(ObjectId roomId)
+        public static RoomsDB_Room_DTO GetRoomById(ObjectId roomId)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
             var room = MongoController.RoomCollection.Find(filter).SingleOrDefault();
             return room;
         }
         /// <summary>
         /// Поиск комнаты по домену, вернет комнату или null в случае если она не найдена.
         /// </summary>
-        public static Room GetRoomByDomain(string domain)
+        public static RoomsDB_Room_DTO GetRoomByDomain(string domain)
         {
-            var filter = Builders<Room>.Filter.Eq("Domain", domain);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Domain", domain);
             var room = MongoController.RoomCollection.Find(filter).SingleOrDefault();
             return room;
         }
         /// <summary>
         /// Поиск комнат созданных юзером
         /// </summary>
-        public static Room[] GetRoomsByOwnerId(ObjectId ownerId)
+        public static RoomsDB_Room_DTO[] GetRoomsByOwnerId(ObjectId ownerId)
         {
-            var filter = Builders<Room>.Filter.Eq("OwnerId", ownerId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("OwnerId", ownerId);
             var rooms = MongoController.RoomCollection.Find(filter).ToEnumerable();
 
             return rooms.ToArray();
@@ -43,7 +43,7 @@ namespace AqoTesting.Domain.Workers
         /// <summary>
         /// Вставка комнаты в базу
         /// </summary>
-        public static ObjectId InsertRoom(Room room)
+        public static ObjectId InsertRoom(RoomsDB_Room_DTO room)
         {
             MongoController.RoomCollection?.InsertOne(room);
             return room.Id;
@@ -51,7 +51,7 @@ namespace AqoTesting.Domain.Workers
         /// <summary>
         /// Вставка комнат в базу
         /// </summary>
-        public static ObjectId[] InsertRooms(Room[] rooms)
+        public static ObjectId[] InsertRooms(RoomsDB_Room_DTO[] rooms)
         {
             MongoController.RoomCollection?.InsertMany(rooms);
             return rooms.Select(room => room.Id).ToArray();
@@ -59,21 +59,21 @@ namespace AqoTesting.Domain.Workers
         /// <summary>
         /// Полная перезапись комнаты (Бу-э-э-э)
         /// </summary>
-        public static void ReplaceRoom(Room updatedRoom)
+        public static void ReplaceRoom(RoomsDB_Room_DTO updatedRoom)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", updatedRoom.Id);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", updatedRoom.Id);
             MongoController.RoomCollection?.ReplaceOne(filter, updatedRoom);
         }
         /// <summary>
         /// Всё еще полная перезапись, но красивее
         /// </summary>
-        public static void UpdateInDB(this Room room) => ReplaceRoom(room);
+        public static void UpdateInDB(this RoomsDB_Room_DTO room) => ReplaceRoom(room);
         /// <summary>
         /// Удаление комнаты по Id
         /// </summary>
         public static bool DeleteRoomById(ObjectId roomId)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
             var isDeleteSuccessful = MongoController.RoomCollection?.DeleteOne(filter).DeletedCount == 1;
             return isDeleteSuccessful;
         }
@@ -86,8 +86,8 @@ namespace AqoTesting.Domain.Workers
         public static void AddMemberToRoom(ObjectId roomId, ObjectId memberId)
         {
             MemberWorker.SetMemberRoomId(memberId, roomId);
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Push("MemberAPI", memberId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Push("MemberAPI", memberId);
             MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
@@ -104,12 +104,12 @@ namespace AqoTesting.Domain.Workers
         /// <summary>
         /// Добавляет нового пользователя в комнату (пользователя, которого нет в базе)
         /// </summary>
-        public static void AddNewMemberToRoom(ObjectId roomId, Member member)
+        public static void AddNewMemberToRoom(ObjectId roomId, MembersDB_Member_DTO member)
         {
             member.RoomId = roomId;
             MemberWorker.InsertMember(member);
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Push("MemberAPI", member.Id);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Push("MemberAPI", member.Id);
             MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
@@ -127,8 +127,8 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         public static bool RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Pull("MemberAPI", memberId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Pull("MemberAPI", memberId);
             var isRemovedSuccessful = MongoController.RoomCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isRemovedSuccessful;
@@ -150,18 +150,18 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         public static void RemoveMemberFromRoomByLogin(ObjectId roomId, string memberLogin)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
             var member = MemberWorker.GetMemberFromRoom(roomId, memberLogin);
             if(member != null)
             {
-                var update = Builders<Room>.Update.Pull("MemberAPI", member.Id);
+                var update = Builders<RoomsDB_Room_DTO>.Update.Pull("MemberAPI", member.Id);
                 MongoController.RoomCollection?.UpdateOne(filter, update);
             }
         }
         /// <summary>
         /// Удаляет пользователя из комнаты (по логину), НЕ удаляет его из объекта комнаты
         /// </summary>
-        public static void RemoveMemberByLogin(this Room room, string memberLogin) => RemoveMemberFromRoomByLogin(room.Id, memberLogin);
+        public static void RemoveMemberByLogin(this RoomsDB_Room_DTO room, string memberLogin) => RemoveMemberFromRoomByLogin(room.Id, memberLogin);
 
         #endregion
 
@@ -172,8 +172,8 @@ namespace AqoTesting.Domain.Workers
         /// <returns>успех</returns>
         public static bool AddTestToRoomById(ObjectId roomId, ObjectId testId)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Push("TestIds", testId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Push("TestIds", testId);
             var isUpdatedSuccessful = MongoController.RoomCollection?.UpdateOne(filter, update).ModifiedCount == 1;
             return isUpdatedSuccessful;
         }
@@ -181,7 +181,7 @@ namespace AqoTesting.Domain.Workers
         /// Добавляет тест в комнату
         /// </summary>
         /// <returns>успех</returns>
-        public static bool AddTestById(this Room room, ObjectId testId)
+        public static bool AddTestById(this RoomsDB_Room_DTO room, ObjectId testId)
         {
             var testAdded = AddTestToRoomById(room.Id, testId);
             //if(testAdded == true)
@@ -200,8 +200,8 @@ namespace AqoTesting.Domain.Workers
         /// <returns>Успех</returns>
         public static bool RemoveTestFromRoomById(ObjectId roomId, ObjectId testId)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Pull("TestIds", testId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Pull("TestIds", testId);
             var isUpdatedSuccessful = MongoController.RoomCollection?.UpdateOne(filter, update).ModifiedCount == 1;
             return isUpdatedSuccessful;
         }
@@ -211,7 +211,7 @@ namespace AqoTesting.Domain.Workers
         /// <param name="roomId"></param>
         /// <param name="testId"></param>
         /// <returns>Успех</returns>
-        public static bool RemoveTestById(this Room room, ObjectId testId)
+        public static bool RemoveTestById(this RoomsDB_Room_DTO room, ObjectId testId)
         {
             var testRemoved = RemoveTestFromRoomById(room.Id, testId);
             //if(testRemoved == true)
@@ -237,8 +237,8 @@ namespace AqoTesting.Domain.Workers
         /// <param name="newName"></param>
         public static void SetRoomName(ObjectId roomId, string newName)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Set("Name", newName);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Set("Name", newName);
             MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
@@ -246,7 +246,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="room"></param>
         /// <param name="newName"></param>
-        public static void SetName(this Room room, string newName)
+        public static void SetName(this RoomsDB_Room_DTO room, string newName)
         {
             room.Name = newName;
             SetRoomName(room.Id, newName);
@@ -258,8 +258,8 @@ namespace AqoTesting.Domain.Workers
         /// <param name="newDomain"></param>
         public static void SetRoomDomain(ObjectId roomId, string newDomain)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Set("Domain", newDomain);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Set("Domain", newDomain);
             MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
@@ -267,7 +267,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="room"></param>
         /// <param name="newDomain"></param>
-        public static void SetDomain(this Room room, string newDomain)
+        public static void SetDomain(this RoomsDB_Room_DTO room, string newDomain)
         {
             room.Domain = newDomain;
             SetRoomDomain(room.Id, newDomain);
@@ -277,10 +277,10 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="roomId"></param>
         /// <param name="newFields"></param>
-        public static void SetRoomFields(ObjectId roomId, RoomField[] newFields)
+        public static void SetRoomFields(ObjectId roomId, RoomsDB_Field_DTO[] newFields)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Set("Fields", newFields);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Set("Fields", newFields);
             MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
@@ -288,7 +288,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="room"></param>
         /// <param name="newFields"></param>
-        public static void SetRequestedFields(this Room room, RoomField[] newFields)
+        public static void SetRequestedFields(this RoomsDB_Room_DTO room, RoomsDB_Field_DTO[] newFields)
         {
             room.Fields = newFields;
             SetRoomFields(room.Id, newFields);
@@ -300,8 +300,8 @@ namespace AqoTesting.Domain.Workers
         /// <param name="newIsDataRequired"></param>
         public static void SetRoomIsDataRequired(ObjectId roomId, bool newIsDataRequired)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Set("IsDataRequired", newIsDataRequired);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Set("IsDataRequired", newIsDataRequired);
             MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
@@ -309,7 +309,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="room"></param>
         /// <param name="newIsDataRequired"></param>
-        public static void SetIsDataRequired(this Room room, bool newIsDataRequired)
+        public static void SetIsDataRequired(this RoomsDB_Room_DTO room, bool newIsDataRequired)
         {
             room.IsDataRequired = newIsDataRequired;
             SetRoomIsDataRequired(room.Id, newIsDataRequired);
@@ -321,8 +321,8 @@ namespace AqoTesting.Domain.Workers
         /// <param name="newIsActive"></param>
         public static void SetRoomIsActive(ObjectId roomId, bool newIsActive)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Set("IsActive", newIsActive);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Set("IsActive", newIsActive);
             MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
@@ -330,7 +330,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="room"></param>
         /// <param name="newIsActive"></param>
-        public static void SetIsActive(this Room room, bool newIsActive)
+        public static void SetIsActive(this RoomsDB_Room_DTO room, bool newIsActive)
         {
             room.IsActive = newIsActive;
             SetRoomIsActive(room.Id, newIsActive);
@@ -344,10 +344,10 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="roomId"></param>
         /// <returns>Поля комнаты</returns>
-        public static RoomField[]? GetRoomFields(ObjectId roomId)
+        public static RoomsDB_Field_DTO[]? GetRoomFields(ObjectId roomId)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var room = MongoController.RoomCollection.Find(filter).Project<Room>("{ Fields:1}").SingleOrDefault();
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var room = MongoController.RoomCollection.Find(filter).Project<RoomsDB_Room_DTO>("{ Fields:1}").SingleOrDefault();
 
             return room?.Fields;
         }
@@ -356,16 +356,16 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="room"></param>
         /// <returns>Поля комнаты</returns>
-        public static RoomField[]? GetFields(this Room room) => GetRoomFields(room.Id);
+        public static RoomsDB_Field_DTO[]? GetFields(this RoomsDB_Room_DTO room) => GetRoomFields(room.Id);
         /// <summary>
         /// Добавляет поле в комнату
         /// </summary>
         /// <param name="roomId"></param>
         /// <param name="field"></param>
-        public static void AddFieldToRoom(ObjectId roomId, RoomField field)
+        public static void AddFieldToRoom(ObjectId roomId, RoomsDB_Field_DTO field)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var update = Builders<Room>.Update.Push("Fields", field);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Push("Fields", field);
             MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
@@ -373,7 +373,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="room"></param>
         /// <param name="field"></param>
-        public static void AddField(this Room room, RoomField field)
+        public static void AddField(this RoomsDB_Room_DTO room, RoomsDB_Field_DTO field)
         {
             var fieldsList = room.Fields.ToList();
             fieldsList.Add(field);
@@ -387,9 +387,9 @@ namespace AqoTesting.Domain.Workers
         /// <param name="fieldName"></param>
         public static void RemoveFieldFromRoom(ObjectId roomId, string fieldName)
         {
-            var filter = Builders<Room>.Filter.Eq("Id", roomId);
-            var fieldFilter = Builders<RoomField>.Filter.Eq("Name", fieldName);
-            var update = Builders<Room>.Update.PullFilter("Fields", fieldFilter);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var fieldFilter = Builders<RoomsDB_Field_DTO>.Filter.Eq("Name", fieldName);
+            var update = Builders<RoomsDB_Room_DTO>.Update.PullFilter("Fields", fieldFilter);
             MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
@@ -397,9 +397,9 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="roomId"></param>
         /// <param name="fieldName"></param>
-        public static void RemoveField(this Room room, string fieldName)
+        public static void RemoveField(this RoomsDB_Room_DTO room, string fieldName)
         {
-            var fieldsList = new List<RoomField>();
+            var fieldsList = new List<RoomsDB_Field_DTO>();
             foreach(var field in room.Fields)
                 if(field.Name != fieldName)
                     fieldsList.Add(field);

@@ -8,6 +8,7 @@ using AqoTesting.Domain.Utils;
 using AqoTesting.Domain.Workers;
 using AqoTesting.Shared.DTOs.DB.Members;
 using System.Collections.Generic;
+using AqoTesting.Shared.DTOs.DB.Attempts;
 
 namespace AqoTesting.Domain.Tests
 {
@@ -15,9 +16,9 @@ namespace AqoTesting.Domain.Tests
     {
         public ObjectId[] AddTests(ObjectId userId)
         {
-            var tests = new Test[]
+            var tests = new TestsDB_Test_DTO[]
             {
-                new Test
+                new TestsDB_Test_DTO
                 {
                     OwnerId = userId,
                     CreationDate = DateTime.Now,
@@ -25,14 +26,14 @@ namespace AqoTesting.Domain.Tests
                     DeactivationDate = null,
                     Shuffle = true,
                     Title = "Dev 1 Test",
-                    Sections = new Section[]
+                    Sections = new TestsDB_Section_DTO[]
                     {
-                        new Section
+                        new TestsDB_Section_DTO
                         {
                             Id = 1,
-                            Questions = new Question[]
+                            Questions = new TestsDB_Question_DTO[]
                             {
-                                new Question
+                                new TestsDB_Question_DTO
                                 {
                                     Id = 1,
                                     Text = "Dev test Q 1",
@@ -40,7 +41,7 @@ namespace AqoTesting.Domain.Tests
                                     Type = (QuestionTypes) 1,
                                     //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
-                                new Question
+                                new TestsDB_Question_DTO
                                 {
                                     Id = 2,
                                     Text = "Dev test Q 2",
@@ -50,12 +51,12 @@ namespace AqoTesting.Domain.Tests
                                 }
                             }
                         },
-                        new Section
+                        new TestsDB_Section_DTO
                         {
                             Id = 2,
-                            Questions = new Question[]
+                            Questions = new TestsDB_Question_DTO[]
                             {
-                                new Question
+                                new TestsDB_Question_DTO
                                 {
                                     Id = 1,
                                     Text = "Dev test Q 1",
@@ -63,7 +64,7 @@ namespace AqoTesting.Domain.Tests
                                     Type = (QuestionTypes) 1,
                                     //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
-                                new Question
+                                new TestsDB_Question_DTO
                                 {
                                     Id = 2,
                                     Text = "Dev test Q 2",
@@ -75,7 +76,7 @@ namespace AqoTesting.Domain.Tests
                         }
                     }
                 },
-                new Test
+                new TestsDB_Test_DTO
                 {
                     OwnerId = userId,
                     CreationDate = DateTime.Now,
@@ -83,14 +84,14 @@ namespace AqoTesting.Domain.Tests
                     DeactivationDate = null,
                     Shuffle = true,
                     Title = "Dev 2 Test",
-                    Sections = new Section[]
+                    Sections = new TestsDB_Section_DTO[]
                     {
-                        new Section
+                        new TestsDB_Section_DTO
                         {
                             Id = 1,
-                            Questions = new Question[]
+                            Questions = new TestsDB_Question_DTO[]
                             {
-                                new Question
+                                new TestsDB_Question_DTO
                                 {
                                     Id = 1,
                                     Text = "Dev test Q 1",
@@ -98,7 +99,7 @@ namespace AqoTesting.Domain.Tests
                                     Type = (QuestionTypes) 1,
                                     //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
-                                new Question
+                                new TestsDB_Question_DTO
                                 {
                                     Id = 2,
                                     Text = "Dev test Q 2",
@@ -108,12 +109,12 @@ namespace AqoTesting.Domain.Tests
                                 }
                             }
                         },
-                        new Section
+                        new TestsDB_Section_DTO
                         {
                             Id = 2,
-                            Questions = new Question[]
+                            Questions = new TestsDB_Question_DTO[]
                             {
-                                new Question
+                                new TestsDB_Question_DTO
                                 {
                                     Id = 1,
                                     Text = "Dev test Q 1",
@@ -121,7 +122,7 @@ namespace AqoTesting.Domain.Tests
                                     Type = (QuestionTypes) 1,
                                     //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
-                                new Question
+                                new TestsDB_Question_DTO
                                 {
                                     Id = 2,
                                     Text = "Dev test Q 2",
@@ -142,9 +143,9 @@ namespace AqoTesting.Domain.Tests
         public ObjectId[] AddUsers()
         {
 
-            var users = new User[]
+            var users = new UsersDB_User_DTO[]
             {
-                new User
+                new UsersDB_User_DTO
                 {
                     Login = "Test Dev Login 1",
                     Email = "DevGavno@gmail.com",
@@ -152,7 +153,7 @@ namespace AqoTesting.Domain.Tests
                     Name = "Test Dev Name 1",
                     RegistrationDate = DateTime.Now
                 },
-                new User
+                new UsersDB_User_DTO
                 {
                     Login = "Test Dev Login 2",
                     Email = "DevGavno@gmail.com",
@@ -168,9 +169,9 @@ namespace AqoTesting.Domain.Tests
 
         public ObjectId[] AddMembers()
         {
-            var members = new Member[]
+            var members = new MembersDB_Member_DTO[]
             {
-                new Member
+                new MembersDB_Member_DTO
                 {
                     //Token = ObjectId.GenerateNewId().ToString(),
                     Login = "Test Dev Login Member 1",
@@ -178,7 +179,7 @@ namespace AqoTesting.Domain.Tests
                     //Attempts = new Attempt[0],
                     Fields = new Dictionary<string, string>(),
                 },
-                new Member
+                new MembersDB_Member_DTO
                 {
                     //Token = ObjectId.GenerateNewId().ToString(),
                     Login = "Test Dev Login Member 2",
@@ -195,9 +196,9 @@ namespace AqoTesting.Domain.Tests
         public ObjectId[] AddRooms()
         {
             var users = AddUsers();
-            var rooms = new Room[]
+            var rooms = new RoomsDB_Room_DTO[]
             {
-                new Room
+                new RoomsDB_Room_DTO
                 {
                     Name = "Test Dev Room",
                     Domain = "Test Dev Domain",
@@ -206,7 +207,7 @@ namespace AqoTesting.Domain.Tests
                     //TestIds = AddTests(ObjectId.Parse("5f9211bd5858e9955f588f19")),
                     //OwnerId = ObjectId.Parse("5f9211bd5858e9955f588f19"),
                     IsDataRequired = false,
-                    Fields = new RoomField[0],
+                    Fields = new RoomsDB_Field_DTO[0],
                     IsActive = true
                 }
             };

@@ -1,5 +1,4 @@
 ﻿using AqoTesting.Core.Utils;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace AqoTesting.Shared.DTOs.DB.Members
 {
-    public class Member
+    public class MembersDB_Member_DTO
     {
         [BsonId]
         [JsonConverter(typeof(ObjectIdConverter))]

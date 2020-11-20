@@ -31,7 +31,7 @@ namespace AqoTesting.WebApi.Controllers
 
         [Auth(Role = Role.Member)]
         [HttpGet("/member/test/{TestId}")]
-        public async Task<IActionResult> GetTest([FromRoute] TestId_DTO testIdDTO)
+        public async Task<IActionResult> GetTest([FromRoute] CommonAPI_TestId_DTO testIdDTO)
         {
             var (errorCode, response) = await _testService.MemberAPI_GetTestById(testIdDTO);
 

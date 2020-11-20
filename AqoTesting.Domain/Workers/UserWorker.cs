@@ -16,10 +16,10 @@ namespace AqoTesting.Domain.Workers
         /// <param name="UserId"></param>
         /// <param name="RoomId"></param>
         /// <returns>Комната или null</returns>
-        public static Room GetUserRoom(ObjectId UserId, ObjectId RoomId) //а нужно ли?
+        public static RoomsDB_Room_DTO GetUserRoom(ObjectId UserId, ObjectId RoomId) //а нужно ли?
         {
-            var idFilter = Builders<Room>.Filter.Eq("Id", RoomId);
-            var ownerFilter = Builders<Room>.Filter.Eq("OwnerId", UserId);
+            var idFilter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", RoomId);
+            var ownerFilter = Builders<RoomsDB_Room_DTO>.Filter.Eq("OwnerId", UserId);
             var filter = idFilter & ownerFilter;
             var room = MongoController.RoomCollection.Find(filter).SingleOrDefault();
 
@@ -30,9 +30,9 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="UserId"></param>
         /// <returns>Список комнат</returns>
-        public static Room[] GetUserRooms(ObjectId UserId)
+        public static RoomsDB_Room_DTO[] GetUserRooms(ObjectId UserId)
         {
-            var filter = Builders<Room>.Filter.Eq("OwnerId", UserId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("OwnerId", UserId);
             var rooms = MongoController.RoomCollection.Find(filter).ToList();
 
             return rooms.ToArray();
@@ -42,7 +42,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="user"></param>
         /// <returns>Список комнат</returns>
-        public static Room[] GetRooms(this User user) => GetUserRooms(user.Id);
+        public static RoomsDB_Room_DTO[] GetRooms(this UsersDB_User_DTO user) => GetUserRooms(user.Id);
         /// <summary>
         /// Получение id комнат, которыми владеет юзер
         /// </summary>
@@ -50,8 +50,8 @@ namespace AqoTesting.Domain.Workers
         /// <returns>Список id комнат</returns>
         public static ObjectId[] GetUserRoomsId(ObjectId UserId)
         {
-            var filter = Builders<Room>.Filter.Eq("OwnerId", UserId);
-            var rooms = MongoController.RoomCollection.Find(filter).Project<Room>("{ _id:1}").ToList();
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("OwnerId", UserId);
+            var rooms = MongoController.RoomCollection.Find(filter).Project<RoomsDB_Room_DTO>("{ _id:1}").ToList();
 
             return rooms.Select(room => room.Id).ToArray();
         }
@@ -63,8 +63,8 @@ namespace AqoTesting.Domain.Workers
         /// <returns>true если юзер владелец комнаты, инача false</returns>
         public static bool IsUserOwner(ObjectId UserId, ObjectId RoomId)
         {
-            var idFilter = Builders<Room>.Filter.Eq("Id", RoomId);
-            var ownerFilter = Builders<Room>.Filter.Eq("OwnerId", UserId);
+            var idFilter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", RoomId);
+            var ownerFilter = Builders<RoomsDB_Room_DTO>.Filter.Eq("OwnerId", UserId);
             var filter = idFilter & ownerFilter;
             var isOwner = MongoController.RoomCollection.Find(filter).CountDocuments() == 1;
 
@@ -76,7 +76,7 @@ namespace AqoTesting.Domain.Workers
         /// <param name="user"></param>
         /// <param name="RoomId"></param>
         /// <returns>true если юзер владелец комнаты, инача false</returns>
-        public static bool IsOwner(this User user, ObjectId RoomId) => IsUserOwner(user.Id, RoomId);
+        public static bool IsOwner(this UsersDB_User_DTO user, ObjectId RoomId) => IsUserOwner(user.Id, RoomId);
 
         #endregion
 
@@ -86,9 +86,9 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>Юзер или null</returns>
-        public static User GetUserById(ObjectId userId)
+        public static UsersDB_User_DTO GetUserById(ObjectId userId)
         {
-            var filter = Builders<User>.Filter.Eq("Id", userId);
+            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Id", userId);
             var user = MongoController.UserCollection.Find(filter).SingleOrDefault();
 
             return user;
@@ -99,10 +99,10 @@ namespace AqoTesting.Domain.Workers
         /// <param name="login"></param>
         /// <param name="passwordHash"></param>
         /// <returns>Юзер или null</returns>
-        public static User GetUserByAuthData(string login, byte[] passwordHash)
+        public static UsersDB_User_DTO GetUserByAuthData(string login, byte[] passwordHash)
         {
-            var loginFilter = Builders<User>.Filter.Eq("Email", login) | Builders<User>.Filter.Eq("Login", login);
-            var passwordFilter = Builders<User>.Filter.Eq("PasswordHash", passwordHash);
+            var loginFilter = Builders<UsersDB_User_DTO>.Filter.Eq("Email", login) | Builders<UsersDB_User_DTO>.Filter.Eq("Login", login);
+            var passwordFilter = Builders<UsersDB_User_DTO>.Filter.Eq("PasswordHash", passwordHash);
             var filter = loginFilter & passwordFilter;
             var user = MongoController.UserCollection.Find(filter).SingleOrDefault();
 
@@ -113,9 +113,9 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="login"></param>
         /// <returns>Юзер или null</returns>
-        public static User GetUserByLogin(string login)
+        public static UsersDB_User_DTO GetUserByLogin(string login)
         {
-            var filter = Builders<User>.Filter.Eq("Login", login);
+            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Login", login);
             var user = MongoController.UserCollection.Find(filter).SingleOrDefault();
 
             return user;
@@ -125,9 +125,9 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="Email"></param>
         /// <returns>Юзер или null</returns>
-        public static User GetUserByEmail(string Email)
+        public static UsersDB_User_DTO GetUserByEmail(string Email)
         {
-            var filter = Builders<User>.Filter.Eq("Email", Email);
+            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Email", Email);
             var user = MongoController.UserCollection.Find(filter).SingleOrDefault();
 
             return user;
@@ -137,7 +137,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="user"></param>
         /// <returns>id юзера в базе</returns>
-        public static ObjectId InsertUser(User user)
+        public static ObjectId InsertUser(UsersDB_User_DTO user)
         {
             MongoController.UserCollection.InsertOne(user);
 
@@ -148,7 +148,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="users"></param>
         /// <returns>список id юзеров в базе</returns>
-        public static ObjectId[] InsertUsers(User[] users)
+        public static ObjectId[] InsertUsers(UsersDB_User_DTO[] users)
         {
             MongoController.UserCollection.InsertMany(users);
 
@@ -161,7 +161,7 @@ namespace AqoTesting.Domain.Workers
         /// <returns>Успех</returns>
         public static bool DeleteUserById(ObjectId userId)
         {
-            var filter = Builders<User>.Filter.Eq("Id", userId);
+            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Id", userId);
             var isDeleteSuccessful = MongoController.UserCollection.DeleteOne(filter).DeletedCount == 1;
 
             return isDeleteSuccessful;
@@ -171,7 +171,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="user"></param>
         /// <returns>Успех</returns>
-        public static bool DeleteFromDB(this User user) => DeleteUserById(user.Id);
+        public static bool DeleteFromDB(this UsersDB_User_DTO user) => DeleteUserById(user.Id);
         /// <summary>
         /// Удаление юзера по логину
         /// </summary>
@@ -179,7 +179,7 @@ namespace AqoTesting.Domain.Workers
         /// <returns>Успех</returns>
         public static bool DeleteUserByLogin(string userLogin)
         {
-            var filter = Builders<User>.Filter.Eq("Login", userLogin);
+            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Login", userLogin);
             var isDeleteSuccessful = MongoController.UserCollection.DeleteOne(filter).DeletedCount == 1;
 
             return isDeleteSuccessful;
@@ -195,15 +195,15 @@ namespace AqoTesting.Domain.Workers
         /// <param name="newLogin"></param>
         public static void SetUserLogin(ObjectId userId, string newLogin)
         {
-            var filter = Builders<User>.Filter.Eq("Id", userId);
-            var update = Builders<User>.Update.Set("Login", newLogin);
+            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Id", userId);
+            var update = Builders<UsersDB_User_DTO>.Update.Set("Login", newLogin);
             MongoController.UserCollection.UpdateOne(filter, update);
         }/// <summary>
          /// Установка логина юзера
          /// </summary>
          /// <param name="user"></param>
          /// <param name="newLogin"></param>
-        public static void SetLogin(this User user, string newLogin)
+        public static void SetLogin(this UsersDB_User_DTO user, string newLogin)
         {
             user.Login = newLogin;
             SetUserLogin(user.Id, newLogin);
@@ -215,8 +215,8 @@ namespace AqoTesting.Domain.Workers
         /// <param name="newEmail"></param>
         public static void SetUserEmail(ObjectId userId, string newEmail)
         {
-            var filter = Builders<User>.Filter.Eq("Id", userId);
-            var update = Builders<User>.Update.Set("Email", newEmail);
+            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Id", userId);
+            var update = Builders<UsersDB_User_DTO>.Update.Set("Email", newEmail);
             MongoController.UserCollection.UpdateOne(filter, update);
         }
         /// <summary>
@@ -224,7 +224,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="user"></param>
         /// <param name="newEmail"></param>
-        public static void SetEmail(this User user, string newEmail)
+        public static void SetEmail(this UsersDB_User_DTO user, string newEmail)
         {
             user.Email = newEmail;
             SetUserEmail(user.Id, newEmail);
@@ -236,8 +236,8 @@ namespace AqoTesting.Domain.Workers
         /// <param name="newPasswordHash"></param>
         public static void SetUserPasswordHash(ObjectId userId, byte[] newPasswordHash)
         {
-            var filter = Builders<User>.Filter.Eq("Id", userId);
-            var update = Builders<User>.Update.Set("PasswordHash", newPasswordHash);
+            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Id", userId);
+            var update = Builders<UsersDB_User_DTO>.Update.Set("PasswordHash", newPasswordHash);
             MongoController.UserCollection.UpdateOne(filter, update);
         }
         /// <summary>
@@ -245,7 +245,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="user"></param>
         /// <param name="newPasswordHash"></param>
-        public static void SetPasswordHash(this User user, byte[] newPasswordHash)
+        public static void SetPasswordHash(this UsersDB_User_DTO user, byte[] newPasswordHash)
         {
             user.PasswordHash = newPasswordHash;
             SetUserPasswordHash(user.Id, newPasswordHash);
@@ -257,8 +257,8 @@ namespace AqoTesting.Domain.Workers
         /// <param name="newName"></param>
         public static void SetUserName(ObjectId userId, string newName)
         {
-            var filter = Builders<User>.Filter.Eq("Id", userId);
-            var update = Builders<User>.Update.Set("Name", newName);
+            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Id", userId);
+            var update = Builders<UsersDB_User_DTO>.Update.Set("Name", newName);
             MongoController.UserCollection.UpdateOne(filter, update);
         }
         /// <summary>
@@ -266,7 +266,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="user"></param>
         /// <param name="newName"></param>
-        public static void SetName(this User user, string newName)
+        public static void SetName(this UsersDB_User_DTO user, string newName)
         {
             user.Name = newName;
             SetUserName(user.Id, newName);

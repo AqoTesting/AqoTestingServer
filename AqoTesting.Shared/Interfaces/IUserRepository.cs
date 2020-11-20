@@ -6,10 +6,10 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IUserRepository
     {
-        Task<User> GetUserById(ObjectId userId);
-        Task<User> GetUserByAuthData(string login, byte[] passwordHash);
-        Task<User> GetUserByLogin(string login);
-        Task<User> GetUserByEmail(string email);
-        Task<ObjectId> InsertUser(User user);
+        Task<UsersDB_User_DTO> GetUserById(ObjectId userId);
+        Task<UsersDB_User_DTO> GetUserByAuthData(string login, byte[] passwordHash);
+        Task<UsersDB_User_DTO> GetUserByLogin(string login);
+        Task<UsersDB_User_DTO> GetUserByEmail(string email);
+        Task<ObjectId> InsertUser(UsersDB_User_DTO user);
     }
 }

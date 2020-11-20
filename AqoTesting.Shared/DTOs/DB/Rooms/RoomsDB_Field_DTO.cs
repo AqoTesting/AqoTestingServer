@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
 {
-    public class RoomField
+    public class RoomsDB_Field_DTO
     {
         public string Name { get; set; }
         public FieldType Type { get; set; }

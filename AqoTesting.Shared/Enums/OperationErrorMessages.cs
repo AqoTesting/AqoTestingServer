@@ -19,6 +19,11 @@
 
         // Tests
         TestNotFound = 300,
+        NonUniqueSectionId = 301,
+        NonUniqueQuestionId = 302,
+        SingleChoiceWrongCorrectsCount = 303,
+        OptionTypeMismatch = 304,
+        EmptyOption = 305,
 
         // Users
         UserNotFound = 400,
@@ -29,7 +34,7 @@
         MemberAccessError = 502,
 
         FieldNotPassed = 503,
-        FieldRegexMissmatch = 504,
+        FieldRegexMismatch = 504,
         FieldOptionNotInList = 505,
         FieldsAlreadyExists = 506,
 

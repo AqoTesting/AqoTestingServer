@@ -2,10 +2,7 @@
 using AqoTesting.Shared.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AqoTesting.Core.Repositories

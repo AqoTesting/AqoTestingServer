@@ -13,7 +13,11 @@ namespace AqoTesting.Core.Repositories
         {
             _cache = cache;
         }
-        public async Task<Member> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash) =>
+
+        public async Task<MembersDB_Member_DTO> GetMemberById(ObjectId memberId) =>
+            await _cache.Get<MembersDB_Member_DTO>($"Member:{memberId}", () => MemberWorker.GetMemberById(memberId));
+
+        public async Task<MembersDB_Member_DTO> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash) =>
             await Task.Run(() => MemberWorker.GetMemberByAuthData(roomId, login, passwordHash));
 
         public async Task<bool> CheckLoginTaken(ObjectId roomId, string login) =>
@@ -21,22 +25,19 @@ namespace AqoTesting.Core.Repositories
         public async Task<bool> CheckEmailTaken(ObjectId roomId, string email) =>
             await Task.Run(() => MemberWorker.CheckMemberInRoomByEmail(roomId, email));
 
-        public async Task<Member> GetMemberById(ObjectId memberId) =>
-            await Task.Run(async () => await _cache.Get<Member>($"Member:{memberId}", () =>   MemberWorker.GetMemberById(memberId)));
-
-        public async Task<Member[]> GetMembersByIds(ObjectId[] memberIds) =>
+        public async Task<MembersDB_Member_DTO[]> GetMembersByIds(ObjectId[] memberIds) =>
             await Task.Run(() => MemberWorker.GetMembersByIds(memberIds));
 
-        public async Task<Member[]> GetMembersByRoomId(ObjectId roomId) =>
+        public async Task<MembersDB_Member_DTO[]> GetMembersByRoomId(ObjectId roomId) =>
             await Task.Run(() => MemberWorker.GetMembersFromRoom(roomId));
 
-        public async Task<Member> GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash) =>
+        public async Task<MembersDB_Member_DTO> GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash) =>
             await Task.Run(() => MemberWorker.GetMemberByFieldsHash(roomId, fieldsHash));
 
-        public async Task<ObjectId> InsertMember(Member newMember) =>
+        public async Task<ObjectId> InsertMember(MembersDB_Member_DTO newMember) =>
             await Task.Run(() => MemberWorker.InsertMember(newMember));
 
-        public async Task ReplaceMember(Member member) =>
+        public async Task ReplaceMember(MembersDB_Member_DTO member) =>
             await Task.Run(() => MemberWorker.ReplaceMember(member));
 
         public async Task<bool> SetIsRegistered(ObjectId memberId, bool newValue) =>

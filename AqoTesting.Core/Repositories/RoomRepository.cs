@@ -8,30 +8,33 @@ namespace AqoTesting.Core.Repositories
 {
     public class RoomRepository : IRoomRepository
     {
-        Room _roomById;
-        Room _roomByDomain;
+        RoomsDB_Room_DTO _roomById;
+        RoomsDB_Room_DTO _roomByDomain;
 
-        public async Task<Room> GetRoomById(ObjectId roomId) =>
+        ICacheRepository _cache;
+        public RoomRepository(ICacheRepository cache)
+        {
+            _cache = cache;
+        }
+
+        public async Task<RoomsDB_Room_DTO> GetRoomById(ObjectId roomId) =>
+            _roomById == null ?
+                _roomById = await _cache.Get<RoomsDB_Room_DTO>($"Room:{roomId}", () => RoomWorker.GetRoomById(roomId)) :
+                _roomById;
+
+        public async Task<RoomsDB_Room_DTO> GetRoomByDomain(string domain) =>
             await Task.Run(() =>
-            {
-                if(_roomById == null) _roomById = RoomWorker.GetRoomById(roomId);
-                return _roomById;
-            });
+                _roomByDomain == null ?
+                    _roomByDomain = RoomWorker.GetRoomByDomain(domain) :
+                    _roomByDomain);
 
-        public async Task<Room> GetRoomByDomain(string domain) =>
-            await Task.Run(() =>
-            {
-                if(_roomByDomain == null) _roomByDomain = RoomWorker.GetRoomByDomain(domain);
-                return _roomByDomain;
-            });
-
-        public async Task<Room[]> GetRoomsByOwnerId(ObjectId ownerId) =>
+        public async Task<RoomsDB_Room_DTO[]> GetRoomsByOwnerId(ObjectId ownerId) =>
             await Task.Run(() => UserWorker.GetUserRooms(ownerId));
 
-        public async Task<ObjectId> InsertRoom(Room newRoom) =>
+        public async Task<ObjectId> InsertRoom(RoomsDB_Room_DTO newRoom) =>
             await Task.Run(() => RoomWorker.InsertRoom(newRoom));
 
-        public async Task ReplaceRoom(Room update) =>
+        public async Task ReplaceRoom(RoomsDB_Room_DTO update) =>
             await Task.Run(() => RoomWorker.ReplaceRoom(update));
 
         public async Task<bool> RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId) =>

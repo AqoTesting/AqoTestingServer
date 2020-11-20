@@ -6,15 +6,15 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IRoomRepository
     {
-        Task<Room> GetRoomById(ObjectId roomId);
+        Task<RoomsDB_Room_DTO> GetRoomById(ObjectId roomId);
 
-        Task<Room> GetRoomByDomain(string domain);
+        Task<RoomsDB_Room_DTO> GetRoomByDomain(string domain);
 
-        Task<Room[]> GetRoomsByOwnerId(ObjectId ownerId);
+        Task<RoomsDB_Room_DTO[]> GetRoomsByOwnerId(ObjectId ownerId);
 
-        Task<ObjectId> InsertRoom(Room newRoom);
+        Task<ObjectId> InsertRoom(RoomsDB_Room_DTO newRoom);
 
-        Task ReplaceRoom(Room update);
+        Task ReplaceRoom(RoomsDB_Room_DTO update);
 
         Task<bool> RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId);
 

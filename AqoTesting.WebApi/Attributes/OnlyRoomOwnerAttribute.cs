@@ -58,15 +58,15 @@ namespace AqoTesting.WebApi.Attributes
 
             var ownerId = _workContext.UserId;
 
-            var room = new Room();
+            var room = new RoomsDB_Room_DTO();
 
             if(dtoName == "roomIdDTO")
             {
-                room = await roomRepository.GetRoomById(ObjectId.Parse(((RoomId_DTO)argument).RoomId));
+                room = await roomRepository.GetRoomById(ObjectId.Parse(((CommonAPI_RoomId_DTO)argument).RoomId));
             }
             else if(dtoName == "roomDomainDTO")
             {
-                room = await roomRepository.GetRoomByDomain(((RoomDomain_DTO)argument).RoomDomain);
+                room = await roomRepository.GetRoomByDomain(((CommonAPI_RoomDomain_DTO)argument).RoomDomain);
             }
 
             if(room == null)

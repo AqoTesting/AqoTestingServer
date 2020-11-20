@@ -2,7 +2,7 @@
 
 namespace AqoTesting.Shared.DTOs.DB
 {
-    class Token
+    class CommonDB_Token_DTO
     {
         public string Value { get; set; }
         public DateTime CreationDate { get; set; }
