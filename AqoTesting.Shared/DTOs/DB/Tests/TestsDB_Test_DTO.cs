@@ -20,6 +20,6 @@ namespace AqoTesting.Shared.DTOs.DB.Tests
         public DateTime? ActivationDate { get; set; }
         public DateTime? DeactivationDate { get; set; }
         public bool Shuffle { get; set; }
-        public Dictionary<string, int> RatingScale { get; set; }
+        public Dictionary<string, int>? RatingScale { get; set; }
     }
 }

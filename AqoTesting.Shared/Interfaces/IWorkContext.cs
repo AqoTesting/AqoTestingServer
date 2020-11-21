@@ -1,5 +1,4 @@
-﻿using AqoTesting.Shared.Enums;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 
 namespace AqoTesting.Shared.Interfaces
 {

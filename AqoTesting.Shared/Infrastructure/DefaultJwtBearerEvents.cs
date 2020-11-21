@@ -1,10 +1,8 @@
 ﻿using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Primitives;
 using MongoDB.Bson;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;

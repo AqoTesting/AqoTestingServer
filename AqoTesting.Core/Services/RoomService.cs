@@ -5,7 +5,6 @@ using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
-using AqoTesting.Shared.Models;
 using AutoMapper;
 using MongoDB.Bson;
 
@@ -131,15 +130,6 @@ namespace AqoTesting.Core.Services
         public async Task<OperationErrorMessages> UserAPI_DeleteRoomById(CommonAPI_RoomId_DTO roomIdDTO) =>
             await UserAPI_DeleteRoomById(ObjectId.Parse(roomIdDTO.RoomId));
 
-        public async Task<OperationErrorMessages> UserAPI_RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId)
-        {
-            var removed = await _roomRepository.RemoveMemberFromRoomById(roomId, memberId);
-
-            if(!removed)
-                return OperationErrorMessages.MemberNotFound;
-
-            return OperationErrorMessages.NoError;
-        }
         #endregion
 
         #region Member API
@@ -147,7 +137,7 @@ namespace AqoTesting.Core.Services
         {
             var room = await _roomRepository.GetRoomById(roomId);
             if(room == null)
-                return (OperationErrorMessages.MemberNotFound, null);
+                return (OperationErrorMessages.RoomNotFound, null);
 
             var getRoomDTO = Mapper.Map<MemberAPI_GetRoom_DTO>(room);
 

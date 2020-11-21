@@ -30,7 +30,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [HttpPost("/member/signup")]
-        public async Task<IActionResult> SignUpByFields([FromBody] MemberAPI_SignUp_DTO signUpDTO)
+        public async Task<IActionResult> SignUp([FromBody] MemberAPI_SignUp_DTO signUpDTO)
         {
             (var errorCode, var response) = await _memberService.MemberAPI_SignUp(signUpDTO);
 

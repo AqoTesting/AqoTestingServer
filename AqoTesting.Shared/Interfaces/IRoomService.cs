@@ -1,5 +1,4 @@
 ﻿using AqoTesting.Shared.DTOs.API.Common;
-using AqoTesting.Shared.DTOs.API.MemberAPI.Rooms;
 using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
 using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
@@ -24,9 +23,6 @@ namespace AqoTesting.Shared.Interfaces
         Task<OperationErrorMessages> UserAPI_EditRoom(CommonAPI_RoomId_DTO roomIdDTO, UserAPI_PostRoom_DTO roomUpdates);
         Task<OperationErrorMessages> UserAPI_DeleteRoomById(ObjectId roomId);
         Task<OperationErrorMessages> UserAPI_DeleteRoomById(CommonAPI_RoomId_DTO roomIdDTO);
-
-        Task<OperationErrorMessages> UserAPI_RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId);
-
 
         Task<(OperationErrorMessages, object)> MemberAPI_GetRoomById(ObjectId roomId);
         Task<(OperationErrorMessages, object)> MemberAPI_GetRoomById(CommonAPI_RoomId_DTO roomIdDTO);

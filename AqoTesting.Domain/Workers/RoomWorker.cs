@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AqoTesting.Domain.Controllers;
 using AqoTesting.Shared.DTOs.DB.Members;
@@ -87,7 +86,7 @@ namespace AqoTesting.Domain.Workers
         {
             MemberWorker.SetMemberRoomId(memberId, roomId);
             var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
-            var update = Builders<RoomsDB_Room_DTO>.Update.Push("MemberAPI", memberId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Push("Member", memberId);
             MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
@@ -109,7 +108,7 @@ namespace AqoTesting.Domain.Workers
             member.RoomId = roomId;
             MemberWorker.InsertMember(member);
             var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
-            var update = Builders<RoomsDB_Room_DTO>.Update.Push("MemberAPI", member.Id);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Push("Member", member.Id);
             MongoController.RoomCollection?.UpdateOne(filter, update);
         }
         /// <summary>
@@ -128,7 +127,7 @@ namespace AqoTesting.Domain.Workers
         public static bool RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId)
         {
             var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
-            var update = Builders<RoomsDB_Room_DTO>.Update.Pull("MemberAPI", memberId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Pull("Member", memberId);
             var isRemovedSuccessful = MongoController.RoomCollection?.UpdateOne(filter, update).ModifiedCount == 1;
 
             return isRemovedSuccessful;
@@ -154,7 +153,7 @@ namespace AqoTesting.Domain.Workers
             var member = MemberWorker.GetMemberFromRoom(roomId, memberLogin);
             if(member != null)
             {
-                var update = Builders<RoomsDB_Room_DTO>.Update.Pull("MemberAPI", member.Id);
+                var update = Builders<RoomsDB_Room_DTO>.Update.Pull("Member", member.Id);
                 MongoController.RoomCollection?.UpdateOne(filter, update);
             }
         }
@@ -356,7 +355,8 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="room"></param>
         /// <returns>Поля комнаты</returns>
-        public static RoomsDB_Field_DTO[]? GetFields(this RoomsDB_Room_DTO room) => GetRoomFields(room.Id);
+        public static RoomsDB_Field_DTO[]? GetFields(this RoomsDB_Room_DTO room) =>
+            GetRoomFields(room.Id);
         /// <summary>
         /// Добавляет поле в комнату
         /// </summary>

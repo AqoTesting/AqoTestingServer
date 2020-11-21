@@ -4,9 +4,11 @@ using AqoTesting.Shared.DTOs.API.MemberAPI.Account;
 using AqoTesting.Shared.DTOs.API.UserAPI.Members;
 using AqoTesting.Shared.DTOs.DB.Members;
 using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.Infrastructure;
 using AqoTesting.Shared.Interfaces;
 using AutoMapper;
 using MongoDB.Bson;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 
 namespace AqoTesting.Core.Services
@@ -17,13 +19,15 @@ namespace AqoTesting.Core.Services
         IRoomRepository _roomRepository;
         IWorkContext _workContext;
         ITokenGeneratorService _tokenGeneratorService;
+        ITokenRepository _tokenRepository;
 
-        public MemberService(IRoomRepository roomRespository, IMemberRepository memberRepository, IWorkContext workContext, ITokenGeneratorService tokenGeneratorService)
+        public MemberService(IRoomRepository roomRespository, IMemberRepository memberRepository, IWorkContext workContext, ITokenGeneratorService tokenGeneratorService, ITokenRepository tokenRepository)
         {
             _memberRepository = memberRepository;
             _roomRepository = roomRespository;
             _workContext = workContext;
             _tokenGeneratorService = tokenGeneratorService;
+            _tokenRepository = tokenRepository;
         }
 
         #region User API
@@ -124,6 +128,18 @@ namespace AqoTesting.Core.Services
         }
         public async Task<(OperationErrorMessages, object)> UserAPI_Approve(CommonAPI_MemberId_DTO memberIdDTO) =>
             await this.UserAPI_Approve(ObjectId.Parse(memberIdDTO.MemberId));
+
+        public async Task<OperationErrorMessages> UserAPI_Delete(ObjectId roomId, ObjectId memberId)
+        {
+            var deleted = await _memberRepository.Delete(roomId, memberId);
+
+            if (!deleted)
+                return OperationErrorMessages.MemberNotFound;
+
+            //await _attemptRepository.RemoveAttemptsByMemberId(memberId);
+
+            return OperationErrorMessages.NoError;
+        }
         #endregion
 
         #region Member API
@@ -140,6 +156,8 @@ namespace AqoTesting.Core.Services
 
             var memberToken = _tokenGeneratorService.GenerateToken(member.Id, Role.Member, room.Id, member.IsApproved);
             var memberTokenDTO = new CommonAPI_Token_DTO { Token = memberToken };
+
+            await _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), AuthOptions.LIFETIME);
 
             return (OperationErrorMessages.NoError, memberTokenDTO);
         }
@@ -206,6 +224,8 @@ namespace AqoTesting.Core.Services
 
             var memberToken = _tokenGeneratorService.GenerateToken(memberId, Role.Member, roomId, member.IsApproved);
             var memberTokenDTO = new CommonAPI_Token_DTO { Token = memberToken };
+
+            await _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), AuthOptions.LIFETIME);
 
             return (OperationErrorMessages.NoError, memberTokenDTO);
         }

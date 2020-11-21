@@ -1,5 +1,4 @@
-﻿using AqoTesting.Shared.DTOs.API;
-using AqoTesting.Shared.Enums;
+﻿using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Infrastructure;
 using AqoTesting.Shared.Interfaces;
 using Microsoft.IdentityModel.Tokens;

@@ -4,9 +4,7 @@ using AqoTesting.Shared.DTOs.DB.Tests;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AqoTesting.Domain.Workers
 {

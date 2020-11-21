@@ -2,7 +2,7 @@
 
 namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Questions
 {
-    public struct UserAPI_Section_DTO
+    public class UserAPI_Section_DTO
     {
         [Required]
         public int Id { get; set; }
@@ -16,6 +16,6 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Questions
         public UserAPI_Question_DTO[] Questions { get; set; }
 
         [Required]
-        public bool Shuffle { get; set; }
+        public bool? Shuffle { get; set; }
     }
 }

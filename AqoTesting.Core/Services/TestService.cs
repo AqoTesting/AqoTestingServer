@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.API.Common;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Tests;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
-using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
-using AqoTesting.Shared.Models;
 using AutoMapper;
 using MongoDB.Bson;
 
@@ -62,18 +58,20 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_CreateTest(CommonAPI_RoomId_DTO roomIdDTO, UserAPI_PostTest_DTO postTestDTO)
         {
-            var (valid, errorCode, response) = SectionsValidator.Validate(postTestDTO.Sections);
+            var (valid, errorCode, response) = TestValidator.Validate(postTestDTO);
 
             if (!valid)
                 return (errorCode, response);
 
-            /*var newTest = Mapper.Map<TestsDB_Test_DTO>(postTestDTO);
+            var newTest = Mapper.Map<TestsDB_Test_DTO>(postTestDTO);
             newTest.OwnerId = _workContext.UserId;
             newTest.RoomId = ObjectId.Parse(roomIdDTO.RoomId);
             newTest.CreationDate = DateTime.UtcNow;
 
-            return (OperationErrorMessages.NoError, newTest);*/
-            return (OperationErrorMessages.NoError, "OK");
+            var newTestId = await _testRepository.InsertTest(newTest);
+            var newTestIdDTO = new CommonAPI_TestId_DTO { TestId = newTestId.ToString() };
+
+            return (OperationErrorMessages.NoError, newTestIdDTO);
         }
         #endregion
 

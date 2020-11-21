@@ -2,40 +2,58 @@
 {
     public enum OperationErrorMessages
     {
+        #region Common
         NoError = 0,
         InvalidModel = 1,
         EntityNotFound = 3,
+        #endregion
 
-        // Auth
+        #region Auth
         WrongAuthData = 100,
         LoginAlreadyTaken = 101,
         EmailAlreadyTaken = 102,
+        #endregion
 
-        // Rooms
+        #region Rooms
         DomainAlreadyTaken = 200,
         RoomNotFound = 201,
         RoomAccessError = 202,
+        // Юзер не может добавить мембера по полям, потому что включена самостоятельная регистрация
         RoomRegistrationEnabled = 203,
+        #endregion
 
-        // Tests
+        #region Tests
         TestNotFound = 300,
+
         NonUniqueSectionId = 301,
         NonUniqueQuestionId = 302,
-        SingleChoiceWrongCorrectsCount = 303,
-        OptionTypeMismatch = 304,
+
+        // В SingleChoice 0 или больше 1 правильных ответов, в MultipleChoice - меньше 2
+        ChoiceWrongCorrectsCount = 303,
+
+        // В UserAPI_CommonOption_DTO, поля, которые нужны для конкретного типа вопроса - пустые
+        TypeMismatch = 304,
+        // В Option нет ни картинки, ни текста
         EmptyOption = 305,
+        // Передан RatingScale, но в каком-то из вопросов не указан Cost
+        RatingScaleNullCost = 306,
+        #endregion
 
-        // Users
+        #region Users
         UserNotFound = 400,
+        #endregion
 
-        // Members
+        #region Members
         MemberNotFound = 500,
         MemberAlreadyExists = 501,
+        // Юзер не может взаимодействовать с мембером не из своей комнаты
         MemberAccessError = 502,
 
         FieldNotPassed = 503,
         FieldRegexMismatch = 504,
         FieldOptionNotInList = 505,
+
+        // Мембер с такими полями уже зареган
         FieldsAlreadyExists = 506,
 
         MemberIsNotApproved = 507,
@@ -43,8 +61,6 @@
 
         MemberIsNotRegistered = 509,
         MemberIsRegistered = 510,
-
-        RegistrationDisabled = 511,
-        RegistrationEnabled = 512,
+        #endregion
     }
 }

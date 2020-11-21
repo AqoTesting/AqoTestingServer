@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using AqoTesting.Shared.Models;
 using AqoTesting.Shared.Enums;
-using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
 using AqoTesting.Shared.DTOs.API.Common;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using MongoDB.Bson;

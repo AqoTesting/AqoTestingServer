@@ -37,13 +37,34 @@ namespace AqoTesting.Core.Repositories
         public async Task<ObjectId> InsertMember(MembersDB_Member_DTO newMember) =>
             await Task.Run(() => MemberWorker.InsertMember(newMember));
 
-        public async Task ReplaceMember(MembersDB_Member_DTO member) =>
+        public async Task ReplaceMember(MembersDB_Member_DTO member)
+        {
             await Task.Run(() => MemberWorker.ReplaceMember(member));
+            await _cache.Del($"Member:{member.Id}");
+        }
 
-        public async Task<bool> SetIsRegistered(ObjectId memberId, bool newValue) =>
-            await Task.Run(() => MemberWorker.SetIsRegistered(memberId, newValue));
+        public async Task<bool> SetIsRegistered(ObjectId memberId, bool newValue)
+        {
+            var response = await Task.Run(() => MemberWorker.SetIsRegistered(memberId, newValue));
+            await _cache.Del($"Member:{memberId}");
 
-        public async Task<bool> SetIsApproved(ObjectId memberId, bool newValue) =>
-            await Task.Run(() => MemberWorker.SetIsApproved(memberId, newValue));
+            return response;
+        }
+
+        public async Task<bool> SetIsApproved(ObjectId memberId, bool newValue)
+        {
+            var response = await Task.Run(() => MemberWorker.SetIsApproved(memberId, newValue));
+            await _cache.Del($"Member:{memberId}");
+
+            return response;
+        }
+
+        public async Task<bool> Delete(ObjectId roomId, ObjectId memberId)
+        {
+            var response = await Task.Run(() => RoomWorker.RemoveMemberFromRoomById(roomId, memberId));
+            await _cache.Del($"Member:{memberId}");
+
+            return response;
+        }
     }
 }

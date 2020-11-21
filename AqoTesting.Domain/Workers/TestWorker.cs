@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using AqoTesting.Domain.Controllers;
-using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using MongoDB.Bson;
 using MongoDB.Driver;

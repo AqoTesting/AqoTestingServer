@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.API.Common;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
 using AqoTesting.Shared.Enums;

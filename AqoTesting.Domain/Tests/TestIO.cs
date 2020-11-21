@@ -8,7 +8,6 @@ using AqoTesting.Domain.Utils;
 using AqoTesting.Domain.Workers;
 using AqoTesting.Shared.DTOs.DB.Members;
 using System.Collections.Generic;
-using AqoTesting.Shared.DTOs.DB.Attempts;
 
 namespace AqoTesting.Domain.Tests
 {

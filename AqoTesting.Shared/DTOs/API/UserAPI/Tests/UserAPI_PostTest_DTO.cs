@@ -19,10 +19,10 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         public UserAPI_Document_DTO[]? Documents { get; set; }
 
         [Required]
-        public bool IsActive { get; set; }
+        public bool? IsActive { get; set; }
 
         [Required]
-        [MinLength(1)]
+        [MinLength(0)]
         [MaxLength(128)]
         public UserAPI_Section_DTO[]? Sections { get; set; }
 
@@ -30,7 +30,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         public DateTime? DeactivationDate { get; set; }
 
         [Required]
-        public bool Shuffle { get; set; }
+        public bool? Shuffle { get; set; }
 
         public Dictionary<string, int>? RatingScale { get; set; }
     }

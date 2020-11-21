@@ -25,5 +25,7 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<bool> SetIsRegistered(ObjectId memberId, bool newValue);
         Task<bool> SetIsApproved(ObjectId memberId, bool newValue);
+
+        Task<bool> Delete(ObjectId roomId, ObjectId memberId);
     }
 }

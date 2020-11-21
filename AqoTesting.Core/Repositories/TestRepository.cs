@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using AqoTesting.Domain.Workers;
-using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
@@ -20,5 +19,8 @@ namespace AqoTesting.Core.Repositories
 
         public async Task<TestsDB_Test_DTO[]> GetTestsByRoomId(ObjectId roomId) =>
             await Task.Run(() => TestWorker.GetTestsByRoomId(roomId));
+
+        public async Task<ObjectId> InsertTest(TestsDB_Test_DTO newTest) =>
+            await Task.Run(() => TestWorker.InsertTest(newTest));
     }
 }

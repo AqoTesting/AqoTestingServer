@@ -1,5 +1,4 @@
 ﻿using AqoTesting.Shared.Enums;
-using MongoDB.Bson;
 using System.ComponentModel.DataAnnotations;
 
 namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Questions
@@ -16,12 +15,13 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Questions
         [StringLength(1024, MinimumLength = 1)]
         public string? Text { get; set; }
 
-        [Required]
-        public bool Shuffle { get; set; }
+        public bool? Shuffle { get; set; }
 
         [Required]
         [MinLength(2)]
         [MaxLength(16)]
         public UserAPI_CommonOption_DTO[]? Options { get; set; }
+
+        public int? Cost { get; set; }
     }
 }

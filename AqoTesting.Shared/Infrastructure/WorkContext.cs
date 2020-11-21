@@ -1,9 +1,5 @@
-﻿using AqoTesting.Shared.Enums;
-using AqoTesting.Shared.Interfaces;
+﻿using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AqoTesting.Shared.Infrastructure
 {
