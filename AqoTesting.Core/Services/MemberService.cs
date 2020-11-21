@@ -20,14 +20,16 @@ namespace AqoTesting.Core.Services
         IWorkContext _workContext;
         ITokenGeneratorService _tokenGeneratorService;
         ITokenRepository _tokenRepository;
+        ICacheRepository _cacheRepository;
 
-        public MemberService(IRoomRepository roomRespository, IMemberRepository memberRepository, IWorkContext workContext, ITokenGeneratorService tokenGeneratorService, ITokenRepository tokenRepository)
+        public MemberService(IRoomRepository roomRespository, IMemberRepository memberRepository, IWorkContext workContext, ITokenGeneratorService tokenGeneratorService, ITokenRepository tokenRepository, ICacheRepository cacheRepository)
         {
             _memberRepository = memberRepository;
             _roomRepository = roomRespository;
             _workContext = workContext;
             _tokenGeneratorService = tokenGeneratorService;
             _tokenRepository = tokenRepository;
+            _cacheRepository = cacheRepository;
         }
 
         #region User API
@@ -105,6 +107,8 @@ namespace AqoTesting.Core.Services
             var unregistered = await _memberRepository.SetIsRegistered(memberId, false);
             if (!unregistered)
                 return (OperationErrorMessages.MemberIsNotRegistered, null);
+
+            await _cacheRepository.DelAll(await _cacheRepository.Keys($"Member:{memberId}*"));
 
             return (OperationErrorMessages.NoError, null);
         }
