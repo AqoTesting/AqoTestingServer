@@ -38,7 +38,6 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Auth(Role = Role.Member)]
-        [MemberIsRegistered]
         [HttpGet("/member")]
         public async Task<IActionResult> GetProfile()
         {
