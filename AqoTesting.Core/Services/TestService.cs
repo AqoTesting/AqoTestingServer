@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.API.Common;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Tests;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
+using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
@@ -56,16 +56,11 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetTestById(CommonAPI_TestId_DTO testIdDTO) =>
             await UserAPI_GetTestById(ObjectId.Parse(testIdDTO.TestId));
 
-        public async Task<(OperationErrorMessages, object)> UserAPI_CreateTest(CommonAPI_RoomId_DTO roomIdDTO, UserAPI_PostTest_DTO postTestDTO)
+        public async Task<(OperationErrorMessages, object)> UserAPI_CreateTest(ObjectId roomId, UserAPI_PostTest_DTO postTestDTO)
         {
-            var (valid, errorCode, response) = TestValidator.Validate(postTestDTO);
-
-            if (!valid)
-                return (errorCode, response);
-
             var newTest = Mapper.Map<TestsDB_Test_DTO>(postTestDTO);
             newTest.OwnerId = _workContext.UserId;
-            newTest.RoomId = ObjectId.Parse(roomIdDTO.RoomId);
+            newTest.RoomId = roomId;
             newTest.CreationDate = DateTime.UtcNow;
 
             var newTestId = await _testRepository.InsertTest(newTest);
@@ -73,6 +68,63 @@ namespace AqoTesting.Core.Services
 
             return (OperationErrorMessages.NoError, newTestIdDTO);
         }
+        public async Task<(OperationErrorMessages, object)> UserAPI_CreateTest(CommonAPI_RoomId_DTO roomIdDTO, UserAPI_PostTest_DTO postTestDTO) =>
+            await this.UserAPI_CreateTest(ObjectId.Parse(roomIdDTO.RoomId), postTestDTO);
+
+        public async Task<(OperationErrorMessages, object)> UserAPI_EditTest(ObjectId testId, UserAPI_PostTest_DTO postTestDTO)
+        {
+            var outdatedTest = await _testRepository.GetTestById(testId);
+            if (outdatedTest == null)
+                return (OperationErrorMessages.TestNotFound, null);
+
+            var updatedTest = Mapper.Map<TestsDB_Test_DTO>(postTestDTO);
+            updatedTest.OwnerId = outdatedTest.OwnerId;
+            updatedTest.RoomId = outdatedTest.RoomId;
+            updatedTest.CreationDate = outdatedTest.CreationDate;
+            updatedTest.Sections = outdatedTest.Sections;
+
+            await _testRepository.ReplaceTest(updatedTest);
+
+            return (OperationErrorMessages.NoError, null);
+        }
+        public async Task<(OperationErrorMessages, object)> UserAPI_EditTest(CommonAPI_TestId_DTO testIdDTO, UserAPI_PostTest_DTO postTestDTO) =>
+            await this.UserAPI_EditTest(ObjectId.Parse(testIdDTO.TestId), postTestDTO);
+
+        public async Task<(OperationErrorMessages, object)> UserAPI_EditSections(ObjectId testId, UserAPI_PostSections_DTO postSectionsDTO)
+        {
+            var test = await _testRepository.GetTestById(testId);
+            if (test == null)
+                return (OperationErrorMessages.TestNotFound, null);
+
+            var dbSections = test.Sections;
+
+            foreach(var updateSection in postSectionsDTO.Sections)
+            {
+                if (updateSection.Value.Deleted != null && updateSection.Value.Deleted.Value)
+                    dbSections.Remove(updateSection.Key);
+
+                else
+                {
+                    foreach(var updateQuestion in updateSection.Value.Questions)
+                    {
+                        if (updateQuestion.Value.Deleted != null && updateSection.Value.Deleted.Value)
+                            dbSections[updateSection.Key].Questions.Remove(updateQuestion.Key);
+                        
+                        else
+                            dbSections[updateSection.Key].Questions[updateQuestion.Key] = Mapper.Map<TestsDB_Question_DTO>(updateQuestion.Value);
+                    }
+
+                    dbSections[updateSection.Key] = Mapper.Map<TestsDB_Section_DTO>(updateSection.Value);
+                }
+                
+            }
+
+            await _testRepository.SetSections(testId, dbSections);
+
+            return (OperationErrorMessages.NoError, null);
+        }
+        public async Task<(OperationErrorMessages, object)> UserAPI_EditSections(CommonAPI_TestId_DTO testIdDTO, UserAPI_PostSections_DTO postSectionsDTO) =>
+            await this.UserAPI_EditSections(ObjectId.Parse(testIdDTO.TestId), postSectionsDTO);
         #endregion
 
         #region MemberAPI

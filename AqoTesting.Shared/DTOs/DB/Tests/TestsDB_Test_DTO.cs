@@ -15,7 +15,7 @@ namespace AqoTesting.Shared.DTOs.DB.Tests
         public string Description { get; set; }
         public TestsDB_Document_DTO[] Documents {get; set; }
         public bool IsActive { get; set; } //приоритет над датами (если true)
-        public TestsDB_Section_DTO[] Sections { get; set; }
+        public Dictionary<int, TestsDB_Section_DTO> Sections { get; set; } = new Dictionary<int, TestsDB_Section_DTO>();
         public DateTime CreationDate { get; set; }
         public DateTime? ActivationDate { get; set; }
         public DateTime? DeactivationDate { get; set; }

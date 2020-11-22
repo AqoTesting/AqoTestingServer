@@ -1,4 +1,4 @@
-﻿using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Questions;
+﻿using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -20,11 +20,6 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
 
         [Required]
         public bool? IsActive { get; set; }
-
-        [Required]
-        [MinLength(0)]
-        [MaxLength(128)]
-        public UserAPI_Section_DTO[]? Sections { get; set; }
 
         public DateTime? ActivationDate { get; set; }
         public DateTime? DeactivationDate { get; set; }

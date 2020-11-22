@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AqoTesting.Domain.Workers;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.Interfaces;
@@ -22,5 +23,17 @@ namespace AqoTesting.Core.Repositories
 
         public async Task<ObjectId> InsertTest(TestsDB_Test_DTO newTest) =>
             await Task.Run(() => TestWorker.InsertTest(newTest));
+
+        public async Task ReplaceTest(TestsDB_Test_DTO updatedTest)
+        {
+            await Task.Run(() => TestWorker.ReplaceTest(updatedTest));
+            await _cache.Del($"Test:{updatedTest.Id}");
+        }
+
+        public async Task SetSections(ObjectId testId, Dictionary<int, TestsDB_Section_DTO> newValue)
+        {
+            await Task.Run(() => TestWorker.SetTestSections(testId, newValue));
+            await _cache.Del($"Test:{testId}");
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Account;
@@ -7,7 +8,8 @@ using AqoTesting.Shared.DTOs.API.UserAPI.Account;
 using AqoTesting.Shared.DTOs.API.UserAPI.Members;
 using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
-using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Questions;
+using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
+using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections.Options;
 using AqoTesting.Shared.DTOs.DB.Members;
 using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.DTOs.DB.Tests;
@@ -17,6 +19,7 @@ using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Models;
 using AutoMapper;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 
 namespace AqoTesting.WebApi.Infrastructure
 {
@@ -106,13 +109,37 @@ namespace AqoTesting.WebApi.Infrastructure
                 #endregion
 
                 #region Tests
+                cfg.CreateMap<TestsDB_ChoiceOption, UserAPI_CommonOption_DTO>();
+                cfg.CreateMap<TestsDB_Question_DTO, UserAPI_GetQuestion_DTO>()
+                    .ForMember(x => x.Options,
+                        x => x.ResolveUsing(m =>
+                        {
+                            if(m.Type == QuestionTypes.SingleChoice || m.Type == QuestionTypes.MultipleChoice)
+                            {
+                                return Mapper.Map<UserAPI_CommonOption_DTO[]>( BsonSerializer.Deserialize<TestsDB_ChoiceOption[]>(m.Options) );
+                            }
+                            else if(m.Type == QuestionTypes.Matching)
+                            {
+                                return Mapper.Map<UserAPI_MatchingOption_DTO>( BsonSerializer.Deserialize<TestsDB_MatchingOptionsData>(m.Options));
+                            }
+                            else
+                            {
+                                return new UserAPI_CommonOption_DTO[];
+                            }
+                        }));
+                cfg.CreateMap<TestsDB_Section_DTO, UserAPI_GetSection_DTO>()
+                    .ForMember(x => x.Questions,
+                        x => x.MapFrom(m => Mapper.Map<Dictionary<int, UserAPI_GetQuestion_DTO>>(m.Questions)));
+                cfg.CreateMap<TestsDB_Test_DTO, UserAPI_GetTest_DTO>()
+                    .ForMember(x => x.Sections,
+                        x => x.MapFrom(m => Mapper.Map<Dictionary<int, UserAPI_GetSection_DTO>>(m.Sections)));
+
                 cfg.CreateMap<TestsDB_Test_DTO, UserAPI_GetTestsItem_DTO>();
-                cfg.CreateMap<TestsDB_Test_DTO, UserAPI_GetTest_DTO>();
 
                 cfg.CreateMap<UserAPI_ChoiceOption_DTO, TestsDB_ChoiceOption>();
                 cfg.CreateMap<UserAPI_MatchingOption_DTO, TestsDB_PositionalOption>();
 
-                cfg.CreateMap<UserAPI_Question_DTO, TestsDB_Question_DTO>()
+                cfg.CreateMap<UserAPI_PostQuestion_DTO, TestsDB_Question_DTO>()
                     .ForMember(x => x.Options,
                         x => x.ResolveUsing(m =>
                             m.Type == QuestionTypes.SingleChoice || m.Type == QuestionTypes.MultipleChoice ?
@@ -139,13 +166,11 @@ namespace AqoTesting.WebApi.Infrastructure
                             
                             new BsonDocument()));
 
-                cfg.CreateMap<UserAPI_Section_DTO, TestsDB_Section_DTO>()
+                cfg.CreateMap<UserAPI_PostSection_DTO, TestsDB_Section_DTO>()
                     .ForMember(x => x.Questions,
-                        x => x.MapFrom(m => Mapper.Map<TestsDB_Question_DTO[]>(m.Questions)));
+                        x => x.MapFrom(m => Mapper.Map<Dictionary<int, TestsDB_Question_DTO>>(m.Questions)));
 
-                cfg.CreateMap<UserAPI_PostTest_DTO, TestsDB_Test_DTO>()
-                    .ForMember(x => x.Sections,
-                        x => x.MapFrom(m => Mapper.Map<TestsDB_Section_DTO[]>(m.Sections)));
+                cfg.CreateMap<UserAPI_PostTest_DTO, TestsDB_Test_DTO>();
                 #endregion
 
                 #region Members
