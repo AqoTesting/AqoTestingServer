@@ -1,4 +1,4 @@
-﻿namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Questions
+﻿namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections.Options
 {
     public class UserAPI_MatchingOption_DTO
     {

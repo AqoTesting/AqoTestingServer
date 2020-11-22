@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.API.Common;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
+using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
@@ -47,6 +48,25 @@ namespace AqoTesting.WebApi.Controllers
 
             return this.ResultResponse(errorCorde, response);
         }
-                
+
+        [Auth(Role = Role.User)]
+        [OnlyRoomOwner]
+        [HttpPut("/user/room/{RoomId}/test")]
+        public async Task<IActionResult> EditTest([FromRoute] CommonAPI_TestId_DTO testIdDTO, [FromBody] UserAPI_PostTest_DTO postTestDTO)
+        {
+            var (errorCorde, response) = await _testService.UserAPI_EditTest(testIdDTO, postTestDTO);
+
+            return this.ResultResponse(errorCorde, response);
+        }
+
+        [Auth(Role = Role.User)]
+        [OnlyRoomOwner]
+        [HttpPatch("/user/test/{TestId}/sections")]
+        public async Task<IActionResult> EditSections([FromRoute] CommonAPI_TestId_DTO testIdDTO, [FromBody] UserAPI_PostSections_DTO postSectionDTOs)
+        {
+            var (errorCode, response) = await _testService.UserAPI_EditSections(testIdDTO, postSectionDTOs);
+
+            return this.ResultResponse(errorCode, response);
+        }
     }
 }

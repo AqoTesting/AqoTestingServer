@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Questions
+namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
 {
     public class UserAPI_Document_DTO
     {

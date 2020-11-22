@@ -35,8 +35,6 @@
         TypeMismatch = 304,
         // В Option нет ни картинки, ни текста
         EmptyOption = 305,
-        // Передан RatingScale, но в каком-то из вопросов не указан Cost
-        RatingScaleNullCost = 306,
         #endregion
 
         #region Users

@@ -25,24 +25,21 @@ namespace AqoTesting.Domain.Tests
                     DeactivationDate = null,
                     Shuffle = true,
                     Title = "Dev 1 Test",
-                    Sections = new TestsDB_Section_DTO[]
+                    Sections = new Dictionary<int, TestsDB_Section_DTO>
                     {
-                        new TestsDB_Section_DTO
+                        [1] = new TestsDB_Section_DTO
                         {
-                            Id = 1,
-                            Questions = new TestsDB_Question_DTO[]
+                            Questions = new Dictionary<int, TestsDB_Question_DTO>
                             {
-                                new TestsDB_Question_DTO
+                                [1] = new TestsDB_Question_DTO
                                 {
-                                    Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
                                     //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
-                                new TestsDB_Question_DTO
+                                [2] = new TestsDB_Question_DTO
                                 {
-                                    Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
@@ -50,22 +47,19 @@ namespace AqoTesting.Domain.Tests
                                 }
                             }
                         },
-                        new TestsDB_Section_DTO
+                        [2] = new TestsDB_Section_DTO
                         {
-                            Id = 2,
-                            Questions = new TestsDB_Question_DTO[]
+                            Questions = new Dictionary<int, TestsDB_Question_DTO>
                             {
-                                new TestsDB_Question_DTO
+                                [1] = new TestsDB_Question_DTO
                                 {
-                                    Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
                                     //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
-                                new TestsDB_Question_DTO
+                                [2] = new TestsDB_Question_DTO
                                 {
-                                    Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
@@ -83,24 +77,21 @@ namespace AqoTesting.Domain.Tests
                     DeactivationDate = null,
                     Shuffle = true,
                     Title = "Dev 2 Test",
-                    Sections = new TestsDB_Section_DTO[]
+                    Sections = new Dictionary<int, TestsDB_Section_DTO>
                     {
-                        new TestsDB_Section_DTO
+                        [1] = new TestsDB_Section_DTO
                         {
-                            Id = 1,
-                            Questions = new TestsDB_Question_DTO[]
+                            Questions = new Dictionary<int, TestsDB_Question_DTO>
                             {
-                                new TestsDB_Question_DTO
+                                [1] = new TestsDB_Question_DTO
                                 {
-                                    Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
                                     //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
-                                new TestsDB_Question_DTO
+                                [2] = new TestsDB_Question_DTO
                                 {
-                                    Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
@@ -108,22 +99,19 @@ namespace AqoTesting.Domain.Tests
                                 }
                             }
                         },
-                        new TestsDB_Section_DTO
+                        [2] = new TestsDB_Section_DTO
                         {
-                            Id = 2,
-                            Questions = new TestsDB_Question_DTO[]
+                            Questions = new Dictionary<int, TestsDB_Question_DTO>
                             {
-                                new TestsDB_Question_DTO
+                                [1] = new TestsDB_Question_DTO
                                 {
-                                    Id = 1,
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
                                     //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
-                                new TestsDB_Question_DTO
+                                [2] = new TestsDB_Question_DTO
                                 {
-                                    Id = 2,
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,

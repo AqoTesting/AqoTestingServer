@@ -1,29 +1,23 @@
 ﻿using AqoTesting.Shared.DTOs.API.Common;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
+using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
 using AqoTesting.Shared.Enums;
 using System.Collections.Generic;
 
 namespace AqoTesting.Core.Utils
 {
-    public static class TestValidator
+    public static class SectionsValidator
     {
-        public static (bool, OperationErrorMessages, object) Validate(UserAPI_PostTest_DTO postTestDTO)
+        public static (bool, OperationErrorMessages, object) Validate(UserAPI_GetSection_DTO[] sections)
         {
-            HashSet<int> uniqueSectionIds = new HashSet<int>();
+            /*HashSet<int> uniqueSectionIds = new HashSet<int>();
             HashSet<int> uniqueQuestionIds;
-            foreach (var section in postTestDTO.Sections)
+            foreach (var section in sections)
             {
-                if (!uniqueSectionIds.Add(section.Id))
                     return (false, OperationErrorMessages.NonUniqueSectionId, new CommonAPI_Error_DTO { ErrorSubject = section.Id });
 
-                uniqueQuestionIds = new HashSet<int>();
                 foreach (var question in section.Questions)
                 {
-                    if (!uniqueQuestionIds.Add(question.Id))
-                        return (false, OperationErrorMessages.NonUniqueQuestionId, new CommonAPI_Error_DTO { ErrorSubject = new int[] { section.Id, question.Id } });
-
-                    if (postTestDTO.RatingScale != null && question.Cost == null)
-                        return (false, OperationErrorMessages.RatingScaleNullCost, new CommonAPI_Error_DTO { ErrorSubject = new int[] { section.Id, question.Id } });
 
                     int correctsCount;
                     switch (question.Type)
@@ -85,7 +79,7 @@ namespace AqoTesting.Core.Utils
                             break;
                     }
                 }
-            }
+            }*/
 
             return (true, OperationErrorMessages.NoError, null);
         }
