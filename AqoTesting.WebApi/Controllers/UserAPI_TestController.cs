@@ -51,7 +51,7 @@ namespace AqoTesting.WebApi.Controllers
 
         [Auth(Role = Role.User)]
         [OnlyRoomOwner]
-        [HttpPut("/user/room/{RoomId}/test")]
+        [HttpPut("/user/test/{TestId}")]
         public async Task<IActionResult> EditTest([FromRoute] CommonAPI_TestId_DTO testIdDTO, [FromBody] UserAPI_PostTest_DTO postTestDTO)
         {
             var (errorCorde, response) = await _testService.UserAPI_EditTest(testIdDTO, postTestDTO);

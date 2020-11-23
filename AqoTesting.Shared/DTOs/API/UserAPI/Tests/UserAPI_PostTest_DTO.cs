@@ -1,4 +1,5 @@
 ﻿using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
+using AqoTesting.Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,6 +18,11 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         [MinLength(1)]
         [MaxLength(16)]
         public UserAPI_Document_DTO[]? Documents { get; set; }
+
+        public FinalResultCalculationMethod FinalResultCalculationMethod { get; set; } = FinalResultCalculationMethod.Best;
+
+        [Range(1, int.MaxValue)]
+        public int AttemptsNumber { get; set; } = 1;
 
         [Required]
         public bool? IsActive { get; set; }

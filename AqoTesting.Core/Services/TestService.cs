@@ -80,6 +80,7 @@ namespace AqoTesting.Core.Services
                 return (OperationErrorMessages.TestNotFound, null);
 
             var updatedTest = Mapper.Map<TestsDB_Test_DTO>(postTestDTO);
+            updatedTest.Id = outdatedTest.Id;
             updatedTest.OwnerId = outdatedTest.OwnerId;
             updatedTest.RoomId = outdatedTest.RoomId;
             updatedTest.CreationDate = outdatedTest.CreationDate;

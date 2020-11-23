@@ -1,4 +1,5 @@
 ﻿using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
+using AqoTesting.Shared.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -12,8 +13,10 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         public string? Title { get; set; }
         public string? Description { get; set; }
         public UserAPI_Document_DTO[]? Documents { get; set; }
-        public bool IsActive { get; set; }
         public Dictionary<string, UserAPI_GetSection_DTO>? Sections { get; set; }
+        public FinalResultCalculationMethod FinalResultCalculationMethod { get; set; }
+        public int AttemptsNumber { get; set; }
+        public bool IsActive { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? ActivationDate { get; set; }
         public DateTime? DeactivationDate { get; set; }

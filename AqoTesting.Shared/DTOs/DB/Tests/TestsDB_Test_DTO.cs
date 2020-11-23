@@ -1,4 +1,5 @@
 ﻿using AqoTesting.Core.Utils;
+using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.Options;
@@ -20,8 +21,10 @@ namespace AqoTesting.Shared.DTOs.DB.Tests
         public string Title { get; set; }
         public string Description { get; set; }
         public TestsDB_Document_DTO[] Documents {get; set; }
-        public bool IsActive { get; set; } //приоритет над датами (если true)
         public Dictionary<string, TestsDB_Section_DTO> Sections { get; set; }
+        public FinalResultCalculationMethod FinalResultCalculationMethod { get; set; }
+        public int AttemptsNumber { get; set; }
+        public bool IsActive { get; set; } //приоритет над датами (если true)
         public DateTime CreationDate { get; set; }
         public DateTime? ActivationDate { get; set; }
         public DateTime? DeactivationDate { get; set; }
