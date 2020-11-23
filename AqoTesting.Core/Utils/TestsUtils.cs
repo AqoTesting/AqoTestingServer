@@ -110,7 +110,10 @@ namespace AqoTesting.Core.Utils
                         }
                         else
                             dbSections.Add(updateSection.Key, Mapper.Map<TestsDB_Section_DTO>(updateSection.Value));
-                }
+
+                    if (dbSections[updateSection.Key].Questions.Count < dbSections[updateSection.Key].AttemptQuestionsNumber)
+                        return (false, OperationErrorMessages.NotEnoughQuestions, new CommonAPI_Error_DTO { ErrorSubject = updateSection.Key });
+                }                
             }
 
             return (true, OperationErrorMessages.NoError, dbSections);

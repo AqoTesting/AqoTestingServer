@@ -19,10 +19,13 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         [MaxLength(16)]
         public UserAPI_Document_DTO[]? Documents { get; set; }
 
-        public FinalResultCalculationMethod FinalResultCalculationMethod { get; set; } = FinalResultCalculationMethod.Best;
+        [Range(0, int.MaxValue)]
+        public int AttemptSectionsNumber { get; set; } = 0;
 
         [Range(1, int.MaxValue)]
         public int AttemptsNumber { get; set; } = 1;
+
+        public FinalResultCalculationMethod FinalResultCalculationMethod { get; set; } = FinalResultCalculationMethod.Best;
 
         [Required]
         public bool? IsActive { get; set; }

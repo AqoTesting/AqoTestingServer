@@ -28,14 +28,15 @@
         SectionNotFound = 301,
         QuestionNotFound = 302,
 
-        // В SingleChoice 0 или больше 1 правильных ответов, в MultipleChoice - меньше 2
-        ChoiceWrongCorrectsCount = 303,
+        NotEnoughSections = 303,
+        NotEnoughQuestions = 304,
 
-        // В UserAPI_CommonOption_DTO, поля, которые нужны для конкретного типа вопроса - пустые
-        TypeMismatch = 304,
+        // В SingleChoice 0 или больше 1 правильных ответов, в MultipleChoice - меньше 2
+        ChoiceWrongCorrectsCount = 305,
+
         // В Option нет ни картинки, ни текста
-        EmptyOption = 305,
-        EmptyQuestion = 306,
+        EmptyOption = 307,
+        EmptyQuestion = 308,
         #endregion
 
         #region Users

@@ -12,9 +12,11 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
         public string? Title { get; set; }
 
         [RequiredIf("Deleted", false)]
-        [MinLength(1)]
         [MaxLength(32)]
         public Dictionary<string, UserAPI_PostQuestion_DTO>? Questions { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int AttemptQuestionsNumber { get; set; } = 0;
 
         public bool Shuffle { get; set; } = false;
 

@@ -79,6 +79,9 @@ namespace AqoTesting.Core.Services
             if (outdatedTest == null)
                 return (OperationErrorMessages.TestNotFound, null);
 
+            if (postTestDTO.AttemptSectionsNumber > outdatedTest.Sections.Count)
+                return (OperationErrorMessages.NotEnoughSections, null);
+
             var updatedTest = Mapper.Map<TestsDB_Test_DTO>(postTestDTO);
             updatedTest.Id = outdatedTest.Id;
             updatedTest.OwnerId = outdatedTest.OwnerId;
@@ -109,6 +112,9 @@ namespace AqoTesting.Core.Services
                 return (errorCode, response);
 
             var dbSections = (Dictionary<string, TestsDB_Section_DTO>) response;
+
+            if (dbSections.Count < test.AttemptSectionsNumber)
+                return (OperationErrorMessages.NotEnoughSections, null);
 
             await _testRepository.SetSections(testId, dbSections);
 

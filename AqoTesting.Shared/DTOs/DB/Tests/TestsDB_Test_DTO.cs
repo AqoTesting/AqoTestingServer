@@ -22,8 +22,9 @@ namespace AqoTesting.Shared.DTOs.DB.Tests
         public string Description { get; set; }
         public TestsDB_Document_DTO[] Documents {get; set; }
         public Dictionary<string, TestsDB_Section_DTO> Sections { get; set; }
-        public FinalResultCalculationMethod FinalResultCalculationMethod { get; set; }
+        public int AttemptSectionsNumber { get; set; }
         public int AttemptsNumber { get; set; }
+        public FinalResultCalculationMethod FinalResultCalculationMethod { get; set; }
         public bool IsActive { get; set; } //приоритет над датами (если true)
         public DateTime CreationDate { get; set; }
         public DateTime? ActivationDate { get; set; }
