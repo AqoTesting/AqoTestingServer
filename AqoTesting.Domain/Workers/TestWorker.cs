@@ -146,7 +146,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="testId"></param>
         /// <param name="newValue"></param>
-        public static void SetTestSections(ObjectId testId, Dictionary<int, TestsDB_Section_DTO> newValue)
+        public static void SetTestSections(ObjectId testId, Dictionary<string, TestsDB_Section_DTO> newValue)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
             var update = Builders<TestsDB_Test_DTO>.Update.Set("Sections", newValue);
@@ -157,7 +157,7 @@ namespace AqoTesting.Domain.Workers
         /// </summary>
         /// <param name="test"></param>
         /// <param name="newValue"></param>
-        public static void SetSections(this TestsDB_Test_DTO test, Dictionary<int, TestsDB_Section_DTO> newValue)
+        public static void SetSections(this TestsDB_Test_DTO test, Dictionary<string, TestsDB_Section_DTO> newValue)
         {
             test.Sections = newValue;
             SetTestSections(test.Id, newValue);

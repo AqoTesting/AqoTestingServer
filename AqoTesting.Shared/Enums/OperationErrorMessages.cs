@@ -25,8 +25,8 @@
         #region Tests
         TestNotFound = 300,
 
-        NonUniqueSectionId = 301,
-        NonUniqueQuestionId = 302,
+        SectionNotFound = 301,
+        QuestionNotFound = 302,
 
         // В SingleChoice 0 или больше 1 правильных ответов, в MultipleChoice - меньше 2
         ChoiceWrongCorrectsCount = 303,
@@ -35,6 +35,7 @@
         TypeMismatch = 304,
         // В Option нет ни картинки, ни текста
         EmptyOption = 305,
+        EmptyQuestion = 306,
         #endregion
 
         #region Users

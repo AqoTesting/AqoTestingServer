@@ -7,6 +7,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
     {
         public QuestionTypes Type { get; set; }
         public string? Text { get; set; }
+        public string? ImageUrl { get; set; }
         public bool? Shuffle { get; set; }
         public UserAPI_CommonOption_DTO[]? Options { get; set; }
         public int? Cost { get; set; }

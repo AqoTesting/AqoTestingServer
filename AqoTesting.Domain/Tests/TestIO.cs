@@ -25,20 +25,20 @@ namespace AqoTesting.Domain.Tests
                     DeactivationDate = null,
                     Shuffle = true,
                     Title = "Dev 1 Test",
-                    Sections = new Dictionary<int, TestsDB_Section_DTO>
+                    Sections = new Dictionary<string, TestsDB_Section_DTO>
                     {
-                        [1] = new TestsDB_Section_DTO
+                        ["1"] = new TestsDB_Section_DTO
                         {
-                            Questions = new Dictionary<int, TestsDB_Question_DTO>
+                            Questions = new Dictionary<string, TestsDB_Question_DTO>
                             {
-                                [1] = new TestsDB_Question_DTO
+                                ["1"] = new TestsDB_Question_DTO
                                 {
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
                                     //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
-                                [2] = new TestsDB_Question_DTO
+                                ["2"] = new TestsDB_Question_DTO
                                 {
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
@@ -47,18 +47,18 @@ namespace AqoTesting.Domain.Tests
                                 }
                             }
                         },
-                        [2] = new TestsDB_Section_DTO
+                        ["2"] = new TestsDB_Section_DTO
                         {
-                            Questions = new Dictionary<int, TestsDB_Question_DTO>
+                            Questions = new Dictionary<string, TestsDB_Question_DTO>
                             {
-                                [1] = new TestsDB_Question_DTO
+                                ["1"] = new TestsDB_Question_DTO
                                 {
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
                                     //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
-                                [2] = new TestsDB_Question_DTO
+                                ["2"] = new TestsDB_Question_DTO
                                 {
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
@@ -77,20 +77,20 @@ namespace AqoTesting.Domain.Tests
                     DeactivationDate = null,
                     Shuffle = true,
                     Title = "Dev 2 Test",
-                    Sections = new Dictionary<int, TestsDB_Section_DTO>
+                    Sections = new Dictionary<string, TestsDB_Section_DTO>
                     {
-                        [1] = new TestsDB_Section_DTO
+                        ["1"] = new TestsDB_Section_DTO
                         {
-                            Questions = new Dictionary<int, TestsDB_Question_DTO>
+                            Questions = new Dictionary<string, TestsDB_Question_DTO>
                             {
-                                [1] = new TestsDB_Question_DTO
+                                ["1"] = new TestsDB_Question_DTO
                                 {
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
                                     //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
-                                [2] = new TestsDB_Question_DTO
+                                ["2"] = new TestsDB_Question_DTO
                                 {
                                     Text = "Dev test Q 2",
                                     Shuffle = false,
@@ -99,18 +99,18 @@ namespace AqoTesting.Domain.Tests
                                 }
                             }
                         },
-                        [2] = new TestsDB_Section_DTO
+                        ["2"] = new TestsDB_Section_DTO
                         {
-                            Questions = new Dictionary<int, TestsDB_Question_DTO>
+                            Questions = new Dictionary<string, TestsDB_Question_DTO>
                             {
-                                [1] = new TestsDB_Question_DTO
+                                ["1"] = new TestsDB_Question_DTO
                                 {
                                     Text = "Dev test Q 1",
                                     Shuffle = false,
                                     Type = (QuestionTypes) 1,
                                     //OptionsJson = "[{\"text\": \"text1\", \"valid\": true}, {\"text\": \"text2\", \"valid\": false}]"
                                 },
-                                [2] = new TestsDB_Question_DTO
+                                ["2"] = new TestsDB_Question_DTO
                                 {
                                     Text = "Dev test Q 2",
                                     Shuffle = false,

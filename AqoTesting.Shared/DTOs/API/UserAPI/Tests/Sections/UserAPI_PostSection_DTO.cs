@@ -6,11 +6,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
 {
     public class UserAPI_PostSection_DTO
     {
-        [Required]
-        public bool? Deleted { get; set; }
-
-        [Required]
-        public int Id { get; set; }
+        public bool Deleted { get; set; } = false;
 
         [StringLength(128, MinimumLength = 1)]
         public string? Title { get; set; }
@@ -18,12 +14,10 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
         [RequiredIf("Deleted", false)]
         [MinLength(1)]
         [MaxLength(32)]
-        public Dictionary<int, UserAPI_PostQuestion_DTO>? Questions { get; set; }
+        public Dictionary<string, UserAPI_PostQuestion_DTO>? Questions { get; set; }
 
-        [RequiredIf("Deleted", false)]
-        public bool? Shuffle { get; set; }
+        public bool Shuffle { get; set; } = false;
 
-        [RequiredIf("Deleted", false)]
-        public int? Weight { get; set; }
+        public int Weight { get; set; } = 0;
     }
 }

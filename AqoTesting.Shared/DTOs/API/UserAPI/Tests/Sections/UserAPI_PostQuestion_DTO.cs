@@ -7,29 +7,25 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
 {
     public class UserAPI_PostQuestion_DTO
     {
-        [Required]
-        public bool? Deleted { get; set; }
-
-        [Required]
-        public int Id { get; set; }
+        public bool Deleted { get; set; } = false;
 
         [RequiredIf("Deleted", false)]
         public QuestionTypes Type { get; set; }
 
-        [RequiredIf("Deleted", false)]
         [StringLength(1024, MinimumLength = 1)]
         public string? Text { get; set; }
-
-        public bool? Shuffle { get; set; }
+        [StringLength(2048)]
+        [Url]
+        public string? ImageUrl { get; set; }
+        public bool Shuffle { get; set; } = false;
 
         [RequiredIf("Deleted", false)]
         [MinLength(2)]
         [MaxLength(16)]
         public UserAPI_CommonOption_DTO[]? Options { get; set; }
 
-        public int? Cost { get; set; }
+        public int Cost { get; set; } = 1;
 
-        [RequiredIf("Deleted", false)]
-        public int? Weight { get; set; }
+        public int Weight { get; set; } = 0;
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.API.Common;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Tests;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
@@ -92,6 +94,8 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_EditSections(ObjectId testId, UserAPI_PostSections_DTO postSectionsDTO)
         {
+            var (valid, errorCode, response) = SectionsValidator.Validate(postSectionsDTO.Sections);
+
             var test = await _testRepository.GetTestById(testId);
             if (test == null)
                 return (OperationErrorMessages.TestNotFound, null);
@@ -100,21 +104,36 @@ namespace AqoTesting.Core.Services
 
             foreach(var updateSection in postSectionsDTO.Sections)
             {
-                if (updateSection.Value.Deleted != null && updateSection.Value.Deleted.Value)
-                    dbSections.Remove(updateSection.Key);
+                if (updateSection.Value.Deleted)
+                    if (!dbSections.ContainsKey(updateSection.Key))
+                        return (OperationErrorMessages.SectionNotFound, new CommonAPI_Error_DTO { ErrorSubject = updateSection.Key });
+                    else
+                        dbSections.Remove(updateSection.Key);
 
                 else
                 {
-                    foreach(var updateQuestion in updateSection.Value.Questions)
-                    {
-                        if (updateQuestion.Value.Deleted != null && updateSection.Value.Deleted.Value)
-                            dbSections[updateSection.Key].Questions.Remove(updateQuestion.Key);
-                        
-                        else
-                            dbSections[updateSection.Key].Questions[updateQuestion.Key] = Mapper.Map<TestsDB_Question_DTO>(updateQuestion.Value);
-                    }
+                    foreach (var updateQuestion in updateSection.Value.Questions)
+                        if (updateQuestion.Value.Deleted)
+                            if (!dbSections.ContainsKey(updateSection.Key))
+                                return (OperationErrorMessages.SectionNotFound, new CommonAPI_Error_DTO { ErrorSubject = updateSection.Key });
+                            else if (!dbSections[updateSection.Key].Questions.ContainsKey(updateQuestion.Key))
+                                return (OperationErrorMessages.QuestionNotFound, new CommonAPI_Error_DTO { ErrorSubject = new string[] { updateSection.Key, updateQuestion.Key } });
 
-                    dbSections[updateSection.Key] = Mapper.Map<TestsDB_Section_DTO>(updateSection.Value);
+                            else
+                            {
+                                dbSections[updateSection.Key].Questions.Remove(updateQuestion.Key);
+                                updateSection.Value.Questions.Remove(updateQuestion.Key);
+                            }
+
+                    if (updateSection.Value.Questions.Count > 0)
+                        if (dbSections.ContainsKey(updateSection.Key))
+                        {
+                            var oldQuestions = dbSections[updateSection.Key].Questions.ToDictionary(x => x.Key, x => x.Value);
+                            dbSections[updateSection.Key] = Mapper.Map<TestsDB_Section_DTO>(updateSection.Value);
+                            dbSections[updateSection.Key].Questions.Concat(oldQuestions);
+                        }
+                        else
+                            dbSections.Add(updateSection.Key, Mapper.Map<TestsDB_Section_DTO>(updateSection.Value));
                 }
                 
             }

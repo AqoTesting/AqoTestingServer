@@ -77,11 +77,11 @@ namespace AqoTesting.WebApi.Infrastructure
 
                 cfg.CreateMap<UserAPI_RoomField_DTO, RoomsDB_Field_DTO>()
                     .ForMember(x => x.Data,
-                        x => x.ResolveUsing(m =>
+                        x => x.MapFrom(m =>
                             m.Type == FieldType.Input ?
-                                Mapper.Map<RoomsDB_InputField_DTO>(m).ToBsonDocument() :
+                                Mapper.Map<RoomsDB_InputField_DTO>(m).ToBsonDocument(null, null, default) :
                             m.Type == FieldType.Select ?
-                                Mapper.Map<RoomsDB_SelectField_DTO>(m).ToBsonDocument() :
+                                Mapper.Map<RoomsDB_SelectField_DTO>(m).ToBsonDocument(null, null, default) :
                             new BsonDocument()));
 
                 cfg.CreateMap<RoomsDB_Field_DTO, MemberAPI_GetRoomField_DTO>()
@@ -109,68 +109,101 @@ namespace AqoTesting.WebApi.Infrastructure
                 #endregion
 
                 #region Tests
+                #region TestsDB_Test_DTO -> UserAPI_GetTest_DTO
                 cfg.CreateMap<TestsDB_ChoiceOption, UserAPI_CommonOption_DTO>();
+                cfg.CreateMap<TestsDB_MatchingOptionsData, UserAPI_CommonOption_DTO[]>()
+                    .ConstructUsing(x =>
+                    {
+                        var commonOptionsDTOs = new UserAPI_CommonOption_DTO[x.Left.Length];
+                        for(var i = 0; i < x.Left.Length; i++)
+                            commonOptionsDTOs[i] = new UserAPI_CommonOption_DTO {
+                                LeftText = x.Left[i].Text,
+                                LeftImageUrl = x.Left[i].Text,
+                                RightText = x.Right[i].Text,
+                                RightImageUrl = x.Right[i].ImageUrl
+                            };
+
+                        return commonOptionsDTOs;
+                    });
+                cfg.CreateMap<TestsDB_PositionalOption, UserAPI_CommonOption_DTO>();
                 cfg.CreateMap<TestsDB_Question_DTO, UserAPI_GetQuestion_DTO>()
                     .ForMember(x => x.Options,
-                        x => x.ResolveUsing(m =>
-                        {
-                            if(m.Type == QuestionTypes.SingleChoice || m.Type == QuestionTypes.MultipleChoice)
-                            {
-                                return Mapper.Map<UserAPI_CommonOption_DTO[]>( BsonSerializer.Deserialize<TestsDB_ChoiceOption[]>(m.Options) );
-                            }
-                            else if(m.Type == QuestionTypes.Matching)
-                            {
-                                return Mapper.Map<UserAPI_MatchingOption_DTO>( BsonSerializer.Deserialize<TestsDB_MatchingOptionsData>(m.Options));
-                            }
-                            else
-                            {
-                                return new UserAPI_CommonOption_DTO[];
-                            }
-                        }));
+                        x => x.MapFrom(m =>
+                            m.Type == QuestionTypes.SingleChoice || m.Type == QuestionTypes.MultipleChoice ?
+                                Mapper.Map<UserAPI_CommonOption_DTO[]>((TestsDB_ChoiceOption[]) BsonSerializer.Deserialize<TestsDB_OptionsData>(m.Options, null).Data) :
+
+                            m.Type == QuestionTypes.Matching ?
+                                Mapper.Map<UserAPI_CommonOption_DTO[]>(BsonSerializer.Deserialize<TestsDB_MatchingOptionsData>(m.Options, null)) :
+                            
+                            m.Type == QuestionTypes.Sequence ?
+                                Mapper.Map<UserAPI_CommonOption_DTO[]>((TestsDB_PositionalOption[]) BsonSerializer.Deserialize<TestsDB_OptionsData>(m.Options, null).Data) :
+
+                            new UserAPI_CommonOption_DTO[0]));
+                cfg.CreateMap<KeyValuePair<string, TestsDB_Question_DTO>, KeyValuePair<string, UserAPI_GetQuestion_DTO>>()
+                    .ConstructUsing(x => new KeyValuePair<string, UserAPI_GetQuestion_DTO>(
+                        x.Key,
+                        Mapper.Map<UserAPI_GetQuestion_DTO>(x.Value)));
                 cfg.CreateMap<TestsDB_Section_DTO, UserAPI_GetSection_DTO>()
                     .ForMember(x => x.Questions,
-                        x => x.MapFrom(m => Mapper.Map<Dictionary<int, UserAPI_GetQuestion_DTO>>(m.Questions)));
+                        x => x.MapFrom(m => Mapper.Map<Dictionary<string, UserAPI_GetQuestion_DTO>>(m.Questions)));
+                cfg.CreateMap<KeyValuePair<string, TestsDB_Section_DTO>, KeyValuePair<string, UserAPI_GetSection_DTO>>()
+                    .ConstructUsing(x => new KeyValuePair<string, UserAPI_GetSection_DTO>(
+                        x.Key,
+                        Mapper.Map<UserAPI_GetSection_DTO>(x.Value)));
                 cfg.CreateMap<TestsDB_Test_DTO, UserAPI_GetTest_DTO>()
                     .ForMember(x => x.Sections,
-                        x => x.MapFrom(m => Mapper.Map<Dictionary<int, UserAPI_GetSection_DTO>>(m.Sections)));
+                        x => x.MapFrom(m => Mapper.Map<Dictionary<string, UserAPI_GetSection_DTO>>(m.Sections)));
+                #endregion
 
                 cfg.CreateMap<TestsDB_Test_DTO, UserAPI_GetTestsItem_DTO>();
 
-                cfg.CreateMap<UserAPI_ChoiceOption_DTO, TestsDB_ChoiceOption>();
-                cfg.CreateMap<UserAPI_MatchingOption_DTO, TestsDB_PositionalOption>();
-
+                #region UserAPI_PostSection_DTO -> TestsDB_Section_DTO
+                cfg.CreateMap<UserAPI_CommonOption_DTO, TestsDB_ChoiceOption>();
+                cfg.CreateMap<UserAPI_CommonOption_DTO[], TestsDB_MatchingOptionsData>()
+                    .ForMember(x => x.Left,
+                        x => x.MapFrom(m =>
+                            m.Select(option => new TestsDB_PositionalOption {
+                                Text = option.LeftText,
+                                ImageUrl = option.LeftImageUrl
+                            })))
+                    .ForMember(x => x.Right,
+                        x => x.MapFrom(m =>
+                            m.Select(option => new TestsDB_PositionalOption {
+                                Text = option.RightText,
+                                ImageUrl = option.RightImageUrl
+                            })));
+                cfg.CreateMap<UserAPI_CommonOption_DTO, TestsDB_PositionalOption>();
                 cfg.CreateMap<UserAPI_PostQuestion_DTO, TestsDB_Question_DTO>()
                     .ForMember(x => x.Options,
-                        x => x.ResolveUsing(m =>
+                        x => x.MapFrom(m =>
                             m.Type == QuestionTypes.SingleChoice || m.Type == QuestionTypes.MultipleChoice ?
-                                new TestsDB_OptionsData {
+                                new TestsDB_OptionsData { 
                                     Data = Mapper.Map<TestsDB_ChoiceOption[]>(m.Options)
-                                }.ToBsonDocument() :
+                                }.ToBsonDocument(null, null, default) :
 
                             m.Type == QuestionTypes.Matching ?
-                                new TestsDB_MatchingOptionsData {
-                                    Left = m.Options.Select(option => new TestsDB_PositionalOption {
-                                        Text = option.LeftText,
-                                        ImageUrl = option.LeftImageUrl
-                                    }).ToArray(),
-                                    Right = m.Options.Select(option => new TestsDB_PositionalOption {
-                                        Text = option.RightText,
-                                        ImageUrl = option.RightImageUrl
-                                    }).ToArray()
-                                }.ToBsonDocument() :
+                                Mapper.Map<TestsDB_MatchingOptionsData>(m.Options).ToBsonDocument(null, null, default) :
 
                             m.Type == QuestionTypes.Sequence ?
-                                new TestsDB_OptionsData {
+                                new TestsDB_OptionsData { 
                                     Data = Mapper.Map<TestsDB_PositionalOption[]>(m.Options)
-                                }.ToBsonDocument() :
-                            
-                            new BsonDocument()));
+                                }.ToBsonDocument(null, null, default) :
 
+                            new BsonDocument()));
+                cfg.CreateMap<KeyValuePair<string, UserAPI_PostQuestion_DTO>, KeyValuePair<string, TestsDB_Question_DTO>>()
+                    .ConstructUsing(x => new KeyValuePair<string, TestsDB_Question_DTO>(
+                        x.Key,
+                        Mapper.Map<TestsDB_Question_DTO>(x.Value)));
                 cfg.CreateMap<UserAPI_PostSection_DTO, TestsDB_Section_DTO>()
                     .ForMember(x => x.Questions,
-                        x => x.MapFrom(m => Mapper.Map<Dictionary<int, TestsDB_Question_DTO>>(m.Questions)));
+                        x => x.MapFrom(m =>
+                            Mapper.Map<Dictionary<string, TestsDB_Question_DTO>>(m.Questions)));
+                #endregion
 
-                cfg.CreateMap<UserAPI_PostTest_DTO, TestsDB_Test_DTO>();
+                cfg.CreateMap<UserAPI_PostTest_DTO, TestsDB_Test_DTO>()
+                    .ForMember(x => x.Sections,
+                        x => x.MapFrom(m =>
+                            new Dictionary<string, UserAPI_PostSections_DTO>()));
                 #endregion
 
                 #region Members

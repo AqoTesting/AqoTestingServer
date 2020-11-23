@@ -4,7 +4,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections.Options
 {
     public class UserAPI_CommonOption_DTO
     {
-        public bool? IsCorrect { get; set; }
+        public bool IsCorrect { get; set; } = false;
 
         [StringLength(512, MinimumLength = 1)]
         public string? Text { get; set; }
