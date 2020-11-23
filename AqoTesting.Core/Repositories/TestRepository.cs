@@ -16,7 +16,7 @@ namespace AqoTesting.Core.Repositories
         }
 
         public async Task<TestsDB_Test_DTO> GetTestById(ObjectId testId) =>
-            //await _cache.Get<TestsDB_Test_DTO>($"Test:{testId}", () => TestWorker.GetTestById(testId));
+            //await _cache.Get($"Test:{testId}", () => TestWorker.GetTestById(testId));
             await Task.Run(() => TestWorker.GetTestById(testId));
 
         public async Task<TestsDB_Test_DTO[]> GetTestsByRoomId(ObjectId roomId) =>
@@ -35,6 +35,14 @@ namespace AqoTesting.Core.Repositories
         {
             await Task.Run(() => TestWorker.SetTestSections(testId, newValue));
             await _cache.Del($"Test:{testId}");
+        }
+
+        public async Task<bool> DeleteTest(ObjectId testId)
+        {
+            var response = await Task.Run(() => TestWorker.DeleteTestById(testId));
+            await _cache.Del($"Test:{testId}");
+
+            return response;
         }
     }
 }

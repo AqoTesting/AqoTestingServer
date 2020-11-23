@@ -68,5 +68,15 @@ namespace AqoTesting.WebApi.Controllers
 
             return this.ResultResponse(errorCode, response);
         }
+
+        [Auth(Role = Role.User)]
+        [OnlyRoomOwner]
+        [HttpDelete("/user/test/{TestId}")]
+        public async Task<IActionResult> DeleteTest([FromRoute] CommonAPI_TestId_DTO testIdDTO)
+        {
+            var (errorCode, response) = await _testService.UserAPI_DeleteTest(testIdDTO);
+
+            return this.ResultResponse(errorCode, response);
+        }
     }
 }

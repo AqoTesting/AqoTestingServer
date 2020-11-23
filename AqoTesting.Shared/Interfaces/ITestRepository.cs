@@ -16,5 +16,7 @@ namespace AqoTesting.Shared.Interfaces
         Task ReplaceTest(TestsDB_Test_DTO updatedTest);
 
         Task SetSections(ObjectId testId, Dictionary<string, TestsDB_Section_DTO> newValue);
+
+        Task<bool> DeleteTest(ObjectId testId);
     }
 }
