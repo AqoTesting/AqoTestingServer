@@ -44,15 +44,20 @@ namespace AqoTestingServer
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<ITestService, TestService>();
             services.AddScoped<IMemberService, MemberService>();
+            services.AddScoped<IAttemptService, AttemptService>();
+
+            services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
 
             // Load repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<ITestRepository, TestRepository>();
             services.AddScoped<IMemberRepository, MemberRepository>();
+            services.AddScoped<IAttemptRepository, AttemptRepository>();
+
             services.AddSingleton<ICacheRepository, CacheRepository>();
             services.AddSingleton<ITokenRepository, TokenRepository>();
-            services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
+            
 
             services.AddCors();
 

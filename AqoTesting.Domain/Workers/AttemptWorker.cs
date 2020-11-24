@@ -11,70 +11,47 @@ namespace AqoTesting.Domain.Workers
     public static class AttemptWorker
     {
         #region IO
-        /// <summary>
-        /// Вставляет попытку в базу
-        /// </summary>
-        /// <param name="attempt"></param>
-        /// <returns></returns>
+        public static AttemptsDB_Attempt_DTO? GetAttemptById(ObjectId attemptId)
+        {
+            var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
+            var attempt = MongoController.AttemptCollection.Find(filter).SingleOrDefault();
+
+            return attempt;
+        }
+        
         public static ObjectId InsertAttempt(AttemptsDB_Attempt_DTO attempt)
         {
             MongoController.AttemptCollection?.InsertOne(attempt);
 
             return attempt.Id;
         }
-        /// <summary>
-        /// Вставляет попытку в базу
-        /// </summary>
-        /// <param name="attempt"></param>
-        /// <returns></returns>
-        public static ObjectId Insert(this AttemptsDB_Attempt_DTO attempt) => InsertAttempt(attempt);
-        /// <summary>
-        /// Добавляет попытки в базу
-        /// </summary>
-        /// <param name="attempts"></param>
-        /// <returns></returns>
+        public static ObjectId Insert(this AttemptsDB_Attempt_DTO attempt) =>
+            InsertAttempt(attempt);
+        
         public static ObjectId[] InsertAttempts(AttemptsDB_Attempt_DTO[] attempts)
         {
             MongoController.AttemptCollection?.InsertMany(attempts);
             return attempts.Select(attempts => attempts.Id).ToArray();
         }
-        /// <summary>
-        /// Добавляет попытки в базу
-        /// </summary>
-        /// <param name="attempts"></param>
-        /// <returns></returns>
-        public static ObjectId[] Insert(this AttemptsDB_Attempt_DTO[] attempts) => InsertAttempts(attempts);
-        /// <summary>
-        /// Замена попытки в базе
-        /// </summary>
-        /// <param name="attempt"></param>
+        public static ObjectId[] Insert(this AttemptsDB_Attempt_DTO[] attempts) =>
+            InsertAttempts(attempts);
+        
         public static void ReplaceAttempt(AttemptsDB_Attempt_DTO attempt)
         {
             var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attempt.Id);
             MongoController.AttemptCollection?.ReplaceOne(filter, attempt);
         }
-        /// <summary>
-        /// Удаление попытки из базы
-        /// </summary>
-        /// <param name="attemptId"></param>
-        /// <returns></returns>
+        
         public static bool DeleteAttempt(ObjectId attemptId)
         {
             var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
+
             return MongoController.AttemptCollection?.DeleteOne(filter).DeletedCount == 1;
         }
-        /// <summary>
-        /// Удаление попытки из базы
-        /// </summary>
-        /// <param name="attempt"></param>
-        /// <returns></returns>
-        public static bool Delete(AttemptsDB_Attempt_DTO attempt) => DeleteAttempt(attempt.Id);
-        /// <summary>
-        /// Удаляет все попытки пользователя
-        /// </summary>
-        /// <param name="memberId"></param>
-        /// <returns></returns>
-        public static long? DeleteAllMemberAttempts(ObjectId memberId)
+        public static bool Delete(AttemptsDB_Attempt_DTO attempt) =>
+            DeleteAttempt(attempt.Id);
+        
+        public static long? DeleteAttemptsByMemberId(ObjectId memberId)
         {
             var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("MemberId", memberId);
             return MongoController.AttemptCollection?.DeleteMany(filter).DeletedCount;

@@ -10,14 +10,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace AqoTesting.WebApi.Controllers
 {
     [Produces("application/json")]
-    public class UserRoomController : Controller
+    public class UserAPI_MemberController : Controller
     {
         IMemberService _memberService;
-        IWorkContext _workContext;
 
-        public UserRoomController(IMemberService memberService, IWorkContext workContext)
+        public UserAPI_MemberController(IMemberService memberService)
         {
-            _workContext = workContext;
             _memberService = memberService;
         }
 

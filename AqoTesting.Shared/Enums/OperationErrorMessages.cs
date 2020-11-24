@@ -62,5 +62,9 @@
         MemberIsNotRegistered = 509,
         MemberIsRegistered = 510,
         #endregion
+
+        #region Attempts
+        AttemptNotFound = 600,
+        #endregion
     }
 }
