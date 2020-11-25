@@ -1,56 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AqoTesting.Domain.Controllers;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
+#pragma warning disable CS8602 // Разыменование вероятной пустой ссылки.
 namespace AqoTesting.Domain.Workers
 {
     public static class TestWorker
     {
         #region IO
-        /// <summary>
-        /// Получение теста по id
-        /// </summary>
-        /// <param name="testId"></param>
-        /// <returns>Тест или null</returns>
-        public static TestsDB_Test_DTO GetTestById(ObjectId testId)
+
+        public static async Task<TestsDB_Test_DTO> GetTestById(ObjectId testId)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
-            var test = MongoController.TestCollection?.Find(filter).SingleOrDefault();
+            var test = await MongoController.TestCollection.Find(filter).SingleOrDefaultAsync();
             return test;
         }
-        /// <summary>
-        /// Получение тестов по id комнаты
-        /// </summary>
-        /// <param name="testIds"></param>
-        /// <returns>список тестов</returns>
-        public static TestsDB_Test_DTO[] GetTestsByRoomId(ObjectId roomId)
+
+        public static async Task<TestsDB_Test_DTO[]> GetTestsByRoomId(ObjectId roomId)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("RoomId", roomId);
-            var tests = MongoController.TestCollection?.Find(filter).ToEnumerable();
+            var tests = await MongoController.TestCollection.Find(filter).ToListAsync();
             return tests.ToArray();
         }
-        /// <summary>
-        /// Вставка теста в базу
-        /// </summary>
-        /// <param name="test"></param>
-        /// <returns>id теста</returns>
-        public static ObjectId InsertTest(TestsDB_Test_DTO test)
+
+        public static async Task<ObjectId> InsertTest(TestsDB_Test_DTO test)
         {
-            MongoController.TestCollection?.InsertOne(test);
+            await MongoController.TestCollection.InsertOneAsync(test);
             return test.Id;
         }
-        /// <summary>
-        /// Вставка списка тестов в базу
-        /// </summary>
-        /// <param name="tests"></param>
-        /// <returns>список id тестов</returns>
-        public static ObjectId[] InsertTests(TestsDB_Test_DTO[] tests)
+
+        public static async Task<ObjectId[]> InsertTests(TestsDB_Test_DTO[] tests)
         {
-            MongoController.TestCollection?.InsertMany(tests);
+            await MongoController.TestCollection.InsertManyAsync(tests);
             var TestsIds = new List<ObjectId>();
             foreach(var test in tests)
                 TestsIds.Add(test.Id);
@@ -58,172 +44,110 @@ namespace AqoTesting.Domain.Workers
             return TestsIds.ToArray();
         }
 
-        public static void ReplaceTest(TestsDB_Test_DTO updatedTest)
+        public static async Task<bool> ReplaceTest(TestsDB_Test_DTO updatedTest)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", updatedTest.Id);
-            MongoController.TestCollection?.ReplaceOne(filter, updatedTest);
+            return (await MongoController.TestCollection.ReplaceOneAsync(filter, updatedTest)).MatchedCount == 1;
         }
 
-        /// <summary>
-        /// Удаление теста по id
-        /// </summary>
-        /// <param name="testId"></param>
-        /// <returns>успех</returns>
-        public static bool DeleteTestById(ObjectId testId)
+        public static async Task<bool> DeleteTestById(ObjectId testId)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
-            var isDeleteSuccessful = MongoController.TestCollection?.DeleteOne(filter).DeletedCount == 1;
-            return isDeleteSuccessful;
+            return (await MongoController.TestCollection.DeleteOneAsync(filter)).DeletedCount == 1;
         }
         #endregion
 
         #region Props
-        /// <summary>
-        /// Установка заголовка теста
-        /// </summary>
-        /// <param name="testId"></param>
-        /// <param name="newValue"></param>
-        public static void SetTestTitle(ObjectId testId, string newValue)
+
+        public static async Task<bool> SetTestTitle(ObjectId testId, string newValue)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
             var update = Builders<TestsDB_Test_DTO>.Update.Set("Title", newValue);
-            MongoController.TestCollection?.UpdateOne(filter, update);
+            return (await MongoController.TestCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
-        /// <summary>
-        /// Установка заголовка теста
-        /// </summary>
-        /// <param name="test"></param>
-        /// <param name="newValue"></param>
-        public static void SetTitle(this TestsDB_Test_DTO test, string newValue)
+
+        public static async Task<bool> SetTitle(this TestsDB_Test_DTO test, string newValue)
         {
             test.Title = newValue;
-            SetTestTitle(test.Id, newValue);
+            return await SetTestTitle(test.Id, newValue);
         }
-        /// <summary>
-        /// Установка создателя теста
-        /// </summary>
-        /// <param name="testId"></param>
-        /// <param name="newValue"></param>
-        public static void SetTestOwnerId(ObjectId testId, ObjectId newValue)
+
+        public static async Task<bool> SetTestOwnerId(ObjectId testId, ObjectId newValue)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
             var update = Builders<TestsDB_Test_DTO>.Update.Set("OwnerId", newValue);
-            MongoController.TestCollection?.UpdateOne(filter, update);
+            return (await MongoController.TestCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
-        /// <summary>
-        /// Установка создателя теста
-        /// </summary>
-        /// <param name="test"></param>
-        /// <param name="newValue"></param>
-        public static void SetOwnerId(this TestsDB_Test_DTO test, ObjectId newValue)
+
+        public static async Task<bool> SetOwnerId(this TestsDB_Test_DTO test, ObjectId newValue)
         {
             test.OwnerId = newValue;
-            SetTestOwnerId(test.Id, newValue);
+            return await SetTestOwnerId(test.Id, newValue);
         }
-        /// <summary>
-        /// Установка активности теста
-        /// </summary>
-        /// <param name="testId"></param>
-        /// <param name="newValue"></param>
-        public static void SetTestIsActive(ObjectId testId, bool newValue)
+
+        public static async Task<bool> SetTestIsActive(ObjectId testId, bool newValue)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
             var update = Builders<TestsDB_Test_DTO>.Update.Set("IsActive", newValue);
-            MongoController.TestCollection?.UpdateOne(filter, update);
+            return (await MongoController.TestCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
-        /// <summary>
-        /// Установка активности теста
-        /// </summary>
-        /// <param name="test"></param>
-        /// <param name="newValue"></param>
-        public static void SetIsActive(this TestsDB_Test_DTO test, bool newValue)
+
+        public static async Task<bool> SetIsActive(this TestsDB_Test_DTO test, bool newValue)
         {
             test.IsActive = newValue;
-            SetTestIsActive(test.Id, newValue);
+            return await SetTestIsActive(test.Id, newValue);
         }
-        /// <summary>
-        /// Установка секций теста
-        /// </summary>
-        /// <param name="testId"></param>
-        /// <param name="newValue"></param>
-        public static void SetTestSections(ObjectId testId, Dictionary<string, TestsDB_Section_DTO> newValue)
+
+        public static async Task<bool> SetTestSections(ObjectId testId, Dictionary<string, TestsDB_Section_DTO> newValue)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
             var update = Builders<TestsDB_Test_DTO>.Update.Set("Sections", newValue);
-            MongoController.TestCollection?.UpdateOne(filter, update);
+            return (await MongoController.TestCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
-        /// <summary>
-        /// Установка секций теста
-        /// </summary>
-        /// <param name="test"></param>
-        /// <param name="newValue"></param>
-        public static void SetSections(this TestsDB_Test_DTO test, Dictionary<string, TestsDB_Section_DTO> newValue)
+
+        public static async Task<bool> SetSections(this TestsDB_Test_DTO test, Dictionary<string, TestsDB_Section_DTO> newValue)
         {
             test.Sections = newValue;
-            SetTestSections(test.Id, newValue);
+            return await SetTestSections(test.Id, newValue);
         }
-        /// <summary>
-        /// Установка даты активации теста
-        /// </summary>
-        /// <param name="testId"></param>
-        /// <param name="newValue"></param>
-        public static void SetTestActivationDate(ObjectId testId, DateTime newValue)
+
+        public static async Task<bool> SetTestActivationDate(ObjectId testId, DateTime newValue)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
             var update = Builders<TestsDB_Test_DTO>.Update.Set("ActivationDate", newValue);
-            MongoController.TestCollection?.UpdateOne(filter, update);
+            return (await MongoController.TestCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
-        /// <summary>
-        /// Установка даты активации теста
-        /// </summary>
-        /// <param name="test"></param>
-        /// <param name="newValue"></param>
-        public static void SetActivationDate(this TestsDB_Test_DTO test, DateTime newValue)
+
+        public static async Task<bool> SetActivationDate(this TestsDB_Test_DTO test, DateTime newValue)
         {
             test.ActivationDate = newValue;
-            SetTestActivationDate(test.Id, newValue);
+            return await SetTestActivationDate(test.Id, newValue);
         }
-        /// <summary>
-        /// Установка даты деактивации теста
-        /// </summary>
-        /// <param name="testId"></param>
-        /// <param name="newValue"></param>
-        public static void SetTestDeactivationDate(ObjectId testId, DateTime newValue)
+
+        public static async Task<bool> SetTestDeactivationDate(ObjectId testId, DateTime newValue)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
             var update = Builders<TestsDB_Test_DTO>.Update.Set("DeactivationDate", newValue);
-            MongoController.TestCollection?.UpdateOne(filter, update);
+            return (await MongoController.TestCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
-        /// <summary>
-        /// Установка даты деактивации теста
-        /// </summary>
-        /// <param name="test"></param>
-        /// <param name="newValue"></param>
-        public static void SetDeactivationDate(this TestsDB_Test_DTO test, DateTime newValue)
+
+        public static async Task<bool> SetDeactivationDate(this TestsDB_Test_DTO test, DateTime newValue)
         {
             test.DeactivationDate = newValue;
-            SetTestDeactivationDate(test.Id, newValue);
+            return await SetTestDeactivationDate(test.Id, newValue);
         }
-        /// <summary>
-        /// Установка перемешивания
-        /// </summary>
-        /// <param name="testId"></param>
-        /// <param name="newValue"></param>
-        public static void SetTestShuffle(ObjectId testId, bool newValue)
+
+        public static async Task<bool> SetTestShuffle(ObjectId testId, bool newValue)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
             var update = Builders<TestsDB_Test_DTO>.Update.Set("Shuffle", newValue);
-            MongoController.TestCollection?.UpdateOne(filter, update);
+            return (await MongoController.TestCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
-        /// <summary>
-        /// Установка Перемешивания
-        /// </summary>
-        /// <param name="test"></param>
-        /// <param name="newValue"></param>
-        public static void SetShuffle(this TestsDB_Test_DTO test, bool newValue)
+
+        public static async Task<bool> SetShuffle(this TestsDB_Test_DTO test, bool newValue)
         {
             test.Shuffle = newValue;
-            SetTestShuffle(test.Id, newValue);
+            return await SetTestShuffle(test.Id, newValue);
         }
 
         #endregion
