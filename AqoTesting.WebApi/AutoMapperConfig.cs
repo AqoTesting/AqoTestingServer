@@ -118,7 +118,7 @@ namespace AqoTesting.WebApi.Infrastructure
                         for(var i = 0; i < x.Left.Length; i++)
                             commonOptionsDTOs[i] = new UserAPI_CommonOption_DTO {
                                 LeftText = x.Left[i].Text,
-                                LeftImageUrl = x.Left[i].Text,
+                                LeftImageUrl = x.Left[i].ImageUrl,
                                 RightText = x.Right[i].Text,
                                 RightImageUrl = x.Right[i].ImageUrl
                             };
