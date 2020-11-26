@@ -10,10 +10,10 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
 
         [Required]
         [StringLength(32, MinimumLength = 1)]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         [StringLength(6, MinimumLength = 6)]
         [RegularExpression(@"^[0-9abcdef]+$")]
-        public string Color { get; set; }
+        public string? Color { get; set; }
     }
 }
