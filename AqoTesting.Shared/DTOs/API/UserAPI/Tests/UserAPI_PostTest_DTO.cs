@@ -17,7 +17,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
 
         [MinLength(1)]
         [MaxLength(16)]
-        public UserAPI_Document_DTO[]? Documents { get; set; }
+        public UserAPI_Document_DTO[]? Documents { get; set; } = new UserAPI_Document_DTO[0];
 
         [Range(0, int.MaxValue)]
         public int AttemptSectionsNumber { get; set; } = 0;
@@ -37,6 +37,6 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         public bool? Shuffle { get; set; }
 
         [MinLength(2)]
-        public UserAPI_TestRank_DTO[]? Ranks { get; set; }
+        public UserAPI_TestRank_DTO[]? Ranks { get; set; } = new UserAPI_TestRank_DTO[0];
     }
 }

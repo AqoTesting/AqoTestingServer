@@ -13,7 +13,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
 
         [RequiredIf("Deleted", false)]
         [MaxLength(32)]
-        public Dictionary<string, UserAPI_PostQuestion_DTO>? Questions { get; set; }
+        public Dictionary<string, UserAPI_PostQuestion_DTO>? Questions { get; set; } = new Dictionary<string, UserAPI_PostQuestion_DTO>();
 
         [Range(0, int.MaxValue)]
         public int AttemptQuestionsNumber { get; set; } = 0;

@@ -29,6 +29,6 @@ namespace AqoTesting.Shared.DTOs.DB.Tests
         public DateTime? ActivationDate { get; set; }
         public DateTime? DeactivationDate { get; set; }
         public bool Shuffle { get; set; }
-        public TestsDB_Rank_DTO[]? Ranks { get; set; }
+        public TestsDB_Rank_DTO[] Ranks { get; set; }
     }
 }

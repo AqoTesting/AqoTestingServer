@@ -24,7 +24,6 @@ namespace AqoTesting.Shared.DTOs.API.MemberAPI.Account
         public string? RoomId { get; set; }
 
         [Required]
-        //[StringLength(512)]
         public Dictionary<string, string>? Fields { get; set; }
     }
 }

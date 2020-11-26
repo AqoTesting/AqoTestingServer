@@ -13,7 +13,5 @@ namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
 
         [JsonConverter(typeof(BsonDocumentConverter))]
         public BsonDocument Data { get; set; }
-        //[BsonExtraElements]
-        //public Dictionary<string, string> Data { get; set; }
     }
 }
