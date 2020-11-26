@@ -36,6 +36,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         [Required]
         public bool? Shuffle { get; set; }
 
-        public Dictionary<string, int>? RatingScale { get; set; }
+        [MinLength(2)]
+        public UserAPI_Rank_DTO[]? Ranks { get; set; }
     }
 }

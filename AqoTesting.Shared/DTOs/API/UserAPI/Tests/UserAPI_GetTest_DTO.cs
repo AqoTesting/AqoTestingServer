@@ -22,6 +22,6 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         public DateTime? ActivationDate { get; set; }
         public DateTime? DeactivationDate { get; set; }
         public bool Shuffle { get; set; }
-        public Dictionary<string, int>? RatingScale { get; set; }
+        public UserAPI_Rank_DTO[]? Ranks { get; set; }
     }
 }
