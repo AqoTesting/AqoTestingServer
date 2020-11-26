@@ -15,24 +15,27 @@
         #endregion
 
         #region Rooms
-        DomainAlreadyTaken = 200,
-        RoomNotFound = 201,
-        RoomAccessError = 202,
+        RoomNotFound = 200,
+        RoomAccessError = 201,
+
+        DomainAlreadyTaken = 202,
+        
         // Юзер не может добавить мембера по полям, потому что включена самостоятельная регистрация
         RoomRegistrationEnabled = 203,
         #endregion
 
         #region Tests
         TestNotFound = 300,
+        TestAccessError = 301,
 
-        SectionNotFound = 301,
-        QuestionNotFound = 302,
+        SectionNotFound = 302,
+        QuestionNotFound = 303,
 
-        NotEnoughSections = 303,
-        NotEnoughQuestions = 304,
+        NotEnoughSections = 304,
+        NotEnoughQuestions = 305,
 
         // В SingleChoice 0 или больше 1 правильных ответов, в MultipleChoice - меньше 2
-        ChoiceWrongCorrectsCount = 305,
+        ChoiceWrongCorrectsCount = 306,
 
         // В Option нет ни картинки, ни текста
         EmptyOption = 307,
@@ -45,9 +48,9 @@
 
         #region Members
         MemberNotFound = 500,
-        MemberAlreadyExists = 501,
-        // Юзер не может взаимодействовать с мембером не из своей комнаты
-        MemberAccessError = 502,
+        MemberAccessError = 501,
+
+        MemberAlreadyExists = 502,
 
         FieldNotPassed = 503,
         FieldRegexMismatch = 504,
@@ -65,6 +68,7 @@
 
         #region Attempts
         AttemptNotFound = 600,
+        AttemptAccessError = 601,
         #endregion
     }
 }

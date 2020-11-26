@@ -20,7 +20,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Auth(Role = Role.User)]
-        [OnlyRoomOwner]
+        [UserAPI_RoomAccess]
         [HttpGet("/user/room/{RoomId}/members")]
         public async Task<IActionResult> GetMembersByRoomId([FromRoute] CommonAPI_RoomId_DTO roomIdDTO)
         {
@@ -30,7 +30,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Auth(Role = Role.User)]
-        [OnlyRoomOwner]
+        [UserAPI_RoomAccess]
         [HttpPost("/user/room/{RoomId}/member")]
         public async Task<IActionResult> AddMember([FromRoute] CommonAPI_RoomId_DTO roomIdDTO, [FromBody] UserAPI_PostMember_DTO addMemberDTO)
         {
@@ -51,7 +51,7 @@ namespace AqoTesting.WebApi.Controllers
         //}
 
         [Auth(Role = Role.User)]
-        [OnlyRoomOwner]
+        [UserAPI_MemberAccess]
         [HttpPatch("/user/member/{MemberId}/unregister")]
         public async Task<IActionResult> Unregister([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
         {
@@ -61,7 +61,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Auth(Role = Role.User)]
-        [OnlyRoomOwner]
+        [UserAPI_MemberAccess]
         [HttpPatch("/user/member/{MemberId}/approve")]
         public async Task<IActionResult> Approve([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
         {

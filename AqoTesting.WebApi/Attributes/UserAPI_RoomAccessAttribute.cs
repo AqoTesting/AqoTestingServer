@@ -14,15 +14,14 @@ using System.Threading.Tasks;
 namespace AqoTesting.WebApi.Attributes
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
-    public class OnlyRoomOwnerAttribute : ActionFilterAttribute
+    public class UserAPI_RoomAccessAttribute : ActionFilterAttribute
     {
-        public OnlyRoomOwnerAttribute()
+        public UserAPI_RoomAccessAttribute()
         {
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            //var _roomService = context.HttpContext.RequestServices.GetService<IRoomService>();
             var _roomRepository = context.HttpContext.RequestServices.GetService<IRoomRepository>();
 
             var descriptor = context.ActionDescriptor as ControllerActionDescriptor;
@@ -33,45 +32,34 @@ namespace AqoTesting.WebApi.Attributes
 
                 foreach(var parameter in parameters)
                 {
-                    if(parameter.Name != "roomIdDTO" && parameter.Name != "roomDomainDTO") continue;
-
-                    if(!context.ActionArguments.ContainsKey(parameter.Name))
-                    {
-                        context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.EntityNotFound);
-                        break;
-                    };
+                    if (parameter.ParameterType != typeof(CommonAPI_RoomId_DTO) && parameter.ParameterType != typeof(CommonAPI_RoomDomain_DTO))
+                        continue;
 
                     var argument = context.ActionArguments[parameter.Name];
 
-                    var evalResult = await EvaluateValidationAttributes(argument, context.HttpContext, _roomRepository, parameter.Name);
-                    if(evalResult != OperationErrorMessages.NoError)
-                        context.Result = ResultResponceExtension.ObjectResultResponse<object>(evalResult);
+                    var errorCode = await EvaluateValidationAttributes(argument, context.HttpContext, _roomRepository, parameter.ParameterType);
+                    if(errorCode != OperationErrorMessages.NoError)
+                        context.Result = ResultResponceExtension.ObjectResultResponse<object>(errorCode);
                 }
             }
 
             await base.OnActionExecutionAsync(context, next);
         }
-        private async Task<OperationErrorMessages> EvaluateValidationAttributes(object argument, HttpContext httpContext, IRoomRepository roomRepository, string dtoName)
+        private async Task<OperationErrorMessages> EvaluateValidationAttributes(object argument, HttpContext httpContext, IRoomRepository roomRepository, Type dtoType)
         {
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
-            var ownerId = _workContext.UserId;
-
+            var userId = _workContext.UserId;
             var room = new RoomsDB_Room_DTO();
 
-            if(dtoName == "roomIdDTO")
-            {
+            if(dtoType == typeof(CommonAPI_RoomId_DTO))
                 room = await roomRepository.GetRoomById(ObjectId.Parse(((CommonAPI_RoomId_DTO)argument).RoomId));
-            }
-            else if(dtoName == "roomDomainDTO")
-            {
+            else if(dtoType == typeof(CommonAPI_RoomDomain_DTO))
                 room = await roomRepository.GetRoomByDomain(((CommonAPI_RoomDomain_DTO)argument).RoomDomain);
-            }
 
             if(room == null)
                 return OperationErrorMessages.RoomNotFound;
-
-            else if(room.UserId != ownerId)
+            else if(room.UserId != userId)
                 return OperationErrorMessages.RoomAccessError;
 
             return OperationErrorMessages.NoError;

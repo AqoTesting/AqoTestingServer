@@ -20,7 +20,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Auth(Role = Role.User)]
-        //[UserAPI_AttemptAccess]
+        [UserAPI_AttemptAccess]
         [HttpGet("/user/attempt/{AttemptId}")]
         public async Task<IActionResult> GetAttempt([FromRoute] CommonAPI_AttemptId_DTO attemptIdDTO)
         {

@@ -21,7 +21,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Auth(Role = Role.User)]
-        [OnlyRoomOwner]
+        [UserAPI_RoomAccess]
         [HttpGet("/user/room/{RoomId}/tests")]
         public async Task<IActionResult> GetTests([FromRoute] CommonAPI_RoomId_DTO roomIdDTO)
         {
@@ -31,6 +31,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Auth(Role = Role.User)]
+        [UserAPI_TestAccess]
         [HttpGet("/user/test/{TestId}")]
         public async Task<IActionResult> GetTest([FromRoute] CommonAPI_TestId_DTO testIdDTO)
         {
@@ -40,7 +41,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Auth(Role = Role.User)]
-        [OnlyRoomOwner]
+        [UserAPI_RoomAccess]
         [HttpPost("/user/room/{RoomId}/test")]
         public async Task<IActionResult> CreateTest([FromRoute] CommonAPI_RoomId_DTO roomIdDTO, [FromBody] UserAPI_PostTest_DTO postTestDTO)
         {
@@ -50,7 +51,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Auth(Role = Role.User)]
-        [OnlyRoomOwner]
+        [UserAPI_TestAccess]
         [HttpPut("/user/test/{TestId}")]
         public async Task<IActionResult> EditTest([FromRoute] CommonAPI_TestId_DTO testIdDTO, [FromBody] UserAPI_PostTest_DTO postTestDTO)
         {
@@ -60,7 +61,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Auth(Role = Role.User)]
-        [OnlyRoomOwner]
+        [UserAPI_TestAccess]
         [HttpPatch("/user/test/{TestId}/sections")]
         public async Task<IActionResult> EditSections([FromRoute] CommonAPI_TestId_DTO testIdDTO, [FromBody] UserAPI_PostSections_DTO postSectionDTOs)
         {
@@ -70,7 +71,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [Auth(Role = Role.User)]
-        [OnlyRoomOwner]
+        [UserAPI_TestAccess]
         [HttpDelete("/user/test/{TestId}")]
         public async Task<IActionResult> DeleteTest([FromRoute] CommonAPI_TestId_DTO testIdDTO)
         {
