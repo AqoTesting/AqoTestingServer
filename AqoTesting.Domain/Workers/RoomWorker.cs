@@ -29,7 +29,7 @@ namespace AqoTesting.Domain.Workers
 
         public static async Task<RoomsDB_Room_DTO[]> GetRoomsByOwnerId(ObjectId ownerId)
         {
-            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("OwnerId", ownerId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("UserId", ownerId);
             var rooms = await MongoController.RoomCollection.Find(filter).ToListAsync();
 
             return rooms.ToArray();

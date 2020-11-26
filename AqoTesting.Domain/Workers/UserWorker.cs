@@ -15,7 +15,7 @@ namespace AqoTesting.Domain.Workers
         public static async Task<RoomsDB_Room_DTO?> GetUserRoom(ObjectId UserId, ObjectId RoomId) //а нужно ли?
         {
             var idFilter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", RoomId);
-            var ownerFilter = Builders<RoomsDB_Room_DTO>.Filter.Eq("OwnerId", UserId);
+            var ownerFilter = Builders<RoomsDB_Room_DTO>.Filter.Eq("UserId", UserId);
             var filter = idFilter & ownerFilter;
             var room = await MongoController.RoomCollection.Find(filter).SingleOrDefaultAsync();
 
@@ -24,7 +24,7 @@ namespace AqoTesting.Domain.Workers
 
         public static async Task<RoomsDB_Room_DTO[]> GetUserRooms(ObjectId UserId)
         {
-            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("OwnerId", UserId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("UserId", UserId);
             var rooms = await MongoController.RoomCollection.Find(filter).ToListAsync();
 
             return rooms.ToArray();
@@ -34,7 +34,7 @@ namespace AqoTesting.Domain.Workers
 
         public static async Task<ObjectId[]> GetUserRoomsId(ObjectId UserId)
         {
-            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("OwnerId", UserId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("UserId", UserId);
             var rooms = await MongoController.RoomCollection.Find(filter).Project<RoomsDB_Room_DTO>("{ _id:1}").ToListAsync();
 
             return rooms.Select(room => room.Id).ToArray();
@@ -43,7 +43,7 @@ namespace AqoTesting.Domain.Workers
         public static async Task<bool> IsUserOwner(ObjectId UserId, ObjectId RoomId)
         {
             var idFilter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", RoomId);
-            var ownerFilter = Builders<RoomsDB_Room_DTO>.Filter.Eq("OwnerId", UserId);
+            var ownerFilter = Builders<RoomsDB_Room_DTO>.Filter.Eq("UserId", UserId);
             var filter = idFilter & ownerFilter;
             var isOwner = (await MongoController.RoomCollection.Find(filter).CountDocumentsAsync()) == 1;
 

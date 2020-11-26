@@ -192,7 +192,7 @@ namespace AqoTesting.Domain.Tests
                     //Member = 
                     UserId = users[0],
                     //TestIds = AddTests(ObjectId.Parse("5f9211bd5858e9955f588f19")),
-                    //OwnerId = ObjectId.Parse("5f9211bd5858e9955f588f19"),
+                    //UserId = ObjectId.Parse("5f9211bd5858e9955f588f19"),
                     IsDataRequired = false,
                     Fields = new RoomsDB_Field_DTO[0],
                     IsActive = true

@@ -75,7 +75,7 @@ namespace AqoTesting.Domain.Workers
         public static async Task<bool> SetTestOwnerId(ObjectId testId, ObjectId newValue)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
-            var update = Builders<TestsDB_Test_DTO>.Update.Set("OwnerId", newValue);
+            var update = Builders<TestsDB_Test_DTO>.Update.Set("UserId", newValue);
             return (await MongoController.TestCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
 
