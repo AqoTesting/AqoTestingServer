@@ -19,7 +19,7 @@ namespace AqoTesting.Domain.Tests
             {
                 new TestsDB_Test_DTO
                 {
-                    OwnerId = userId,
+                    UserId = userId,
                     CreationDate = DateTime.Now,
                     ActivationDate = null,
                     DeactivationDate = null,
@@ -71,7 +71,7 @@ namespace AqoTesting.Domain.Tests
                 },
                 new TestsDB_Test_DTO
                 {
-                    OwnerId = userId,
+                    UserId = userId,
                     CreationDate = DateTime.Now,
                     ActivationDate = null,
                     DeactivationDate = null,
@@ -190,7 +190,7 @@ namespace AqoTesting.Domain.Tests
                     Name = "Test Dev Room",
                     Domain = "Test Dev Domain",
                     //Member = 
-                    OwnerId = users[0],
+                    UserId = users[0],
                     //TestIds = AddTests(ObjectId.Parse("5f9211bd5858e9955f588f19")),
                     //OwnerId = ObjectId.Parse("5f9211bd5858e9955f588f19"),
                     IsDataRequired = false,

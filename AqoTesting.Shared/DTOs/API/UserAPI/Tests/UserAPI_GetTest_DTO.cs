@@ -8,7 +8,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
     public class UserAPI_GetTest_DTO
     {
         public string? Id { get; set; }
-        public string? OwnerId { get; set; }
+        public string? UserId { get; set; }
         public string? RoomId { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
@@ -22,6 +22,6 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         public DateTime? ActivationDate { get; set; }
         public DateTime? DeactivationDate { get; set; }
         public bool Shuffle { get; set; }
-        public UserAPI_Rank_DTO[]? Ranks { get; set; }
+        public UserAPI_TestRank_DTO[]? Ranks { get; set; }
     }
 }

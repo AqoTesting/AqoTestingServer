@@ -37,6 +37,6 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         public bool? Shuffle { get; set; }
 
         [MinLength(2)]
-        public UserAPI_Rank_DTO[]? Ranks { get; set; }
+        public UserAPI_TestRank_DTO[]? Ranks { get; set; }
     }
 }

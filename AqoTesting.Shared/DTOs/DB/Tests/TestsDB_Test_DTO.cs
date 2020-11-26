@@ -14,7 +14,7 @@ namespace AqoTesting.Shared.DTOs.DB.Tests
         [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId Id { get; set; }
         [JsonConverter(typeof(ObjectIdConverter))]
-        public ObjectId OwnerId { get; set; }
+        public ObjectId UserId { get; set; }
         [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId RoomId { get; set; }
         public string Title { get; set; }

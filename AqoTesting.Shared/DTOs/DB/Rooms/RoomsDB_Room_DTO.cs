@@ -15,7 +15,7 @@ namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
         public string Description { get; set; }
 
         [JsonConverter(typeof(ObjectIdConverter))]
-        public ObjectId OwnerId { get; set; }
+        public ObjectId UserId { get; set; }
         public bool IsDataRequired { get; set; } = false;
         public RoomsDB_Field_DTO[] Fields { get; set; } = new RoomsDB_Field_DTO[0]; //RoomWorker GetRoomFields
         public bool IsActive { get; set; }

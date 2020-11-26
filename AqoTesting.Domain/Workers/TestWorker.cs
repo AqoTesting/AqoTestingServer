@@ -81,7 +81,7 @@ namespace AqoTesting.Domain.Workers
 
         public static async Task<bool> SetOwnerId(this TestsDB_Test_DTO test, ObjectId newValue)
         {
-            test.OwnerId = newValue;
+            test.UserId = newValue;
             return await SetTestOwnerId(test.Id, newValue);
         }
 

@@ -61,7 +61,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_CreateTest(ObjectId roomId, UserAPI_PostTest_DTO postTestDTO)
         {
             var newTest = Mapper.Map<TestsDB_Test_DTO>(postTestDTO);
-            newTest.OwnerId = _workContext.UserId;
+            newTest.UserId = _workContext.UserId;
             newTest.RoomId = roomId;
             newTest.CreationDate = DateTime.UtcNow;
 
@@ -84,7 +84,7 @@ namespace AqoTesting.Core.Services
 
             var updatedTest = Mapper.Map<TestsDB_Test_DTO>(postTestDTO);
             updatedTest.Id = outdatedTest.Id;
-            updatedTest.OwnerId = outdatedTest.OwnerId;
+            updatedTest.UserId = outdatedTest.UserId;
             updatedTest.RoomId = outdatedTest.RoomId;
             updatedTest.CreationDate = outdatedTest.CreationDate;
             updatedTest.Sections = outdatedTest.Sections;

@@ -6,7 +6,7 @@ namespace AqoTesting.Shared.DTOs.API.MemberAPI.Tests
     {
         public string? Id { get; set; }
         public string? Title { get; set; }
-        public string? OwnerId { get; set; }
+        public string? UserId { get; set; }
         public string? RoomId { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreationDate { get; set; }

@@ -5,7 +5,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
     public class UserAPI_GetTestsItem_DTO
     {
         public string? Id { get; set; }
-        public string? OwnerId { get; set; }
+        public string? UserId { get; set; }
         public string? RoomId { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }

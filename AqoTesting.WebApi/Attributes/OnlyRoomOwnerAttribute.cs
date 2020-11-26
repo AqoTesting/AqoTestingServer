@@ -71,7 +71,7 @@ namespace AqoTesting.WebApi.Attributes
             if(room == null)
                 return OperationErrorMessages.RoomNotFound;
 
-            else if(room.OwnerId != ownerId)
+            else if(room.UserId != ownerId)
                 return OperationErrorMessages.RoomAccessError;
 
             return OperationErrorMessages.NoError;

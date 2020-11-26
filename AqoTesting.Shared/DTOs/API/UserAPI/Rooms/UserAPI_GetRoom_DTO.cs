@@ -6,7 +6,7 @@
         public string? Name { get; set; }
         public string? Domain { get; set; }
         public string? Description { get; set; }
-        public string? OwnerId { get; set; }
+        public string? UserId { get; set; }
         public UserAPI_RoomField_DTO[]? Fields { get; set; }
         public bool IsActive { get; set; }
         public bool IsApproveManually { get; set; }

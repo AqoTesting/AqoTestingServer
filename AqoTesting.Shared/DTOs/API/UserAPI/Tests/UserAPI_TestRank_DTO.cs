@@ -2,7 +2,7 @@
 
 namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
 {
-    public class UserAPI_Rank_DTO
+    public class UserAPI_TestRank_DTO
     {
         [Required]
         [Range(0, int.MaxValue)]

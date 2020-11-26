@@ -83,7 +83,7 @@ namespace AqoTesting.Core.Services
 
             var newMember = Mapper.Map<MembersDB_Member_DTO>(postMemberDTO);
             newMember.IsApproved = !room.IsApproveManually;
-            newMember.OwnerId = room.OwnerId;
+            newMember.UserId = room.UserId;
             newMember.RoomId = roomId;
             newMember.FieldsHash = fieldsHash;
 
@@ -101,7 +101,7 @@ namespace AqoTesting.Core.Services
             if (member == null)
                 return (OperationErrorMessages.MemberNotFound, null);
 
-            if (member.OwnerId != _workContext.UserId)
+            if (member.UserId != _workContext.UserId)
                 return (OperationErrorMessages.MemberAccessError, null);
 
             var unregistered = await _memberRepository.SetIsRegistered(memberId, false);
@@ -121,7 +121,7 @@ namespace AqoTesting.Core.Services
             if (member == null)
                 return (OperationErrorMessages.MemberNotFound, null);
 
-            if (member.OwnerId != _workContext.UserId)
+            if (member.UserId != _workContext.UserId)
                 return (OperationErrorMessages.MemberAccessError, null);
 
             var changed = await _memberRepository.SetIsApproved(memberId, true);
@@ -200,7 +200,7 @@ namespace AqoTesting.Core.Services
 
                 member = Mapper.Map<MembersDB_Member_DTO>(signUpDTO);
                 member.PasswordHash = Sha256.Compute(signUpDTO.Password);
-                member.OwnerId = room.OwnerId;
+                member.UserId = room.UserId;
 
                 member.IsRegistered = true;
                 member.IsApproved = !room.IsApproveManually;

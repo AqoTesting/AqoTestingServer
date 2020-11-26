@@ -12,7 +12,7 @@ namespace AqoTesting.Shared.DTOs.DB.Members
         [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId Id { get; set; }
         [JsonConverter(typeof(ObjectIdConverter))]
-        public ObjectId OwnerId { get; set; }
+        public ObjectId UserId { get; set; }
         [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId RoomId { get; set; }
         public string? Login { get; set; }
