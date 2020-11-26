@@ -27,14 +27,14 @@ namespace AqoTesting.Core.Repositories
             return await Redis.Set(key, json, seconds);
         }
 
-        public async ValueTask<T> Get<T>(string key, Func<T> createItem = null, int seconds = 604800)
+        public async ValueTask<T> Get<T>(string key, Func<Task<T>> createItem = null, int seconds = 604800)
         {
             string json = await Redis.Get<string>(key);
             T value = default;
             if (json != null) value = JsonConvert.DeserializeObject<T>(json);
             if (value == null && createItem != null)
             {
-                value = await Task.Run(createItem);
+                value = await createItem();
                 await Set(key, value, seconds);
             }
             return value;

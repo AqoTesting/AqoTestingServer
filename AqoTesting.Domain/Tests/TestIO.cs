@@ -123,7 +123,7 @@ namespace AqoTesting.Domain.Tests
                 }
             };
 
-            var TestsIds = TestWorker.InsertTests(tests);
+            var TestsIds = TestWorker.InsertTests(tests).Result;
             return TestsIds;
         }
 
@@ -150,7 +150,7 @@ namespace AqoTesting.Domain.Tests
                 }
             };
 
-            var UsersIds = UserWorker.InsertUsers(users);
+            var UsersIds = UserWorker.InsertUsers(users).Result;
             return UsersIds;
         }
 
@@ -176,7 +176,7 @@ namespace AqoTesting.Domain.Tests
                 }
             };
 
-            var MemberIds = MemberWorker.InsertMembers(members);
+            var MemberIds = MemberWorker.InsertMembers(members).Result;
             return MemberIds;
         }
 
@@ -198,7 +198,7 @@ namespace AqoTesting.Domain.Tests
                     IsActive = true
                 }
             };
-            var RoomsIds = RoomWorker.InsertRooms(rooms);
+            var RoomsIds = RoomWorker.InsertRooms(rooms).Result;
             return RoomsIds;
         }
     }

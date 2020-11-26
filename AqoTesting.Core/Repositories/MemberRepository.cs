@@ -15,7 +15,7 @@ namespace AqoTesting.Core.Repositories
         }
 
         public async Task<MembersDB_Member_DTO> GetMemberById(ObjectId memberId) =>
-            await _cache.Get<MembersDB_Member_DTO>($"Member:{memberId}", () => MemberWorker.GetMemberById(memberId));
+            await _cache.Get<MembersDB_Member_DTO>($"Member:{memberId}", async () => await MemberWorker.GetMemberById(memberId));
 
         public async Task<MembersDB_Member_DTO> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash) =>
             await Task.Run(() => MemberWorker.GetMemberByAuthData(roomId, login, passwordHash));

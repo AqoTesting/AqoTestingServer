@@ -101,15 +101,14 @@ namespace AqoTesting.Core.Utils
                                 updateSection.Value.Questions.Remove(updateQuestion.Key);
                             }
 
-                    if (updateSection.Value.Questions.Count > 0)
-                        if (dbSections.ContainsKey(updateSection.Key))
-                        {
-                            var oldQuestions = dbSections[updateSection.Key].Questions.ToDictionary(x => x.Key, x => x.Value);
-                            dbSections[updateSection.Key] = Mapper.Map<TestsDB_Section_DTO>(updateSection.Value);
-                            dbSections[updateSection.Key].Questions.Concat(oldQuestions);
-                        }
-                        else
-                            dbSections.Add(updateSection.Key, Mapper.Map<TestsDB_Section_DTO>(updateSection.Value));
+                    if (dbSections.ContainsKey(updateSection.Key))
+                    {
+                        var oldQuestions = dbSections[updateSection.Key].Questions.ToDictionary(x => x.Key, x => x.Value);
+                        dbSections[updateSection.Key] = Mapper.Map<TestsDB_Section_DTO>(updateSection.Value);
+                        dbSections[updateSection.Key].Questions = dbSections[updateSection.Key].Questions.Concat(oldQuestions).ToDictionary(x => x.Key, x => x.Value);
+                    }
+                    else
+                        dbSections.Add(updateSection.Key, Mapper.Map<TestsDB_Section_DTO>(updateSection.Value));
 
                     if (dbSections[updateSection.Key].Questions.Count < dbSections[updateSection.Key].AttemptQuestionsNumber)
                         return (false, OperationErrorMessages.NotEnoughQuestions, new CommonAPI_Error_DTO { ErrorSubject = updateSection.Key });

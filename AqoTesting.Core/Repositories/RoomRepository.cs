@@ -19,31 +19,31 @@ namespace AqoTesting.Core.Repositories
 
         public async Task<RoomsDB_Room_DTO> GetRoomById(ObjectId roomId) =>
             _roomById == null ?
-                _roomById = await _cache.Get<RoomsDB_Room_DTO>($"Room:{roomId}", () => RoomWorker.GetRoomById(roomId)) :
+                _roomById = await _cache.Get<RoomsDB_Room_DTO>($"Room:{roomId}", async () => await RoomWorker.GetRoomById(roomId)) :
                 _roomById;
 
         public async Task<RoomsDB_Room_DTO> GetRoomByDomain(string domain) =>
-            await Task.Run(() =>
-                _roomByDomain == null ?
-                    _roomByDomain = RoomWorker.GetRoomByDomain(domain) :
-                    _roomByDomain);
+            _roomByDomain == null ?
+                _roomByDomain = await RoomWorker.GetRoomByDomain(domain) :
+                _roomByDomain;
 
         public async Task<RoomsDB_Room_DTO[]> GetRoomsByOwnerId(ObjectId ownerId) =>
-            await Task.Run(() => UserWorker.GetUserRooms(ownerId));
+            await UserWorker.GetUserRooms(ownerId);
 
         public async Task<ObjectId> InsertRoom(RoomsDB_Room_DTO newRoom) =>
-            await Task.Run(() => RoomWorker.InsertRoom(newRoom));
+            await RoomWorker.InsertRoom(newRoom);
 
         public async Task ReplaceRoom(RoomsDB_Room_DTO update)
         {
-            await Task.Run(() => RoomWorker.ReplaceRoom(update));
+            await RoomWorker.ReplaceRoom(update);
             await _cache.Del($"Room:{update.Id}");
         }
 
         public async Task<bool> DeleteRoomById(ObjectId roomId)
         {
-            var response = await Task.Run(() => RoomWorker.DeleteRoomById(roomId));
+            var response = await RoomWorker.DeleteRoomById(roomId);
             await _cache.Del($"Room:{roomId}");
+
             return response;
         }
     }
