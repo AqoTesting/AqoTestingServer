@@ -15,7 +15,6 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         [StringLength(4096, MinimumLength = 1)]
         public string? Description { get; set; }
 
-        [MinLength(1)]
         [MaxLength(16)]
         public UserAPI_Document_DTO[]? Documents { get; set; } = new UserAPI_Document_DTO[0];
 
@@ -36,7 +35,6 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         [Required]
         public bool? Shuffle { get; set; }
 
-        [MinLength(2)]
         public UserAPI_TestRank_DTO[]? Ranks { get; set; } = new UserAPI_TestRank_DTO[0];
     }
 }
