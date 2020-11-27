@@ -14,8 +14,8 @@ namespace AqoTesting.Shared.Interfaces
         Task<(OperationErrorMessages, object)> UserAPI_GetRoomByDomain(string roomDomain);
         Task<(OperationErrorMessages, object)> UserAPI_GetRoomByDomain(CommonAPI_RoomDomain_DTO roomDomainDTO);
 
-        Task<(OperationErrorMessages, object)> UserAPI_GetRoomsByOwnerId(ObjectId ownerId);
-        Task<(OperationErrorMessages, object)> UserAPI_GetRoomsByOwnerId(CommonAPI_UserId_DTO userIdDTO);
+        Task<(OperationErrorMessages, object)> UserAPI_GetRoomsByUserId(ObjectId userId);
+        Task<(OperationErrorMessages, object)> UserAPI_GetRoomsByUserId(CommonAPI_UserId_DTO userIdDTO);
 
         Task<(OperationErrorMessages, object)> UserAPI_CreateRoom(UserAPI_PostRoom_DTO postRoomDto);
 

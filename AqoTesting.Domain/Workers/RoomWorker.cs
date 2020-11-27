@@ -27,9 +27,9 @@ namespace AqoTesting.Domain.Workers
             return room;
         }
 
-        public static async Task<RoomsDB_Room_DTO[]> GetRoomsByOwnerId(ObjectId ownerId)
+        public static async Task<RoomsDB_Room_DTO[]> GetRoomsByUserId(ObjectId userId)
         {
-            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("UserId", ownerId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("UserId", userId);
             var rooms = await MongoController.RoomCollection.Find(filter).ToListAsync();
 
             return rooms.ToArray();

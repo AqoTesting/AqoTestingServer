@@ -36,9 +36,6 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetMemberById(ObjectId memberId)
         {
             var member = await _memberRepository.GetMemberById(memberId);
-            if(member == null)
-                return (OperationErrorMessages.MemberNotFound, null);
-
             var getMemberDTO = Mapper.Map<UserAPI_GetMember_DTO>(member);
 
             return (OperationErrorMessages.NoError, getMemberDTO);
@@ -48,10 +45,6 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_GetMembersByRoomId(ObjectId roomId)
         {
-            var roomExists = await _roomRepository.GetRoomById(roomId);
-            if(roomExists == null)
-                return (OperationErrorMessages.RoomNotFound, null);
-
             var members = await _memberRepository.GetMembersByRoomId(roomId);
             var getMembersItemDTOs = Mapper.Map<UserAPI_GetMembersItem_DTO[]>(members);
 
@@ -63,8 +56,6 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_ManualMemberAdd(ObjectId roomId, UserAPI_PostMember_DTO postMemberDTO)
         {
             var room = await _roomRepository.GetRoomById(roomId);
-            if(room == null)
-                return (OperationErrorMessages.RoomNotFound, null);
 
             // Нельзя добавить потому что включена самостоятельная регистрация
             if (room.IsRegistrationEnabled)
@@ -97,13 +88,6 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_Unregister(ObjectId memberId)
         {
-            var member = await _memberRepository.GetMemberById(memberId);
-            if (member == null)
-                return (OperationErrorMessages.MemberNotFound, null);
-
-            if (member.UserId != _workContext.UserId)
-                return (OperationErrorMessages.MemberAccessError, null);
-
             var unregistered = await _memberRepository.SetIsRegistered(memberId, false);
             if (!unregistered)
                 return (OperationErrorMessages.MemberIsNotRegistered, null);
@@ -117,13 +101,6 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_Approve(ObjectId memberId)
         {
-            var member = await _memberRepository.GetMemberById(memberId);
-            if (member == null)
-                return (OperationErrorMessages.MemberNotFound, null);
-
-            if (member.UserId != _workContext.UserId)
-                return (OperationErrorMessages.MemberAccessError, null);
-
             var changed = await _memberRepository.SetIsApproved(memberId, true);
             if (!changed)
                 return (OperationErrorMessages.MemberIsApproved, null);
@@ -139,8 +116,6 @@ namespace AqoTesting.Core.Services
 
             if (!deleted)
                 return OperationErrorMessages.MemberNotFound;
-
-            //await _attemptRepository.RemoveAttemptsByMemberId(memberId);
 
             return OperationErrorMessages.NoError;
         }

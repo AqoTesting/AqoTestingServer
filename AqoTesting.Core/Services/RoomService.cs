@@ -38,9 +38,6 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetRoomById(ObjectId roomId)
         {
             var room = await _roomRepository.GetRoomById(roomId);
-            if(room == null)
-                return (OperationErrorMessages.RoomNotFound, null);
-
             var getRoomDTO = Mapper.Map<UserAPI_GetRoom_DTO>(room);
 
             return (OperationErrorMessages.NoError, getRoomDTO);
@@ -51,9 +48,6 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetRoomByDomain(string roomDomain)
         {
             var room = await _roomRepository.GetRoomByDomain(roomDomain);
-            if(room == null)
-                return (OperationErrorMessages.RoomNotFound, null);
-
             var getRoomDTO = Mapper.Map<UserAPI_GetRoom_DTO>(room);
 
             return (OperationErrorMessages.NoError, getRoomDTO);
@@ -61,19 +55,19 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetRoomByDomain(CommonAPI_RoomDomain_DTO roomDomainDTO) =>
             await this.UserAPI_GetRoomByDomain(roomDomainDTO.RoomDomain);
 
-        public async Task<(OperationErrorMessages, object)> UserAPI_GetRoomsByOwnerId(ObjectId ownerId)
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetRoomsByUserId(ObjectId userId)
         {
-            var userExists = await _userRepository.GetUserById(ownerId);
+            var userExists = await _userRepository.GetUserById(userId);
             if(userExists == null)
                 return (OperationErrorMessages.UserNotFound, null);
 
-            var rooms = await _roomRepository.GetRoomsByOwnerId(ownerId);
+            var rooms = await _roomRepository.GetRoomsByUserId(userId);
             var getRoomsItemDTOs = Mapper.Map<UserAPI_GetRoomsItem_DTO[]>(rooms);
 
             return(OperationErrorMessages.NoError,  getRoomsItemDTOs);
         }
-        public async Task<(OperationErrorMessages, object)> UserAPI_GetRoomsByOwnerId(CommonAPI_UserId_DTO userIdDTO) =>
-            await UserAPI_GetRoomsByOwnerId(ObjectId.Parse(userIdDTO.UserId));
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetRoomsByUserId(CommonAPI_UserId_DTO userIdDTO) =>
+            await UserAPI_GetRoomsByUserId(ObjectId.Parse(userIdDTO.UserId));
 
         public async Task<(OperationErrorMessages, object)> UserAPI_CreateRoom(UserAPI_PostRoom_DTO postRoomDto)
         {
@@ -93,9 +87,6 @@ namespace AqoTesting.Core.Services
         public async Task<OperationErrorMessages> UserAPI_EditRoom(ObjectId roomId, UserAPI_PostRoom_DTO postRoomDTO)
         {
             var outdatedRoom = await _roomRepository.GetRoomById(roomId);
-
-            if(outdatedRoom == null)
-                return OperationErrorMessages.RoomNotFound;
 
             if(outdatedRoom.Domain != postRoomDTO.Domain)
             {

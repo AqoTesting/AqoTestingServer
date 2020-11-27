@@ -27,8 +27,8 @@ namespace AqoTesting.Core.Repositories
                 _roomByDomain = await RoomWorker.GetRoomByDomain(domain) :
                 _roomByDomain;
 
-        public async Task<RoomsDB_Room_DTO[]> GetRoomsByOwnerId(ObjectId ownerId) =>
-            await UserWorker.GetUserRooms(ownerId);
+        public async Task<RoomsDB_Room_DTO[]> GetRoomsByUserId(ObjectId userId) =>
+            await UserWorker.GetUserRooms(userId);
 
         public async Task<ObjectId> InsertRoom(RoomsDB_Room_DTO newRoom) =>
             await RoomWorker.InsertRoom(newRoom);

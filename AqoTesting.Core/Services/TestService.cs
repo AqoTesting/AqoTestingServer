@@ -30,13 +30,7 @@ namespace AqoTesting.Core.Services
         #region UserAPI
         public async Task<(OperationErrorMessages, object)> UserAPI_GetTestsByRoomId(ObjectId roomId)
         {
-            var room = await _roomRepository.GetRoomById(roomId);
-
-            if(room == null)
-                return (OperationErrorMessages.RoomNotFound, null);
-
-            var tests = await _testRepository.GetTestsByRoomId(room.Id);
-
+            var tests = await _testRepository.GetTestsByRoomId(roomId);
             var getTestsItemDTOs = Mapper.Map<UserAPI_GetTestsItem_DTO[]>(tests);
 
             return (OperationErrorMessages.NoError, getTestsItemDTOs);
@@ -47,10 +41,6 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetTestById(ObjectId testId)
         {
             var test = await _testRepository.GetTestById(testId);
-
-            if(test == null)
-                return (OperationErrorMessages.TestNotFound, null);
-
             var getTestDTO = Mapper.Map<UserAPI_GetTest_DTO>(test);
 
             return (OperationErrorMessages.NoError, getTestDTO);
@@ -76,8 +66,6 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_EditTest(ObjectId testId, UserAPI_PostTest_DTO postTestDTO)
         {
             var outdatedTest = await _testRepository.GetTestById(testId);
-            if (outdatedTest == null)
-                return (OperationErrorMessages.TestNotFound, null);
 
             if (outdatedTest.Sections.Count > 0 && postTestDTO.AttemptSectionsNumber > outdatedTest.Sections.Count)
                 return (OperationErrorMessages.NotEnoughSections, null);

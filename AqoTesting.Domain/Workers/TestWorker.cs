@@ -72,17 +72,17 @@ namespace AqoTesting.Domain.Workers
             return await SetTestTitle(test.Id, newValue);
         }
 
-        public static async Task<bool> SetTestOwnerId(ObjectId testId, ObjectId newValue)
+        public static async Task<bool> SetTestUserId(ObjectId testId, ObjectId newValue)
         {
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
             var update = Builders<TestsDB_Test_DTO>.Update.Set("UserId", newValue);
             return (await MongoController.TestCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
 
-        public static async Task<bool> SetOwnerId(this TestsDB_Test_DTO test, ObjectId newValue)
+        public static async Task<bool> SetUserId(this TestsDB_Test_DTO test, ObjectId newValue)
         {
             test.UserId = newValue;
-            return await SetTestOwnerId(test.Id, newValue);
+            return await SetTestUserId(test.Id, newValue);
         }
 
         public static async Task<bool> SetTestIsActive(ObjectId testId, bool newValue)
