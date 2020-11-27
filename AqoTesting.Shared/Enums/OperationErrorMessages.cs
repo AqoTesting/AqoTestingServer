@@ -34,8 +34,8 @@
         NotEnoughSections = 304,
         NotEnoughQuestions = 305,
 
-        // В SingleChoice 0 или больше 1 правильных ответов, в MultipleChoice - меньше 2
-        ChoiceWrongCorrectsCount = 306,
+        // 0 или больше 1 правильных ответов
+        SingleChoiceWrongCorrectsCount = 306,
 
         // В Option нет ни картинки, ни текста
         EmptyOption = 307,

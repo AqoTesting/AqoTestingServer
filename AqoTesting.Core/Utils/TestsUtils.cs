@@ -39,20 +39,14 @@ namespace AqoTesting.Core.Utils
                                     correctsCount++;
 
                             if (correctsCount != 1)
-                                return (false, OperationErrorMessages.ChoiceWrongCorrectsCount, new CommonAPI_Error_DTO { ErrorSubject = new string[] { section.Key, question.Key } });
+                                return (false, OperationErrorMessages.SingleChoiceWrongCorrectsCount, new CommonAPI_Error_DTO { ErrorSubject = new string[] { section.Key, question.Key } });
 
                             break;
 
                         case QuestionTypes.MultipleChoice:
-                            correctsCount = 0;
                             foreach (var option in question.Value.Options)
                                 if (option.Text == null && option.ImageUrl == null)
                                     return (false, OperationErrorMessages.EmptyOption, new CommonAPI_Error_DTO { ErrorSubject = new object[] { section.Key, question.Key, option } });
-
-                                else if (option.IsCorrect) correctsCount++;
-
-                            if (correctsCount < 2)
-                                return (false, OperationErrorMessages.ChoiceWrongCorrectsCount, new CommonAPI_Error_DTO { ErrorSubject = new string[] { section.Key, question.Key } });
 
                             break;
 
