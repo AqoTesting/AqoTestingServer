@@ -63,7 +63,7 @@ namespace AqoTesting.WebApi.Controllers
         [Auth(Role = Role.User)]
         [UserAPI_TestAccess]
         [HttpPatch("/user/test/{TestId}/sections")]
-        public async Task<IActionResult> EditSections([FromRoute] CommonAPI_TestId_DTO testIdDTO, [FromBody] UserAPI_PostSections_DTO postSectionDTOs)
+        public async Task<IActionResult> EditSections([FromRoute] CommonAPI_TestId_DTO testIdDTO, [FromBody] UserAPI_PostTestSections_DTO postSectionDTOs)
         {
             var (errorCode, response) = await _testService.UserAPI_EditSections(testIdDTO, postSectionDTOs);
 

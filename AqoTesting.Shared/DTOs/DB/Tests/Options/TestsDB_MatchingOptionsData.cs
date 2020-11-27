@@ -1,4 +1,4 @@
-﻿namespace AqoTesting.Shared.DTOs.DB.Tests
+﻿namespace AqoTesting.Shared.DTOs.DB.Tests.Options
 {
     public class TestsDB_MatchingOptionsData
     {

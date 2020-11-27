@@ -10,7 +10,7 @@ namespace AqoTesting.Core.Utils
 {
     public static class TestsUtils
     {
-        public static (bool, OperationErrorMessages, object) ValidateSections(Dictionary<string, UserAPI_PostSection_DTO> sections)
+        public static (bool, OperationErrorMessages, object) ValidateSections(Dictionary<string, UserAPI_PostTestSection_DTO> sections)
         {
             int correctsCount;
 
@@ -76,7 +76,7 @@ namespace AqoTesting.Core.Utils
             return (true, OperationErrorMessages.NoError, null);
         }
 
-        public static (bool, OperationErrorMessages, object) MergeSections(Dictionary<string, TestsDB_Section_DTO> dbSections, Dictionary<string, UserAPI_PostSection_DTO> updateSections)
+        public static (bool, OperationErrorMessages, object) MergeSections(Dictionary<string, TestsDB_Section_DTO> dbSections, Dictionary<string, UserAPI_PostTestSection_DTO> updateSections)
         {
             foreach (var updateSection in updateSections)
             {

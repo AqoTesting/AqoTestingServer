@@ -1,11 +1,10 @@
 ﻿using AqoTesting.Shared.Attributes;
-using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections.Options;
 using AqoTesting.Shared.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
 {
-    public class UserAPI_PostQuestion_DTO
+    public class UserAPI_PostTestQuestion_DTO
     {
         public bool Deleted { get; set; } = false;
 
@@ -22,7 +21,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
         [RequiredIf("Deleted", false)]
         [MinLength(2)]
         [MaxLength(16)]
-        public UserAPI_CommonOption_DTO[]? Options { get; set; } = new UserAPI_CommonOption_DTO[0];
+        public UserAPI_TestCommonOption_DTO[]? Options { get; set; } = new UserAPI_TestCommonOption_DTO[0];
 
         public int Cost { get; set; } = 1;
 

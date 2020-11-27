@@ -16,5 +16,11 @@ namespace AqoTesting.Core.Repositories
 
         public async Task<AttemptsDB_Attempt_DTO> GetAttemptById(ObjectId attemptId) =>
             await AttemptWorker.GetAttemptById(attemptId);
+
+        public async Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByTestId(ObjectId testId) =>
+            await AttemptWorker.GetAttemptsByTestId(testId);
+
+        public async Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByMemberId(ObjectId memberId) =>
+            await AttemptWorker.GetAttemptsByMemberId(memberId);
     }
 }

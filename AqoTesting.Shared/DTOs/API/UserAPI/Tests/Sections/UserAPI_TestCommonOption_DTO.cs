@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections.Options
+namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
 {
-    public class UserAPI_CommonOption_DTO
+    public class UserAPI_TestCommonOption_DTO
     {
         public bool IsCorrect { get; set; } = false;
 

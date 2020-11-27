@@ -28,5 +28,25 @@ namespace AqoTesting.WebApi.Controllers
 
             return this.ResultResponse(errorCode, response);
         }
+
+        [Auth(Role = Role.User)]
+        [UserAPI_TestAccess]
+        [HttpGet("/user/test/{TestId}/attempts")]
+        public async Task<IActionResult> GetAttemptsByTestId([FromRoute] CommonAPI_TestId_DTO testIdDTO)
+        {
+            var (errorCode, response) = await _attemptService.UserAPI_GetAttemptsByTestId(testIdDTO);
+
+            return this.ResultResponse(errorCode, response);
+        }
+
+        [Auth(Role = Role.User)]
+        [UserAPI_TestAccess]
+        [HttpGet("/user/member/{MemberId}/attempts")]
+        public async Task<IActionResult> GetAttemptsByMemberId([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
+        {
+            var (errorCode, response) = await _attemptService.UserAPI_GetAttemptsByMemberId(memberIdDTO);
+
+            return this.ResultResponse(errorCode, response);
+        }
     }
 }

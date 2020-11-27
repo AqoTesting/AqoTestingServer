@@ -9,5 +9,11 @@ namespace AqoTesting.Shared.Interfaces
     {
         Task<(OperationErrorMessages, object)> UserAPI_GetAttempt(ObjectId attemptId);
         Task<(OperationErrorMessages, object)> UserAPI_GetAttempt(CommonAPI_AttemptId_DTO attemptIdDTO);
+
+        Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByTestId(ObjectId testId);
+        Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByTestId(CommonAPI_TestId_DTO testIdDTO);
+
+        Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByMemberId(ObjectId memberId);
+        Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByMemberId(CommonAPI_MemberId_DTO memberIdDTO);
     }
 }

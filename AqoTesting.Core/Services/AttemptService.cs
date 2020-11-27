@@ -25,15 +25,36 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetAttempt(ObjectId attemptId)
         {
             var attempt = await _attemptRepository.GetAttemptById(attemptId);
-            if (attempt == null)
-                return (OperationErrorMessages.AttemptNotFound, null);
-
             var getAttemptDTO = Mapper.Map<UserAPI_GetAttempt_DTO>(attempt);
 
             return (OperationErrorMessages.NoError, getAttemptDTO);
         }
         public async Task<(OperationErrorMessages, object)> UserAPI_GetAttempt(CommonAPI_AttemptId_DTO attemptIdDTO) =>
             await this.UserAPI_GetAttempt(ObjectId.Parse(attemptIdDTO.AttemptId));
+
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByTestId(ObjectId testId)
+        {
+            var attempts = await _attemptRepository.GetAttemptsByTestId(testId);
+            var getAttemptDTO = Mapper.Map<UserAPI_GetAttemptsItem_DTO[]>(attempts);
+
+            return (OperationErrorMessages.NoError, getAttemptDTO);
+        }
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByTestId(CommonAPI_TestId_DTO testIdDTO) =>
+            await this.UserAPI_GetAttemptsByTestId(ObjectId.Parse(testIdDTO.TestId));
+
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByMemberId(ObjectId memberId)
+        {
+            var attempts = await _attemptRepository.GetAttemptsByMemberId(memberId);
+            var getAttemptDTO = Mapper.Map<UserAPI_GetAttemptsItem_DTO[]>(attempts);
+
+            return (OperationErrorMessages.NoError, getAttemptDTO);
+        }
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByMemberId(CommonAPI_MemberId_DTO memberIdDTO) =>
+            await this.UserAPI_GetAttemptsByMemberId(ObjectId.Parse(memberIdDTO.MemberId));
+        #endregion
+
+        #region MemberAPI
+
         #endregion
     }
 }

@@ -27,8 +27,8 @@ namespace AqoTesting.Shared.Interfaces
         Task<(OperationErrorMessages, object)> UserAPI_EditTest(ObjectId testId, UserAPI_PostTest_DTO postTestDTO);
         Task<(OperationErrorMessages, object)> UserAPI_EditTest(CommonAPI_TestId_DTO testIdDTO, UserAPI_PostTest_DTO postTestDTO);
 
-        Task<(OperationErrorMessages, object)> UserAPI_EditSections(ObjectId testId, UserAPI_PostSections_DTO postSectionsDTO);
-        Task<(OperationErrorMessages, object)> UserAPI_EditSections(CommonAPI_TestId_DTO testIdDTO, UserAPI_PostSections_DTO postSectionsDTO);
+        Task<(OperationErrorMessages, object)> UserAPI_EditSections(ObjectId testId, UserAPI_PostTestSections_DTO postSectionsDTO);
+        Task<(OperationErrorMessages, object)> UserAPI_EditSections(CommonAPI_TestId_DTO testIdDTO, UserAPI_PostTestSections_DTO postSectionsDTO);
 
         Task<(OperationErrorMessages, object)> UserAPI_DeleteTest(ObjectId testId);
         Task<(OperationErrorMessages, object)> UserAPI_DeleteTest(CommonAPI_TestId_DTO testIdDTO);

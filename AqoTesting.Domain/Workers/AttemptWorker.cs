@@ -20,7 +20,23 @@ namespace AqoTesting.Domain.Workers
 
             return attempt;
         }
-        
+
+        public static async Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByTestId(ObjectId attemptId)
+        {
+            var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("TestId", attemptId);
+            var attempts = await MongoController.AttemptCollection.Find(filter).ToListAsync();
+
+            return attempts.ToArray();
+        }
+
+        public static async Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByMemberId(ObjectId memberId)
+        {
+            var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("MemberId", memberId);
+            var attempts = await MongoController.AttemptCollection.Find(filter).ToListAsync();
+
+            return attempts.ToArray();
+        }
+
         public static async Task<ObjectId> InsertAttempt(AttemptsDB_Attempt_DTO attempt)
         {
             await MongoController.AttemptCollection.InsertOneAsync(attempt);

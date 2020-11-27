@@ -1,8 +1,10 @@
-﻿namespace AqoTesting.Shared.DTOs.DB.Tests
+﻿
+namespace AqoTesting.Shared.DTOs.DB.Attempts
 {
-    public class TestsDB_ChoiceOption
+    public class AttemptsDB_ChoiceOption
     {
         public bool IsCorrect { get; set; }
+        public bool Chosen { get; set; }
         public string Text { get; set; }
         public string ImageUrl { get; set; }
     }

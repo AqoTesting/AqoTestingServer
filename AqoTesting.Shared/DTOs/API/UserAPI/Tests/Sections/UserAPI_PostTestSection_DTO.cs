@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
 {
-    public class UserAPI_PostSection_DTO
+    public class UserAPI_PostTestSection_DTO
     {
         public bool Deleted { get; set; } = false;
 
@@ -13,7 +13,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
 
         [RequiredIf("Deleted", false)]
         [MaxLength(32)]
-        public Dictionary<string, UserAPI_PostQuestion_DTO>? Questions { get; set; } = new Dictionary<string, UserAPI_PostQuestion_DTO>();
+        public Dictionary<string, UserAPI_PostTestQuestion_DTO>? Questions { get; set; } = new Dictionary<string, UserAPI_PostTestQuestion_DTO>();
 
         [Range(0, int.MaxValue)]
         public int AttemptQuestionsNumber { get; set; } = 0;

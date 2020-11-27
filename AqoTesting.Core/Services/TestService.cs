@@ -96,7 +96,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_EditTest(CommonAPI_TestId_DTO testIdDTO, UserAPI_PostTest_DTO postTestDTO) =>
             await this.UserAPI_EditTest(ObjectId.Parse(testIdDTO.TestId), postTestDTO);
 
-        public async Task<(OperationErrorMessages, object)> UserAPI_EditSections(ObjectId testId, UserAPI_PostSections_DTO postSectionsDTO)
+        public async Task<(OperationErrorMessages, object)> UserAPI_EditSections(ObjectId testId, UserAPI_PostTestSections_DTO postSectionsDTO)
         {
             var (valid, errorCode, response) = TestsUtils.ValidateSections(postSectionsDTO.Sections);
             if (!valid)
@@ -120,7 +120,7 @@ namespace AqoTesting.Core.Services
 
             return (OperationErrorMessages.NoError, null);
         }
-        public async Task<(OperationErrorMessages, object)> UserAPI_EditSections(CommonAPI_TestId_DTO testIdDTO, UserAPI_PostSections_DTO postSectionsDTO) =>
+        public async Task<(OperationErrorMessages, object)> UserAPI_EditSections(CommonAPI_TestId_DTO testIdDTO, UserAPI_PostTestSections_DTO postSectionsDTO) =>
             await this.UserAPI_EditSections(ObjectId.Parse(testIdDTO.TestId), postSectionsDTO);
 
         public async Task<(OperationErrorMessages, object)> UserAPI_DeleteTest(ObjectId testId)
