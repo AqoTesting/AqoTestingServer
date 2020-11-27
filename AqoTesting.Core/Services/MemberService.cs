@@ -171,7 +171,7 @@ namespace AqoTesting.Core.Services
             if (room.IsRegistrationEnabled)
             {
                 if(member != null)
-                    return (OperationErrorMessages.MemberAlreadyExists, null);
+                    return (OperationErrorMessages.MemberAlreadyRegistered, null);
 
                 member = Mapper.Map<MembersDB_Member_DTO>(signUpDTO);
                 member.PasswordHash = Sha256.Compute(signUpDTO.Password);
