@@ -6,6 +6,6 @@ namespace AqoTesting.Shared.Interfaces
     public interface ITokenGeneratorService
     {
         string GenerateToken(ObjectId id, Role role);
-        string GenerateToken(ObjectId id, Role role, ObjectId roomId, bool isChecked = true);
+        string GenerateToken(ObjectId id, Role role, ObjectId roomId);
     }
 }

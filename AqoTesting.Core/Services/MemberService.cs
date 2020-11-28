@@ -131,7 +131,7 @@ namespace AqoTesting.Core.Services
             if(member == null || !member.IsRegistered)
                 return (OperationErrorMessages.WrongAuthData, null);
 
-            var memberToken = _tokenGeneratorService.GenerateToken(member.Id, Role.Member, room.Id, member.IsApproved);
+            var memberToken = _tokenGeneratorService.GenerateToken(member.Id, Role.Member, room.Id);
             var memberTokenDTO = new CommonAPI_Token_DTO { Token = memberToken };
 
             await _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), AuthOptions.LIFETIME);
@@ -199,7 +199,7 @@ namespace AqoTesting.Core.Services
                 memberId = member.Id;
             }
 
-            var memberToken = _tokenGeneratorService.GenerateToken(memberId, Role.Member, roomId, member.IsApproved);
+            var memberToken = _tokenGeneratorService.GenerateToken(memberId, Role.Member, roomId);
             var memberTokenDTO = new CommonAPI_Token_DTO { Token = memberToken };
 
             await _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), AuthOptions.LIFETIME);
