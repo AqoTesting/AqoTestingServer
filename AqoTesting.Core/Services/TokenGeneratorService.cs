@@ -57,7 +57,6 @@ namespace AqoTesting.Core.Services
 
             if (role == Role.Member)
             {
-                claims.Add(new Claim("isChecked", isChecked.ToString()));
                 claims.Add(new Claim("roomId", roomId.ToString()));
             }
 
