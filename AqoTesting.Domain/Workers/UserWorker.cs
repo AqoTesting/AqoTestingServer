@@ -5,6 +5,7 @@ using MongoDB.Driver;
 using System.Linq;
 using AqoTesting.Shared.DTOs.DB.Users;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 #pragma warning disable CS8602 // Разыменование вероятной пустой ссылки.
 namespace AqoTesting.Domain.Workers
@@ -178,6 +179,24 @@ namespace AqoTesting.Domain.Workers
             return await SetUserName(user.Id, newName);
         }
 
+        public static async Task<bool> SetProperty(ObjectId attemptId, KeyValuePair<string, object> propertys)
+        {
+            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Id", attemptId);
+            var update = Builders<UsersDB_User_DTO>.Update.Set(propertys.Key, propertys.Value);
+            return (await MongoController.UserCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
+        }
+
+        public static async Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> propertys)
+        {
+            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Id", attemptId);
+            var updates = new List<UpdateDefinition<UsersDB_User_DTO>>();
+            var update = Builders<UsersDB_User_DTO>.Update;
+            foreach (KeyValuePair<string, object> kvp in propertys)
+            {
+                updates.Add(update.Set(kvp.Key, kvp.Value));
+            }
+            return (await MongoController.UserCollection.UpdateOneAsync(filter, update.Combine(updates.ToArray()))).MatchedCount == 1;
+        }
         #endregion
     }
 }

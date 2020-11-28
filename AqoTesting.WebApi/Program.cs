@@ -22,6 +22,15 @@ namespace AqoTestingServer
             {
                 prepareDB.CreateMainDatabase();
             }
+
+            //await UserWorker.SetProperties(ObjectId.Parse("5f905faa200b014f01a18d9c"), new Dictionary<string, object>
+            //{
+            //    {"Name", "newBoloto"},
+            //    {"Login", "newLogin"}
+            //});
+
+            //await UserWorker.SetProperty(ObjectId.Parse("5f905faa200b014f01a18d9c"), new KeyValuePair<string, object>("Name", "newNewBoloto"));
+
             Console.WriteLine("OK");
             //var testIO = new TestIO();
             //UserWorker.DeleteUserByLogin("Test Dev Login 1");

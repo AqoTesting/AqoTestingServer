@@ -150,6 +150,24 @@ namespace AqoTesting.Domain.Workers
             return await SetTestShuffle(test.Id, newValue);
         }
 
+        public static async Task<bool> SetProperty(ObjectId attemptId, KeyValuePair<string, object> propertys)
+        {
+            var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", attemptId);
+            var update = Builders<TestsDB_Test_DTO>.Update.Set(propertys.Key, propertys.Value);
+            return (await MongoController.TestCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
+        }
+
+        public static async Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> propertys)
+        {
+            var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", attemptId);
+            var updates = new List<UpdateDefinition<TestsDB_Test_DTO>>();
+            var update = Builders<TestsDB_Test_DTO>.Update;
+            foreach (KeyValuePair<string, object> kvp in propertys)
+            {
+                updates.Add(update.Set(kvp.Key, kvp.Value));
+            }
+            return (await MongoController.TestCollection.UpdateOneAsync(filter, update.Combine(updates.ToArray()))).MatchedCount == 1;
+        }
         #endregion
     }
 }

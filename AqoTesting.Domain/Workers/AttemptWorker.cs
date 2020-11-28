@@ -4,6 +4,7 @@ using AqoTesting.Shared.DTOs.DB.Tests;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -184,6 +185,25 @@ namespace AqoTesting.Domain.Workers
             if (updated == true)
                 attempt.Score = newScore;
             return updated;
+        }
+
+        public static async Task<bool> SetProperty(ObjectId attemptId, KeyValuePair<string, object> propertys)
+        {
+            var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
+            var update = Builders<AttemptsDB_Attempt_DTO>.Update.Set(propertys.Key, propertys.Value);
+            return (await MongoController.AttemptCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
+        }
+
+        public static async Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> propertys)
+        {
+            var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
+            var updates = new List<UpdateDefinition<AttemptsDB_Attempt_DTO>>();
+            var update = Builders<AttemptsDB_Attempt_DTO>.Update;
+            foreach (KeyValuePair<string, object> kvp in propertys)
+            {
+                updates.Add(update.Set(kvp.Key, kvp.Value));
+            }
+            return (await MongoController.AttemptCollection.UpdateOneAsync(filter, update.Combine(updates.ToArray()))).MatchedCount == 1;
         }
 
         #endregion
