@@ -29,6 +29,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
                     return commonOptionDTOs;
                 });
             CreateMap<AttemptsDB_PositionalOption, UserAPI_AttemptCommonOption_DTO>();
+
             CreateMap<AttemptsDB_Question_DTO, UserAPI_GetAttemptQuestion_DTO>()
                 .ForMember(x => x.Options,
                     x => x.ResolveUsing(m => {
@@ -55,9 +56,19 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
                 .ConstructUsing(x => new KeyValuePair<string, UserAPI_GetAttemptQuestion_DTO>(
                     x.Key,
                     Mapper.Map<UserAPI_GetAttemptQuestion_DTO>(x.Value)));
-            CreateMap<AttemptsDB_Attempt_DTO, UserAPI_GetAttempt_DTO>()
+
+            CreateMap<AttemptsDB_Section_DTO, UserAPI_GetAttemptSection_DTO>()
                 .ForMember(x => x.Questions,
-                    x => x.MapFrom(m => Mapper.Map<Dictionary<string, UserAPI_GetAttemptQuestion_DTO>>(m.Questions)));
+                    x => x.MapFrom(m =>
+                        Mapper.Map<Dictionary<string, UserAPI_GetAttemptQuestion_DTO>>(m.Questions)));
+            CreateMap<KeyValuePair<string, AttemptsDB_Section_DTO>, KeyValuePair<string, UserAPI_GetAttemptSection_DTO>>()
+                .ConstructUsing(x => new KeyValuePair<string, UserAPI_GetAttemptSection_DTO>(
+                    x.Key,
+                    Mapper.Map<UserAPI_GetAttemptSection_DTO>(x.Value)));
+
+            CreateMap<AttemptsDB_Attempt_DTO, UserAPI_GetAttempt_DTO>()
+                .ForMember(x => x.Sections,
+                    x => x.MapFrom(m => Mapper.Map<Dictionary<string, UserAPI_GetAttemptSection_DTO>>(m.Sections)));
             #endregion
 
             CreateMap<AttemptsDB_Attempt_DTO, UserAPI_GetAttemptsItem_DTO>();

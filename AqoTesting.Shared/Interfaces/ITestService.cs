@@ -15,13 +15,6 @@ namespace AqoTesting.Shared.Interfaces
         Task<(OperationErrorMessages, object)> UserAPI_GetTestById(ObjectId testId);
         Task<(OperationErrorMessages, object)> UserAPI_GetTestById(CommonAPI_TestId_DTO testIdDTO);
 
-
-        Task<(OperationErrorMessages, object)> MemberAPI_GetTestsByRoomId(ObjectId roomId);
-        Task<(OperationErrorMessages, object)> MemberAPI_GetTestsByRoomId(CommonAPI_RoomId_DTO roomIdDTO);
-
-        Task<(OperationErrorMessages, object)> MemberAPI_GetTestById(ObjectId testId);
-        Task<(OperationErrorMessages, object)> MemberAPI_GetTestById(CommonAPI_TestId_DTO testIdDTO);
-
         Task<(OperationErrorMessages, object)> UserAPI_CreateTest(CommonAPI_RoomId_DTO roomIdDTO, UserAPI_PostTest_DTO postTestDTO);
 
         Task<(OperationErrorMessages, object)> UserAPI_EditTest(ObjectId testId, UserAPI_PostTest_DTO postTestDTO);
@@ -32,5 +25,15 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<(OperationErrorMessages, object)> UserAPI_DeleteTest(ObjectId testId);
         Task<(OperationErrorMessages, object)> UserAPI_DeleteTest(CommonAPI_TestId_DTO testIdDTO);
+
+
+        Task<(OperationErrorMessages, object)> MemberAPI_GetTestsByRoomId(ObjectId roomId);
+        Task<(OperationErrorMessages, object)> MemberAPI_GetTestsByRoomId(CommonAPI_RoomId_DTO roomIdDTO);
+
+        Task<(OperationErrorMessages, object)> MemberAPI_GetTestById(ObjectId testId);
+        Task<(OperationErrorMessages, object)> MemberAPI_GetTestById(CommonAPI_TestId_DTO testIdDTO);
+
+        Task<(OperationErrorMessages, object)> MemberAPI_BeginTest(ObjectId testId);
+        Task<(OperationErrorMessages, object)> MemberAPI_BeginTest(CommonAPI_TestId_DTO testIdDTO);
     }
 }

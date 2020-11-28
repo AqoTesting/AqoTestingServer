@@ -1,4 +1,5 @@
-﻿using AqoTesting.WebApi.AutoMapperProfiles.MemberAPI;
+﻿using AqoTesting.WebApi.AutoMapperProfiles;
+using AqoTesting.WebApi.AutoMapperProfiles.MemberAPI;
 using AqoTesting.WebApi.AutoMapperProfiles.UserAPI;
 using AutoMapper;
 
@@ -21,6 +22,8 @@ namespace AqoTesting.WebApi.Infrastructure
                 cfg.AddProfile<AutoMapper_UserAPI_Rooms_Profile>();
                 cfg.AddProfile<AutoMapper_UserAPI_Tests_Profile>();
                 cfg.AddProfile<AutoMapper_UserAPI_Users_Profile>();
+
+                cfg.AddProfile<AutoMapper_CrossObjects_Profile>();
             });
         }
     }

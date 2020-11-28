@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.API.Common;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Tests;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
+using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
@@ -16,14 +18,16 @@ namespace AqoTesting.Core.Services
 {
     public class TestService : ServiceBase, ITestService
     {
-        IRoomRepository _roomRepository;
         ITestRepository _testRepository;
+        IRoomRepository _roomRepository;
+        IAttemptRepository _attemptRepository;
         IWorkContext _workContext;
 
-        public TestService(IRoomRepository roomRespository, ITestRepository testRepository, IWorkContext workContext)
+        public TestService(ITestRepository testRepository, IRoomRepository roomRespository, IAttemptRepository attemptRepository, IWorkContext workContext)
         {
-            _roomRepository = roomRespository;
             _testRepository = testRepository;
+            _roomRepository = roomRespository;
+            _attemptRepository = attemptRepository;
             _workContext = workContext;
         }
 
@@ -138,7 +142,7 @@ namespace AqoTesting.Core.Services
             return (OperationErrorMessages.NoError, getTestsItemDTOs);
         }
         public async Task<(OperationErrorMessages, object)> MemberAPI_GetTestsByRoomId(CommonAPI_RoomId_DTO roomIdDTO) =>
-            await MemberAPI_GetTestsByRoomId(ObjectId.Parse(roomIdDTO.RoomId));
+            await this.MemberAPI_GetTestsByRoomId(ObjectId.Parse(roomIdDTO.RoomId));
 
         public async Task<(OperationErrorMessages, object)> MemberAPI_GetTestById(ObjectId testId)
         {
@@ -152,7 +156,31 @@ namespace AqoTesting.Core.Services
             return (OperationErrorMessages.NoError, getTestDTO);
         }
         public async Task<(OperationErrorMessages, object)> MemberAPI_GetTestById(CommonAPI_TestId_DTO testIdDTO) =>
-            await MemberAPI_GetTestById(ObjectId.Parse(testIdDTO.TestId));
+            await this.MemberAPI_GetTestById(ObjectId.Parse(testIdDTO.TestId));
+
+        public async Task<(OperationErrorMessages, object)> MemberAPI_BeginTest(ObjectId testId)
+        {
+            var memberId = _workContext.MemberId;
+
+            var test = await _testRepository.GetTestById(testId);
+            if (!test.IsActive && (test.DeactivationDate == null || test.DeactivationDate < DateTime.Now || (test.ActivationDate != null && test.ActivationDate.Value > DateTime.Now)))
+                return (OperationErrorMessages.TestIsNotActive, null);
+
+            var attempts = (await _attemptRepository.GetAttemptsByTestIdAndMemberId(testId, memberId));
+
+            if (attempts.Count() >= test.AttemptsNumber)
+                return (OperationErrorMessages.NoAttemptsLeft, null);
+
+            var newAttempt = Mapper.Map<AttemptsDB_Attempt_DTO>(test);
+            newAttempt.StartDate = DateTime.Now;
+            newAttempt.MemberId = memberId;
+
+            var newAttemptId = await _attemptRepository.InsertAttempt(newAttempt);
+
+            return (OperationErrorMessages.NoError, new CommonAPI_AttemptId_DTO { AttemptId = newAttemptId.ToString() });
+        }
+        public async Task<(OperationErrorMessages, object)> MemberAPI_BeginTest(CommonAPI_TestId_DTO testIdDTO) =>
+            await this.MemberAPI_BeginTest(ObjectId.Parse(testIdDTO.TestId));
         #endregion
     }
 }

@@ -11,5 +11,9 @@ namespace AqoTesting.Shared.Interfaces
         Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByTestId(ObjectId testId);
 
         Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByMemberId(ObjectId memberId);
+
+        Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByTestIdAndMemberId(ObjectId testId, ObjectId memberId);
+
+        Task<ObjectId> InsertAttempt(AttemptsDB_Attempt_DTO newAttempt);
     }
 }

@@ -23,6 +23,7 @@ namespace AqoTesting.Shared.DTOs.DB.Tests
         public Dictionary<string, TestsDB_Section_DTO> Sections { get; set; }
         public int AttemptSectionsNumber { get; set; }
         public int AttemptsNumber { get; set; }
+        public int TimeLimit { get; set; }
         public FinalResultCalculationMethod FinalResultCalculationMethod { get; set; }
         public bool IsActive { get; set; } //приоритет над датами (если true)
         public DateTime CreationDate { get; set; }

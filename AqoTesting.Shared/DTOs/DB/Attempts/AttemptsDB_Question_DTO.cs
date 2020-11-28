@@ -7,9 +7,10 @@ namespace AqoTesting.Shared.DTOs.DB.Attempts
     {
         public QuestionTypes Type { get; set; }
         public string? Text { get; set; }
-        public bool Shuffle { get; set; }
+        public string? ImageUrl { get; set; }
         public BsonDocument Options { get; set; }
         public int Cost { get; set; }
+        public int Weight { get; set; }
         public int BlurTime { get; set; } = 0;
         public int TotalTime { get; set; } = 0;
     }

@@ -16,6 +16,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         public Dictionary<string, UserAPI_GetTestSection_DTO>? Sections { get; set; }
         public int AttemptSectionsNumber { get; set; } = 0;
         public int AttemptsNumber { get; set; }
+        public int TimeLimit { get; set; }
         public FinalResultCalculationMethod FinalResultCalculationMethod { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreationDate { get; set; }
