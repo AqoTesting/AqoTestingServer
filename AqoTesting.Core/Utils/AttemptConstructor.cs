@@ -1,5 +1,5 @@
 ﻿using AqoTesting.Shared.DTOs.DB.Tests;
-using AqoTesting.Shared.DTOs.DB.Tests.Options;
+using AqoTesting.Shared.DTOs.DB.Tests.OptionsContainers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,16 +76,6 @@ namespace AqoTesting.Core.Utils
         {
             var random = new Random();
             return array.OrderBy(x => random.Next()).ToArray();
-        }
-
-        public static TestsDB_MatchingOptionsData ShuffleMatchingOptions(TestsDB_MatchingOptionsData options)
-        {
-            var random = new Random();
-
-            options.Left = options.Left.OrderBy(x => random.Next()).ToArray();
-            options.Right = options.Right.OrderBy(x => random.Next()).ToArray();
-
-            return options;
         }
     }
 }

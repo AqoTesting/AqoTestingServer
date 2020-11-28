@@ -1,8 +1,10 @@
 ﻿using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts.Options;
+using AqoTesting.Shared.DTOs.DB.Attempts.OptionsData;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.DTOs.DB.Tests.Options;
+using AqoTesting.Shared.DTOs.DB.Tests.OptionsContainers;
 using AqoTesting.Shared.Enums;
 using AutoMapper;
 using MongoDB.Bson;
@@ -18,47 +20,42 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
             #region TestsDB_Test_DTO -> AttemptsDB_Attempt_DTO
             CreateMap<TestsDB_ChoiceOption, AttemptsDB_ChoiceOption>();
             CreateMap<TestsDB_PositionalOption, AttemptsDB_PositionalOption>();
-            CreateMap<TestsDB_MatchingOptionsData, AttemptsDB_MatchingOptions>()
-                .ForMember(x => x.Left,
-                    x => x.MapFrom(m =>
-                        Mapper.Map<AttemptsDB_PositionalOption>(m.Left)))
-                .ForMember(x => x.Right,
-                    x => x.MapFrom(m =>
-                        Mapper.Map<AttemptsDB_PositionalOption>(m.Right)));
 
             CreateMap<TestsDB_Question_DTO, AttemptsDB_Question_DTO>()
                 .ForMember(x => x.Options,
-                    x => x.ResolveUsing(m =>
-                    {
-                        var optionsData = BsonSerializer.Deserialize<TestsDB_OptionsData>(m.Options, null);
+                    x => x.ResolveUsing(m => {
+                        switch(m.Type) {
+                            case QuestionTypes.SingleChoice:
+                            case QuestionTypes.MultipleChoice:
+                                var choiceOptionsData = BsonSerializer.Deserialize<TestsDB_ChoiceOptions_Container>(m.Options, null);
+                                return new AttemptsDB_ChoiceOptions_Container {
+                                    Options = Mapper.Map<AttemptsDB_ChoiceOption[]>(m.Shuffle.Value ?
+                                        AttemptConstructor.ShuffleArray(choiceOptionsData.Options) :
+                                    choiceOptionsData.Options)
+                                }.ToBsonDocument();
 
-                        return m.Type == QuestionTypes.SingleChoice || m.Type == QuestionTypes.MultipleChoice ?
-                            new AttemptsDB_OptionsData {
-                                Correct = null,
-                                Answer = Mapper.Map<AttemptsDB_ChoiceOption[]>(
-                                    m.Shuffle.Value ?
-                                        AttemptConstructor.ShuffleArray((TestsDB_ChoiceOption[]) optionsData.Data) :
-                                    (TestsDB_ChoiceOption[]) optionsData.Data)
-                            }.ToBsonDocument() :
+                            case QuestionTypes.Matching:
+                                var matchingOptionsData = BsonSerializer.Deserialize<TestsDB_MatchingOptions_Container>(m.Options, null);
+                                return new AttemptsDB_MatchingOptions_Container {
+                                    LeftCorrectOptions = Mapper.Map<AttemptsDB_PositionalOption[]>(matchingOptionsData.LeftOptions),
+                                    RightCorrectOptions = Mapper.Map<AttemptsDB_PositionalOption[]>(matchingOptionsData.RightOptions),
+                                    LeftAnswerOptions = Mapper.Map<AttemptsDB_PositionalOption[]>(
+                                        AttemptConstructor.ShuffleArray(matchingOptionsData.LeftOptions)),
+                                    RightAnswerOptions = Mapper.Map<AttemptsDB_PositionalOption[]>(
+                                        AttemptConstructor.ShuffleArray(matchingOptionsData.RightOptions))
+                                }.ToBsonDocument();
 
-                        m.Type == QuestionTypes.Matching ?
-                            new AttemptsDB_OptionsData
-                            {
-                                Correct = Mapper.Map<AttemptsDB_MatchingOptions>((TestsDB_MatchingOptionsData) optionsData.Data),
-                                Answer = Mapper.Map<AttemptsDB_MatchingOptions>(
-                                    AttemptConstructor.ShuffleMatchingOptions((TestsDB_MatchingOptionsData) optionsData.Data))
-                            }.ToBsonDocument() :
+                            case QuestionTypes.Sequence:
+                                var sequenceOptionsContainer = BsonSerializer.Deserialize<TestsDB_SequenceOptions_Container>(m.Options, null);
+                                return new AttemptsDB_SequenceOptions_Container {
+                                    CorrectOptions = Mapper.Map<AttemptsDB_PositionalOption[]>(sequenceOptionsContainer.Options),
+                                    AnswerOptions = Mapper.Map<AttemptsDB_PositionalOption[]>(
+                                        AttemptConstructor.ShuffleArray(sequenceOptionsContainer.Options))
+                                }.ToBsonDocument();
 
-                        m.Type == QuestionTypes.Sequence ?
-                            new AttemptsDB_OptionsData
-                            {
-                                Correct = Mapper.Map<AttemptsDB_PositionalOption[]>((TestsDB_PositionalOption[]) optionsData.Data),
-                                Answer = Mapper.Map<AttemptsDB_PositionalOption[]>(
-                                    AttemptConstructor.ShuffleArray((TestsDB_PositionalOption[]) optionsData.Data))
-                            }.ToBsonDocument() :
-
-                        new BsonDocument();
-                    }));
+                            default:
+                                return new BsonDocument();
+                        }}));
             CreateMap<KeyValuePair<string, TestsDB_Question_DTO>, KeyValuePair<string, AttemptsDB_Question_DTO>>()
                 .ConstructUsing(x => new KeyValuePair<string, AttemptsDB_Question_DTO>(
                     x.Key,

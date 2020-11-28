@@ -1,6 +1,7 @@
 ﻿using AqoTesting.Shared.DTOs.API.MemberAPI.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts.Options;
+using AqoTesting.Shared.DTOs.DB.Attempts.OptionsData;
 using AqoTesting.Shared.Enums;
 using AutoMapper;
 using MongoDB.Bson.Serialization;
@@ -15,16 +16,18 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
             #region DB -> API
             #region AttemptsDB -> MemberAPI_GetAttempt_DTO
             CreateMap<AttemptsDB_ChoiceOption, MemberAPI_AttemptCommonOption_DTO>();
-            CreateMap<AttemptsDB_MatchingOptions, MemberAPI_AttemptCommonOption_DTO[]>()
+            CreateMap<AttemptsDB_MatchingOptions_Container, MemberAPI_AttemptCommonOption_DTO[]>()
                 .ConstructUsing(x => {
-                    var commonOptionDTOs = new MemberAPI_AttemptCommonOption_DTO[x.Left.Length];
-                    for (var i = 0; i < x.Left.Length; i++)
+                    var optionsLength = x.LeftCorrectOptions.Length;
+
+                    var commonOptionDTOs = new MemberAPI_AttemptCommonOption_DTO[optionsLength];
+                    for (var i = 0; i < optionsLength; i++)
                         commonOptionDTOs[i] = new MemberAPI_AttemptCommonOption_DTO
                         {
-                            LeftText = x.Left[i].Text,
-                            LeftImageUrl = x.Left[i].ImageUrl,
-                            RightText = x.Right[i].Text,
-                            RightImageUrl = x.Right[i].ImageUrl
+                            LeftText = x.LeftAnswerOptions[i].Text,
+                            LeftImageUrl = x.LeftAnswerOptions[i].ImageUrl,
+                            RightText = x.RightAnswerOptions[i].Text,
+                            RightImageUrl = x.RightAnswerOptions[i].ImageUrl
                         };
 
                     return commonOptionDTOs;
@@ -33,20 +36,20 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
 
             CreateMap<AttemptsDB_Question_DTO, MemberAPI_GetAttemptQuestion_DTO>()
                 .ForMember(x => x.Options,
-                    x => x.ResolveUsing(m => {
-                        var optionsData = BsonSerializer.Deserialize<AttemptsDB_OptionsData>(m.Options, null);
-
-                        return m.Type == QuestionTypes.SingleChoice || m.Type == QuestionTypes.MultipleChoice ?
-                            Mapper.Map<MemberAPI_AttemptCommonOption_DTO[]>((AttemptsDB_ChoiceOption[])optionsData.Answer) :
+                    x => x.MapFrom(m =>
+                        m.Type == QuestionTypes.SingleChoice || m.Type == QuestionTypes.MultipleChoice ?
+                            Mapper.Map<MemberAPI_AttemptCommonOption_DTO[]>(
+                                BsonSerializer.Deserialize<AttemptsDB_ChoiceOptions_Container>(m.Options, null).Options) :
 
                         m.Type == QuestionTypes.Matching ?
-                            Mapper.Map<MemberAPI_AttemptCommonOption_DTO[]>((AttemptsDB_MatchingOptions)optionsData.Answer) :
+                            Mapper.Map<MemberAPI_AttemptCommonOption_DTO[]>(
+                                BsonSerializer.Deserialize<AttemptsDB_MatchingOptions_Container>(m.Options, null)) :
 
                         m.Type == QuestionTypes.Sequence ?
-                            Mapper.Map<MemberAPI_AttemptCommonOption_DTO[]>((AttemptsDB_PositionalOption[])optionsData.Answer) :
+                            Mapper.Map<MemberAPI_AttemptCommonOption_DTO[]>(
+                                BsonSerializer.Deserialize<AttemptsDB_SequenceOptions_Container>(m.Options, null).AnswerOptions) :
 
-                        new MemberAPI_AttemptCommonOption_DTO[0];
-                    }));
+                        new MemberAPI_AttemptCommonOption_DTO[0]));
             CreateMap<KeyValuePair<string, AttemptsDB_Question_DTO>, KeyValuePair<string, MemberAPI_GetAttemptQuestion_DTO>>()
                 .ConstructUsing(x => new KeyValuePair<string, MemberAPI_GetAttemptQuestion_DTO>(
                     x.Key,
