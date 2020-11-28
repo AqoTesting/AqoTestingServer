@@ -27,19 +27,27 @@ namespace AqoTesting.Core.Repositories
 
         public async Task ReplaceTest(TestsDB_Test_DTO updatedTest)
         {
-            await TestWorker.ReplaceTest(updatedTest);
+            await TestWorker.Replace(updatedTest);
             await _cache.Del($"Test:{updatedTest.Id}");
         }
 
-        public async Task SetSections(ObjectId testId, Dictionary<string, TestsDB_Section_DTO> newValue)
+        public async Task<bool> SetProperty(ObjectId testId, string propertyName, object newPropertyValue)
         {
-            await TestWorker.SetTestSections(testId, newValue);
             await _cache.Del($"Test:{testId}");
+
+            return await TestWorker.SetProperty(testId, propertyName, newPropertyValue);
+        }
+
+        public async Task<bool> SetProperties(ObjectId testId, Dictionary<string, object> properties)
+        {
+            await _cache.Del($"Test:{testId}");
+
+            return await TestWorker.SetProperties(testId, properties);
         }
 
         public async Task<bool> DeleteTest(ObjectId testId)
         {
-            var response = await Task.Run(async () => await TestWorker.DeleteTestById(testId));
+            var response = await Task.Run(async () => await TestWorker.Delete(testId));
             await _cache.Del($"Test:{testId}");
 
             return response;

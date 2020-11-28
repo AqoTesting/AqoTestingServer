@@ -1,10 +1,6 @@
-﻿using AqoTesting.Shared.DTOs.API.MemberAPI.Rooms;
-using AqoTesting.Shared.DTOs.API.MemberAPI.Tests;
+﻿using AqoTesting.Shared.DTOs.API.MemberAPI.Tests;
 using AqoTesting.Shared.DTOs.DB.Tests;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
-using AqoTesting.Shared.Enums;
 using AutoMapper;
-using System.Linq;
 
 namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
 {

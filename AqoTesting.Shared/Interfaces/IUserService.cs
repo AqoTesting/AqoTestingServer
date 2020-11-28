@@ -1,4 +1,4 @@
-﻿using AqoTesting.Shared.DTOs.API.Common;
+﻿using AqoTesting.Shared.DTOs.API.Common.Identifiers;
 using AqoTesting.Shared.DTOs.API.UserAPI.Account;
 using AqoTesting.Shared.DTOs.DB.Users;
 using MongoDB.Bson;

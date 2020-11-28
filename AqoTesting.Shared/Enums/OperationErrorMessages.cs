@@ -2,18 +2,21 @@
 {
     public enum OperationErrorMessages
     {
+        // 0
         #region Common
         NoError = 0,
         InvalidModel = 1,
         EntityNotFound = 3,
         #endregion
 
+        // 100
         #region Auth
         WrongAuthData = 100,
         LoginAlreadyTaken = 101,
         EmailAlreadyTaken = 102,
         #endregion
 
+        // 200
         #region Rooms
         RoomNotFound = 200,
         RoomAccessError = 201,
@@ -25,6 +28,7 @@
         RoomRegistrationEnabled = 203,
         #endregion
 
+        // 300
         #region Tests
         TestNotFound = 300,
         TestAccessError = 301,
@@ -53,10 +57,12 @@
         TestIsNotActive = 310,
         #endregion
 
+        // 400
         #region Users
         UserNotFound = 400,
         #endregion
 
+        // 500
         #region Members
         MemberNotFound = 500,
         MemberAccessError = 501,
@@ -88,9 +94,22 @@
         NoActiveAttempt = 511,
         #endregion
 
+        // 600
         #region Attempts
         AttemptNotFound = 600,
         AttemptAccessError = 601,
+
+        // MemberAPI Answer
+        // В MemberAPI_CommonTestAnswer_DTO, поля, нужные для конкретного типа вопроса не переданы (null)
+        AnswerNotPassed = 602,
+        // SelectedOption больше или равно количетсву опций
+        SelectedOptionOutOfRange = 603,
+        // Количество переданных id опций не равно количеству опций в вопросе
+        WrongOptionsCount = 604,
+        // Переданы одинаковые id опций
+        NonUniqueOption = 605,
+        // Время на прохождение кончилось, а мембер попытался ответить, возвращается один раз, после этого попытка становится неактивной
+        TimeIsUp = 606,
         #endregion
     }
 }

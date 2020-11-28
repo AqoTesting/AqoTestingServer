@@ -37,19 +37,19 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
                             case QuestionTypes.Matching:
                                 var matchingOptionsData = BsonSerializer.Deserialize<TestsDB_MatchingOptions_Container>(m.Options, null);
                                 return new AttemptsDB_MatchingOptions_Container {
-                                    LeftCorrectOptions = Mapper.Map<AttemptsDB_PositionalOption[]>(matchingOptionsData.LeftOptions),
-                                    RightCorrectOptions = Mapper.Map<AttemptsDB_PositionalOption[]>(matchingOptionsData.RightOptions),
-                                    LeftAnswerOptions = Mapper.Map<AttemptsDB_PositionalOption[]>(
+                                    LeftCorrectSequence = Mapper.Map<AttemptsDB_PositionalOption[]>(matchingOptionsData.LeftOptions),
+                                    RightCorrectSequence = Mapper.Map<AttemptsDB_PositionalOption[]>(matchingOptionsData.RightOptions),
+                                    LeftAnswerSequence = Mapper.Map<AttemptsDB_PositionalOption[]>(
                                         AttemptConstructor.ShuffleArray(matchingOptionsData.LeftOptions)),
-                                    RightAnswerOptions = Mapper.Map<AttemptsDB_PositionalOption[]>(
+                                    RightAnswerSequence = Mapper.Map<AttemptsDB_PositionalOption[]>(
                                         AttemptConstructor.ShuffleArray(matchingOptionsData.RightOptions))
                                 }.ToBsonDocument();
 
                             case QuestionTypes.Sequence:
                                 var sequenceOptionsContainer = BsonSerializer.Deserialize<TestsDB_SequenceOptions_Container>(m.Options, null);
                                 return new AttemptsDB_SequenceOptions_Container {
-                                    CorrectOptions = Mapper.Map<AttemptsDB_PositionalOption[]>(sequenceOptionsContainer.Options),
-                                    AnswerOptions = Mapper.Map<AttemptsDB_PositionalOption[]>(
+                                    CorrectSequence = Mapper.Map<AttemptsDB_PositionalOption[]>(sequenceOptionsContainer.Options),
+                                    AnswerSequence = Mapper.Map<AttemptsDB_PositionalOption[]>(
                                         AttemptConstructor.ShuffleArray(sequenceOptionsContainer.Options))
                                 }.ToBsonDocument();
 

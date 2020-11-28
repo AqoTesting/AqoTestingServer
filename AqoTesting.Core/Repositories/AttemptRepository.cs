@@ -2,15 +2,18 @@
 using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AqoTesting.Core.Repositories
 {
     public class AttemptRepository : IAttemptRepository
     {
+        IWorkContext _workContext;
         ICacheRepository _cache;
-        public AttemptRepository(ICacheRepository cache)
+        public AttemptRepository(IWorkContext workContext, ICacheRepository cache)
         {
+            _workContext = workContext;
             _cache = cache;
         }
 
@@ -32,5 +35,25 @@ namespace AqoTesting.Core.Repositories
 
         public async Task<ObjectId> InsertAttempt(AttemptsDB_Attempt_DTO newAttempt) =>
             await AttemptWorker.InsertAttempt(newAttempt);
+
+        public async Task<bool> SetProperty(ObjectId attemptId, string propertyName, object newPropertyValue, ObjectId? memberId = null)
+        {
+            if (memberId == null)
+                memberId = _workContext.MemberId;
+
+            await _cache.Del($"MemberActiveAttempt:{memberId}");
+
+            return await AttemptWorker.SetProperty(attemptId, propertyName, newPropertyValue);
+        }
+
+        public async Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> properties, ObjectId? memberId = null)
+        {
+            if (memberId == null)
+                memberId = _workContext.MemberId;
+
+            await _cache.Del($"MemberActiveAttempt:{memberId}");
+
+            return await AttemptWorker.SetProperties(attemptId, properties);
+        }
     }
 }

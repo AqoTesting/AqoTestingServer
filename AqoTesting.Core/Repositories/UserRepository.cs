@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AqoTesting.Domain.Workers;
 using AqoTesting.Shared.DTOs.DB.Users;
 using AqoTesting.Shared.Interfaces;
@@ -14,7 +15,7 @@ namespace AqoTesting.Core.Repositories
             _cache = cache;
         }
         public async Task<UsersDB_User_DTO> GetUserById(ObjectId userId) =>
-            await _cache.Get<UsersDB_User_DTO>($"User:{userId}", async () => await UserWorker.GetUserById(userId));
+            await _cache.Get($"User:{userId}", async () => await UserWorker.GetUserById(userId));
 
         public async Task<UsersDB_User_DTO> GetUserByAuthData(string login, byte[] passwordHash) =>
             await UserWorker.GetUserByAuthData(login, passwordHash);
@@ -27,5 +28,19 @@ namespace AqoTesting.Core.Repositories
 
         public async Task<ObjectId> InsertUser(UsersDB_User_DTO user) =>
             await UserWorker.InsertUser(user);
+
+        public async Task<bool> SetProperty(ObjectId userId, string propertyName, object newPropertyValue)
+        {
+            await _cache.Del($"User:{userId}");
+
+            return await UserWorker.SetProperty(userId, propertyName, newPropertyValue);
+        }
+
+        public async Task<bool> SetProperties(ObjectId userId, Dictionary<string, object> properties)
+        {
+            await _cache.Del($"User:{userId}");
+
+            return await UserWorker.SetProperties(userId, properties);
+        }
     }
 }

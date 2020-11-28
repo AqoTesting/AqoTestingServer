@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API.Common;
+using AqoTesting.Shared.DTOs.API.Common.Identifiers;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
 using AqoTesting.Shared.Enums;

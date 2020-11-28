@@ -1,9 +1,7 @@
 ﻿using AqoTesting.Domain.Controllers;
 using AqoTesting.Shared.DTOs.DB.Attempts;
-using AqoTesting.Shared.DTOs.DB.Tests;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +22,7 @@ namespace AqoTesting.Domain.Workers
 
         public static async Task<AttemptsDB_Attempt_DTO> GetActiveAttemptByMemberId(ObjectId memberId)
         {
-            var isCompletedFilter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("IsCompleted", false);
+            var isCompletedFilter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("IsActive", true);
             var memberIdFilter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("MemberId", memberId);
             var filter = isCompletedFilter & memberIdFilter;
             var attempt = await MongoController.AttemptCollection.Find(filter).SingleOrDefaultAsync();
@@ -97,100 +95,12 @@ namespace AqoTesting.Domain.Workers
         }
         #endregion
 
-        #region Props
-        public static async Task<bool> SetAttemptTestId(ObjectId attemptId, ObjectId newTestId)
+        #region Properties
+        public static async Task<bool> SetProperty(ObjectId attemptId, string propertyName, object newPropertyValue)
         {
             var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
-            var update = Builders<AttemptsDB_Attempt_DTO>.Update.Set("TestId", newTestId);
-            return (await MongoController.AttemptCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
-        }
+            var update = Builders<AttemptsDB_Attempt_DTO>.Update.Set(propertyName, newPropertyValue);
 
-        public static async Task<bool> SetTestId(AttemptsDB_Attempt_DTO attempt, ObjectId newTestId)
-        {
-            var updated = await SetAttemptTestId(attempt.Id, newTestId);
-            if (updated == true)
-                attempt.TestId = newTestId;
-            return updated;
-        }
-
-        public static async Task<bool> SetAttemptSeed(ObjectId attemptId, int newSeed)
-        {
-            var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
-            var update = Builders<AttemptsDB_Attempt_DTO>.Update.Set("Seed", newSeed);
-            return (await MongoController.AttemptCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
-        }
-
-        public static async Task<bool> SetAttemptSections(ObjectId attemptId, TestsDB_Section_DTO[] newSections)
-        {
-            var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
-            var update = Builders<AttemptsDB_Attempt_DTO>.Update.Set("Sections", newSections);
-            return (await MongoController.AttemptCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
-        }
-
-        public static async Task<bool> SetAttemptStartDate(ObjectId attemptId, DateTime newStartDate)
-        {
-            var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
-            var update = Builders<AttemptsDB_Attempt_DTO>.Update.Set("StartDate", newStartDate);
-            return (await MongoController.AttemptCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
-        }
-
-        public static async Task<bool> SetStartDate(AttemptsDB_Attempt_DTO attempt, DateTime newStartDate)
-        {
-            var updated = await SetAttemptStartDate(attempt.Id, newStartDate);
-            if (updated == true)
-                attempt.StartDate = newStartDate;
-            return updated;
-        }
-
-        public static async Task<bool> SetAttemptEndDate(ObjectId attemptId, DateTime newEndDate)
-        {
-            var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
-            var update = Builders<AttemptsDB_Attempt_DTO>.Update.Set("EndDate", newEndDate);
-            return (await MongoController.AttemptCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
-        }
-
-        public static async Task<bool> SetEndDate(AttemptsDB_Attempt_DTO attempt, DateTime newEndDate)
-        {
-            var updated = await SetAttemptEndDate(attempt.Id, newEndDate);
-            if (updated == true)
-                attempt.EndDate = newEndDate;
-            return updated;
-        }
-
-        public static async Task<bool> SetAttemptIsCompleted(ObjectId attemptId, bool newIsCompleted)
-        {
-            var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
-            var update = Builders<AttemptsDB_Attempt_DTO>.Update.Set("IsCompleted", newIsCompleted);
-            return (await MongoController.AttemptCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
-        }
-
-        public static async Task<bool> SetSections(AttemptsDB_Attempt_DTO attempt, bool newIsCompleted)
-        {
-            var updated = await SetAttemptIsCompleted(attempt.Id, newIsCompleted);
-            if (updated == true)
-                attempt.IsCompleted = newIsCompleted;
-            return updated;
-        }
-
-        public static async Task<bool> SetAttemptScore(ObjectId attemptId, int newScore)
-        {
-            var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
-            var update = Builders<AttemptsDB_Attempt_DTO>.Update.Set("Cost", newScore);
-            return (await MongoController.AttemptCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
-        }
-
-        public static async Task<bool> SetSections(AttemptsDB_Attempt_DTO attempt, int newScore)
-        {
-            var updated = await SetAttemptScore(attempt.Id, newScore);
-            if (updated == true)
-                attempt.Score = newScore;
-            return updated;
-        }
-
-        public static async Task<bool> SetProperty(ObjectId attemptId, string propName, object propValue)
-        {
-            var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
-            var update = Builders<AttemptsDB_Attempt_DTO>.Update.Set(propName, propValue);
             return (await MongoController.AttemptCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
 
@@ -199,10 +109,9 @@ namespace AqoTesting.Domain.Workers
             var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
             var updates = new List<UpdateDefinition<AttemptsDB_Attempt_DTO>>();
             var update = Builders<AttemptsDB_Attempt_DTO>.Update;
-            foreach (KeyValuePair<string, object> kvp in properties)
-            {
-                updates.Add(update.Set(kvp.Key, kvp.Value));
-            }
+            foreach (KeyValuePair<string, object> property in properties)
+                updates.Add(update.Set(property.Key, property.Value));
+
             return (await MongoController.AttemptCollection.UpdateOneAsync(filter, update.Combine(updates.ToArray()))).MatchedCount == 1;
         }
 

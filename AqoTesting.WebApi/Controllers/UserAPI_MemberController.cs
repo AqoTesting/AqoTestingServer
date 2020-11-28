@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API.Common;
+using AqoTesting.Shared.DTOs.API.Common.Identifiers;
 using AqoTesting.Shared.DTOs.API.UserAPI.Members;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
@@ -39,16 +39,15 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(errorCode, response);
         }
 
-        // Это надо переделать, всё завтра, хочу спать
-        //[Auth(Role = Role.User)]
-        //[OnlyRoomOwner]
-        //[HttpDelete("/user/room/{RoomId}/member/{MemberId}")]
-        //public async Task<IActionResult> KickMember([FromRoute] RoomId_DTO roomIdDTO, [FromRoute] MemberId_DTO memberTokenDTO)
-        //{
-        //    await _roomService.UserAPI_RemoveMemberFromRoomById(roomIdDTO, memberTokenDTO);
+        [Auth(Role = Role.User)]
+        [UserAPI_MemberAccess]
+        [HttpDelete("/user/member/{MemberId}")]
+        public async Task<IActionResult> KickMember([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
+        {
+            await _memberService.UserAPI_Delete(memberIdDTO);
 
-        //    return this.ResultResponse<object>(OperationErrorMessages.NoError);
-        //}
+            return this.ResultResponse<object>(OperationErrorMessages.NoError);
+        }
 
         [Auth(Role = Role.User)]
         [UserAPI_MemberAccess]

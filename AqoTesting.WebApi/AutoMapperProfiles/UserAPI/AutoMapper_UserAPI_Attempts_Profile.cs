@@ -1,5 +1,4 @@
-﻿using AqoTesting.Shared.DTOs.API.MemberAPI.Attempts;
-using AqoTesting.Shared.DTOs.API.UserAPI.Attempts;
+﻿using AqoTesting.Shared.DTOs.API.UserAPI.Attempts;
 using AqoTesting.Shared.DTOs.API.UserAPI.Attempts.Options;
 using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts.Options;
@@ -29,23 +28,23 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
             CreateMap<AttemptsDB_MatchingOptions_Container, UserAPI_AttemptOptions_DTO>()
                 .ConstructUsing(x =>
                 {
-                    var optionsLength = x.LeftCorrectOptions.Length;
+                    var optionsLength = x.LeftCorrectSequence.Length;
                     var correctOptions = new UserAPI_AttemptCommonOption_DTO[optionsLength];
                     var answerOptions = new UserAPI_AttemptCommonOption_DTO[optionsLength];
                     for(var i = 0; i < optionsLength; i++)
                     {
                         correctOptions[i] = new UserAPI_AttemptCommonOption_DTO {
-                            LeftText = x.LeftCorrectOptions[i].Text,
-                            LeftImageUrl = x.LeftCorrectOptions[i].ImageUrl,
-                            RightText = x.RightCorrectOptions[i].Text,
-                            RightImageUrl = x.RightCorrectOptions[i].ImageUrl
+                            LeftText = x.LeftCorrectSequence[i].Text,
+                            LeftImageUrl = x.LeftCorrectSequence[i].ImageUrl,
+                            RightText = x.RightCorrectSequence[i].Text,
+                            RightImageUrl = x.RightCorrectSequence[i].ImageUrl
                         };
 
                         answerOptions[i] = new UserAPI_AttemptCommonOption_DTO {
-                            LeftText = x.LeftAnswerOptions[i].Text,
-                            LeftImageUrl = x.LeftAnswerOptions[i].ImageUrl,
-                            RightText = x.RightAnswerOptions[i].Text,
-                            RightImageUrl = x.RightAnswerOptions[i].ImageUrl
+                            LeftText = x.LeftAnswerSequence[i].Text,
+                            LeftImageUrl = x.LeftAnswerSequence[i].ImageUrl,
+                            RightText = x.RightAnswerSequence[i].Text,
+                            RightImageUrl = x.RightAnswerSequence[i].ImageUrl
                         };
                     }
 
@@ -58,8 +57,8 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
             CreateMap<AttemptsDB_SequenceOptions_Container, UserAPI_AttemptOptions_DTO>()
                 .ConstructUsing(x =>
                     new UserAPI_AttemptOptions_DTO {
-                        CorrectOptions = Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>(x.AnswerOptions),
-                        AnswerOptions = Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>(x.AnswerOptions) });
+                        CorrectOptions = Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>(x.AnswerSequence),
+                        AnswerOptions = Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>(x.AnswerSequence) });
 
             CreateMap<AttemptsDB_Question_DTO, UserAPI_GetAttemptQuestion_DTO>()
                 .ForMember(x => x.Options,

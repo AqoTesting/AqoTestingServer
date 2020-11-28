@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AqoTesting.Core.Utils;
-using AqoTesting.Shared.DTOs.API.Common;
+using AqoTesting.Shared.DTOs.API.Common.Identifiers;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Tests;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
@@ -108,7 +108,7 @@ namespace AqoTesting.Core.Services
             if (dbSections.Count > 0 && dbSections.Count < test.AttemptSectionsNumber)
                 return (OperationErrorMessages.NotEnoughSections, null);
 
-            await _testRepository.SetSections(testId, dbSections);
+            await _testRepository.SetProperty(testId, "Sections", dbSections);
 
             return (OperationErrorMessages.NoError, null);
         }

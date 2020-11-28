@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AqoTesting.Domain.Workers;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Interfaces;
@@ -29,15 +30,29 @@ namespace AqoTesting.Core.Repositories
                 _roomByDomain;
 
         public async Task<RoomsDB_Room_DTO[]> GetRoomsByUserId(ObjectId userId) =>
-            await UserWorker.GetUserRooms(userId);
+            await RoomWorker.GetRoomsByUserId(userId);
 
         public async Task<ObjectId> InsertRoom(RoomsDB_Room_DTO newRoom) =>
             await RoomWorker.InsertRoom(newRoom);
 
         public async Task ReplaceRoom(RoomsDB_Room_DTO update)
         {
-            await RoomWorker.ReplaceRoom(update);
             await _cache.Del($"Room:{update.Id}");
+            await RoomWorker.ReplaceRoom(update);
+        }
+
+        public async Task<bool> SetProperty(ObjectId roomId, string propertyName, object newPropertyValue)
+        {
+            await _cache.Del($"Room:{roomId}");
+
+            return await RoomWorker.SetProperty(roomId, propertyName, newPropertyValue);
+        }
+
+        public async Task<bool> SetProperties(ObjectId roomId, Dictionary<string, object> properties)
+        {
+            await _cache.Del($"Room:{roomId}");
+
+            return await RoomWorker.SetProperties(roomId, properties);
         }
 
         public async Task<bool> DeleteRoomById(ObjectId roomId)

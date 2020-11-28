@@ -1,5 +1,5 @@
 ﻿using AqoTesting.Core.Utils;
-using AqoTesting.Shared.DTOs.API.Common;
+using AqoTesting.Shared.DTOs.API.Common.Identifiers;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Account;
 using AqoTesting.Shared.DTOs.API.UserAPI.Members;
 using AqoTesting.Shared.DTOs.DB.Members;
@@ -86,7 +86,7 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_Unregister(ObjectId memberId)
         {
-            var unregistered = await _memberRepository.SetIsRegistered(memberId, false);
+            var unregistered = await _memberRepository.SetProperty(memberId, "IsRegistered", false);
             if (!unregistered)
                 return (OperationErrorMessages.MemberIsNotRegistered, null);
 
@@ -99,7 +99,7 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_Approve(ObjectId memberId)
         {
-            var changed = await _memberRepository.SetIsApproved(memberId, true);
+            var changed = await _memberRepository.SetProperty(memberId, "IsApproved", true);
             if (!changed)
                 return (OperationErrorMessages.MemberIsApproved, null);
 
@@ -108,15 +108,17 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_Approve(CommonAPI_MemberId_DTO memberIdDTO) =>
             await this.UserAPI_Approve(ObjectId.Parse(memberIdDTO.MemberId));
 
-        public async Task<OperationErrorMessages> UserAPI_Delete(ObjectId roomId, ObjectId memberId)
+        public async Task<OperationErrorMessages> UserAPI_Delete(ObjectId memberId)
         {
-            var deleted = await _memberRepository.Delete(roomId, memberId);
+            var deleted = await _memberRepository.Delete(memberId);
 
             if (!deleted)
                 return OperationErrorMessages.MemberNotFound;
 
             return OperationErrorMessages.NoError;
         }
+        public async Task<OperationErrorMessages> UserAPI_Delete(CommonAPI_MemberId_DTO memberIdDTO) =>
+            await this.UserAPI_Delete(ObjectId.Parse(memberIdDTO.MemberId));
         #endregion
 
         #region Member API

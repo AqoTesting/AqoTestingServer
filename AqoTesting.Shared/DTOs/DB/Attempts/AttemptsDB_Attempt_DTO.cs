@@ -19,9 +19,11 @@ namespace AqoTesting.Shared.DTOs.DB.Attempts
         [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId TestId { get; set; }
         public Dictionary<string, AttemptsDB_Section_DTO> Sections { get; set; }
+        public string CurrentSectionId { get; set; }
+        public string CurrentQuestionId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public bool IsCompleted { get; set; }
+        public bool IsActive { get; set; }
         public bool Ignore { get; set; }
         public int Score { get; set; }
     }

@@ -1,10 +1,13 @@
-﻿using AqoTesting.Shared.DTOs.API.Common;
+﻿using AqoTesting.Core.Utils;
+using AqoTesting.Shared.DTOs.API.Common.Identifiers;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Attempts;
 using AqoTesting.Shared.DTOs.API.UserAPI.Attempts;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AutoMapper;
 using MongoDB.Bson;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AqoTesting.Core.Services
@@ -65,6 +68,55 @@ namespace AqoTesting.Core.Services
             var getAttemptDTO = Mapper.Map<MemberAPI_GetAttempt_DTO>(attempt);
 
             return (OperationErrorMessages.NoError, getAttemptDTO);
+        }
+
+        public async Task<(OperationErrorMessages, object)> MemberAPI_Answer(CommonAPI_TestSectionId_DTO sectionIdDTO, CommonAPI_TestQuestionId_DTO questionIdDTO, MemberAPI_CommonTestAnswer_DTO commonAnswerDTO)
+        {
+            var memberId = _workContext.MemberId;
+
+            var sectionId = sectionIdDTO.SectionId;
+            var questionId = questionIdDTO.QuestionId;
+
+            var attempt = await _attemptRepository.GetActiveAttemptByMemberId(memberId);
+
+            if (attempt.StartDate != attempt.EndDate && DateTime.Now > attempt.EndDate)
+            {
+                (_, var getAttemptDTO) = await this.MemberAPI_FinishCurrentAttempt();
+                return (OperationErrorMessages.TimeIsUp, getAttemptDTO);
+            }
+
+            var (valid, errorCode, response) = AttemptUtils.ApplyAnswer(attempt.Sections, sectionId, questionId, commonAnswerDTO);
+            if (!valid)
+                return (errorCode, response);
+
+            await _attemptRepository.SetProperties(attempt.Id, new Dictionary<string, object> {
+                ["Sections"] = response,
+                ["CurrentSectionId"] = sectionId,
+                ["CurrentQuestionId"] = questionId
+            });
+
+            return (OperationErrorMessages.NoError, null);
+        }
+
+        public async Task<(OperationErrorMessages, object)> MemberAPI_FinishCurrentAttempt()
+        {
+            var memberId = _workContext.MemberId;
+            var attempt = await _attemptRepository.GetActiveAttemptByMemberId(memberId);
+
+            attempt.IsActive = false;
+            var propertiesToUpdate = new Dictionary<string, object> {
+                ["IsActive"] = false };
+
+            var timeNow = DateTime.Now;
+            if (timeNow <= attempt.EndDate)
+            {
+                attempt.EndDate = timeNow;
+                propertiesToUpdate.Add("EndDate", timeNow);
+            }
+
+            await _attemptRepository.SetProperties(attempt.Id, propertiesToUpdate);
+
+            return (OperationErrorMessages.NoError, Mapper.Map<MemberAPI_GetAttempt_DTO>(attempt));
         }
         #endregion
     }

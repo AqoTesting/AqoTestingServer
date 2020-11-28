@@ -2,6 +2,7 @@
 using AqoTesting.Shared.DTOs.DB.Members;
 using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AqoTesting.Core.Repositories
@@ -29,7 +30,7 @@ namespace AqoTesting.Core.Repositories
             await Task.Run(() => MemberWorker.GetMembersByIds(memberIds));
 
         public async Task<MembersDB_Member_DTO[]> GetMembersByRoomId(ObjectId roomId) =>
-            await Task.Run(() => MemberWorker.GetMembersFromRoom(roomId));
+            await Task.Run(() => MemberWorker.GetMembersByRoomId(roomId));
 
         public async Task<MembersDB_Member_DTO> GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash) =>
             await Task.Run(() => MemberWorker.GetMemberByFieldsHash(roomId, fieldsHash));
@@ -39,29 +40,28 @@ namespace AqoTesting.Core.Repositories
 
         public async Task ReplaceMember(MembersDB_Member_DTO member)
         {
-            await Task.Run(() => MemberWorker.ReplaceMember(member));
             await _cache.Del($"Member:{member.Id}");
+
+            await Task.Run(() => MemberWorker.ReplaceMember(member));
         }
 
-        public async Task<bool> SetIsRegistered(ObjectId memberId, bool newValue)
+        public async Task<bool> SetProperty(ObjectId memberId, string propertyName, object newPropertyValue)
         {
-            var response = await Task.Run(() => MemberWorker.SetIsRegistered(memberId, newValue));
             await _cache.Del($"Member:{memberId}");
 
-            return response;
+            return await MemberWorker.SetProperty(memberId, propertyName, newPropertyValue);
         }
 
-        public async Task<bool> SetIsApproved(ObjectId memberId, bool newValue)
+        public async Task<bool> SetProperties(ObjectId memberId, Dictionary<string, object> properties)
         {
-            var response = await Task.Run(() => MemberWorker.SetIsApproved(memberId, newValue));
             await _cache.Del($"Member:{memberId}");
 
-            return response;
+            return await MemberWorker.SetProperties(memberId, properties);
         }
 
-        public async Task<bool> Delete(ObjectId roomId, ObjectId memberId)
+        public async Task<bool> Delete(ObjectId memberId)
         {
-            var response = await Task.Run(() => RoomWorker.RemoveMemberFromRoomById(roomId, memberId));
+            var response = await Task.Run(() => MemberWorker.DeleteMember(memberId));
             await _cache.Del($"Member:{memberId}");
 
             return response;

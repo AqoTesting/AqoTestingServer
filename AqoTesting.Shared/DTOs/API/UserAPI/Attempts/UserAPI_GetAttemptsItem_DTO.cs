@@ -1,5 +1,4 @@
-﻿using AqoTesting.Shared.DTOs.DB.Tests;
-using System;
+﻿using System;
 
 namespace AqoTesting.Shared.DTOs.API.UserAPI.Attempts
 {

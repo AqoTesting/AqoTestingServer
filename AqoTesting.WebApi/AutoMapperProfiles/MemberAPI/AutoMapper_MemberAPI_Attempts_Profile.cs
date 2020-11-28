@@ -18,16 +18,16 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
             CreateMap<AttemptsDB_ChoiceOption, MemberAPI_AttemptCommonOption_DTO>();
             CreateMap<AttemptsDB_MatchingOptions_Container, MemberAPI_AttemptCommonOption_DTO[]>()
                 .ConstructUsing(x => {
-                    var optionsLength = x.LeftCorrectOptions.Length;
+                    var optionsLength = x.LeftCorrectSequence.Length;
 
                     var commonOptionDTOs = new MemberAPI_AttemptCommonOption_DTO[optionsLength];
                     for (var i = 0; i < optionsLength; i++)
                         commonOptionDTOs[i] = new MemberAPI_AttemptCommonOption_DTO
                         {
-                            LeftText = x.LeftAnswerOptions[i].Text,
-                            LeftImageUrl = x.LeftAnswerOptions[i].ImageUrl,
-                            RightText = x.RightAnswerOptions[i].Text,
-                            RightImageUrl = x.RightAnswerOptions[i].ImageUrl
+                            LeftText = x.LeftAnswerSequence[i].Text,
+                            LeftImageUrl = x.LeftAnswerSequence[i].ImageUrl,
+                            RightText = x.RightAnswerSequence[i].Text,
+                            RightImageUrl = x.RightAnswerSequence[i].ImageUrl
                         };
 
                     return commonOptionDTOs;
@@ -47,7 +47,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
 
                         m.Type == QuestionTypes.Sequence ?
                             Mapper.Map<MemberAPI_AttemptCommonOption_DTO[]>(
-                                BsonSerializer.Deserialize<AttemptsDB_SequenceOptions_Container>(m.Options, null).AnswerOptions) :
+                                BsonSerializer.Deserialize<AttemptsDB_SequenceOptions_Container>(m.Options, null).AnswerSequence) :
 
                         new MemberAPI_AttemptCommonOption_DTO[0]));
             CreateMap<KeyValuePair<string, AttemptsDB_Question_DTO>, KeyValuePair<string, MemberAPI_GetAttemptQuestion_DTO>>()

@@ -1,6 +1,5 @@
 ﻿using AqoTesting.Shared.Enums;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests

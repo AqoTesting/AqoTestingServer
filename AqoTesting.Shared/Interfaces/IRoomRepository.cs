@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using MongoDB.Bson;
 
@@ -15,6 +16,9 @@ namespace AqoTesting.Shared.Interfaces
         Task<ObjectId> InsertRoom(RoomsDB_Room_DTO newRoom);
 
         Task ReplaceRoom(RoomsDB_Room_DTO update);
+
+        Task<bool> SetProperty(ObjectId roomId, string propertyName, object newPropertyValue);
+        Task<bool> SetProperties(ObjectId roomId, Dictionary<string, object> properties);
 
         Task<bool> DeleteRoomById(ObjectId roomId);
     }
