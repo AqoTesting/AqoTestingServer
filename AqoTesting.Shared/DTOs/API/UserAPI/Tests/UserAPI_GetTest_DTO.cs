@@ -12,7 +12,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         public string? RoomId { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public UserAPI_Document_DTO[]? Documents { get; set; }
+        public UserAPI_TestDocument_DTO[]? Documents { get; set; }
         public Dictionary<string, UserAPI_GetTestSection_DTO>? Sections { get; set; }
         public int AttemptSectionsNumber { get; set; } = 0;
         public int AttemptsNumber { get; set; }
