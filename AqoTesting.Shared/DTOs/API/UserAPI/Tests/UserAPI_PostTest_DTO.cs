@@ -23,7 +23,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         [Range(1, int.MaxValue)]
         public int AttemptsNumber { get; set; } = 1;
 
-        [Range(1, int.MaxValue)]
+        [Range(0, int.MaxValue)]
         public int TimeLimit { get; set; }
 
         public FinalResultCalculationMethod FinalResultCalculationMethod { get; set; } = FinalResultCalculationMethod.Best;
