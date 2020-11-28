@@ -292,7 +292,7 @@ namespace AqoTesting.Domain.Workers
             var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
             var updates = new List<UpdateDefinition<RoomsDB_Room_DTO>>();
             var update = Builders<RoomsDB_Room_DTO>.Update;
-            foreach (KeyValuePair<string, object> kvp in propertys)
+            foreach (KeyValuePair<string, object> kvp in properties)
             {
                 updates.Add(update.Set(kvp.Key, kvp.Value));
             }

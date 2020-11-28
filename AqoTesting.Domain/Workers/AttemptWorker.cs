@@ -199,7 +199,7 @@ namespace AqoTesting.Domain.Workers
             var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
             var updates = new List<UpdateDefinition<AttemptsDB_Attempt_DTO>>();
             var update = Builders<AttemptsDB_Attempt_DTO>.Update;
-            foreach (KeyValuePair<string, object> kvp in propertys)
+            foreach (KeyValuePair<string, object> kvp in properties)
             {
                 updates.Add(update.Set(kvp.Key, kvp.Value));
             }

@@ -306,7 +306,7 @@ namespace AqoTesting.Domain.Workers
             var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", memberId);
             var updates = new List<UpdateDefinition<MembersDB_Member_DTO>>();
             var update = Builders<MembersDB_Member_DTO>.Update;
-            foreach (KeyValuePair<string, object> kvp in propertys)
+            foreach (KeyValuePair<string, object> kvp in properties)
             {
                 updates.Add(update.Set(kvp.Key, kvp.Value));
             }

@@ -191,7 +191,7 @@ namespace AqoTesting.Domain.Workers
             var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Id", userId);
             var updates = new List<UpdateDefinition<UsersDB_User_DTO>>();
             var update = Builders<UsersDB_User_DTO>.Update;
-            foreach (KeyValuePair<string, object> kvp in propertys)
+            foreach (KeyValuePair<string, object> kvp in properties)
             {
                 updates.Add(update.Set(kvp.Key, kvp.Value));
             }

@@ -162,7 +162,7 @@ namespace AqoTesting.Domain.Workers
             var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
             var updates = new List<UpdateDefinition<TestsDB_Test_DTO>>();
             var update = Builders<TestsDB_Test_DTO>.Update;
-            foreach (KeyValuePair<string, object> kvp in propertys)
+            foreach (KeyValuePair<string, object> kvp in properties)
             {
                 updates.Add(update.Set(kvp.Key, kvp.Value));
             }
