@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
+namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
 {
-    public class UserAPI_Document_DTO
+    public class UserAPI_TestDocument_DTO
     {
         [Required]
         [StringLength(128, MinimumLength = 1)]

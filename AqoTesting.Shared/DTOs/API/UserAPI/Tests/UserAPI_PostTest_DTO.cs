@@ -1,5 +1,4 @@
-﻿using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
-using AqoTesting.Shared.Enums;
+﻿using AqoTesting.Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,7 +15,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         public string? Description { get; set; }
 
         [MaxLength(16)]
-        public UserAPI_Document_DTO[]? Documents { get; set; } = new UserAPI_Document_DTO[0];
+        public UserAPI_TestDocument_DTO[]? Documents { get; set; } = new UserAPI_TestDocument_DTO[0];
 
         [Range(0, int.MaxValue)]
         public int AttemptSectionsNumber { get; set; } = 0;
