@@ -79,6 +79,7 @@ namespace AqoTesting.Core.Services
 
             var attempt = await _attemptRepository.GetActiveAttemptByMemberId(memberId);
 
+            // Тут чёто ошибка
             if (attempt.StartDate != attempt.EndDate && DateTime.Now > attempt.EndDate)
             {
                 (_, var getAttemptDTO) = await this.MemberAPI_FinishCurrentAttempt();
