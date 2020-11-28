@@ -280,16 +280,16 @@ namespace AqoTesting.Domain.Workers
             return false;
         }
 
-        public static async Task<bool> SetProperty(ObjectId attemptId, KeyValuePair<string, object> propertys)
+        public static async Task<bool> SetProperty(ObjectId roomId, string propName, object propValue)
         {
-            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", attemptId);
-            var update = Builders<RoomsDB_Room_DTO>.Update.Set(propertys.Key, propertys.Value);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var update = Builders<RoomsDB_Room_DTO>.Update.Set(propName, propValue);
             return (await MongoController.RoomCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
 
-        public static async Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> propertys)
+        public static async Task<bool> SetProperties(ObjectId roomId, Dictionary<string, object> properties)
         {
-            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", attemptId);
+            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
             var updates = new List<UpdateDefinition<RoomsDB_Room_DTO>>();
             var update = Builders<RoomsDB_Room_DTO>.Update;
             foreach (KeyValuePair<string, object> kvp in propertys)

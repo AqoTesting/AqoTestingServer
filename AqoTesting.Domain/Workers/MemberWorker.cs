@@ -294,16 +294,16 @@ namespace AqoTesting.Domain.Workers
             return dbUpdateSuccessful;
         }
 
-        public static async Task<bool> SetProperty(ObjectId attemptId, KeyValuePair<string, object> propertys)
+        public static async Task<bool> SetProperty(ObjectId memberId, string propName, object propValue)
         {
-            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", attemptId);
-            var update = Builders<MembersDB_Member_DTO>.Update.Set(propertys.Key, propertys.Value);
+            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", memberId);
+            var update = Builders<MembersDB_Member_DTO>.Update.Set(propName, propValue);
             return (await MongoController.MemberCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
 
-        public static async Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> propertys)
+        public static async Task<bool> SetProperties(ObjectId memberId, Dictionary<string, object> properties)
         {
-            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", attemptId);
+            var filter = Builders<MembersDB_Member_DTO>.Filter.Eq("Id", memberId);
             var updates = new List<UpdateDefinition<MembersDB_Member_DTO>>();
             var update = Builders<MembersDB_Member_DTO>.Update;
             foreach (KeyValuePair<string, object> kvp in propertys)

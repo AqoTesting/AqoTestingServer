@@ -150,16 +150,16 @@ namespace AqoTesting.Domain.Workers
             return await SetTestShuffle(test.Id, newValue);
         }
 
-        public static async Task<bool> SetProperty(ObjectId attemptId, KeyValuePair<string, object> propertys)
+        public static async Task<bool> SetProperty(ObjectId testId, string propName, object propValue)
         {
-            var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", attemptId);
-            var update = Builders<TestsDB_Test_DTO>.Update.Set(propertys.Key, propertys.Value);
+            var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
+            var update = Builders<TestsDB_Test_DTO>.Update.Set(propName, propValue);
             return (await MongoController.TestCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
 
-        public static async Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> propertys)
+        public static async Task<bool> SetProperties(ObjectId testId, Dictionary<string, object> properties)
         {
-            var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", attemptId);
+            var filter = Builders<TestsDB_Test_DTO>.Filter.Eq("Id", testId);
             var updates = new List<UpdateDefinition<TestsDB_Test_DTO>>();
             var update = Builders<TestsDB_Test_DTO>.Update;
             foreach (KeyValuePair<string, object> kvp in propertys)

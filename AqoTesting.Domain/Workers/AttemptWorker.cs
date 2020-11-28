@@ -187,14 +187,14 @@ namespace AqoTesting.Domain.Workers
             return updated;
         }
 
-        public static async Task<bool> SetProperty(ObjectId attemptId, KeyValuePair<string, object> propertys)
+        public static async Task<bool> SetProperty(ObjectId attemptId, string propName, object propValue)
         {
             var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
-            var update = Builders<AttemptsDB_Attempt_DTO>.Update.Set(propertys.Key, propertys.Value);
+            var update = Builders<AttemptsDB_Attempt_DTO>.Update.Set(propName, propValue);
             return (await MongoController.AttemptCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
 
-        public static async Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> propertys)
+        public static async Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> properties)
         {
             var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
             var updates = new List<UpdateDefinition<AttemptsDB_Attempt_DTO>>();

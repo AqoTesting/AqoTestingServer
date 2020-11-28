@@ -179,16 +179,16 @@ namespace AqoTesting.Domain.Workers
             return await SetUserName(user.Id, newName);
         }
 
-        public static async Task<bool> SetProperty(ObjectId attemptId, KeyValuePair<string, object> propertys)
+        public static async Task<bool> SetProperty(ObjectId userId, string propName, object propValue)
         {
-            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Id", attemptId);
-            var update = Builders<UsersDB_User_DTO>.Update.Set(propertys.Key, propertys.Value);
+            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Id", userId);
+            var update = Builders<UsersDB_User_DTO>.Update.Set(propName, propValue);
             return (await MongoController.UserCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
 
-        public static async Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> propertys)
+        public static async Task<bool> SetProperties(ObjectId userId, Dictionary<string, object> properties)
         {
-            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Id", attemptId);
+            var filter = Builders<UsersDB_User_DTO>.Filter.Eq("Id", userId);
             var updates = new List<UpdateDefinition<UsersDB_User_DTO>>();
             var update = Builders<UsersDB_User_DTO>.Update;
             foreach (KeyValuePair<string, object> kvp in propertys)
