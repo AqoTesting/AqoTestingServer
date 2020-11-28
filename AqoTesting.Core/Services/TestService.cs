@@ -173,6 +173,7 @@ namespace AqoTesting.Core.Services
 
             var newAttempt = Mapper.Map<AttemptsDB_Attempt_DTO>(test);
             newAttempt.StartDate = DateTime.Now;
+            newAttempt.EndDate = newAttempt.StartDate.Value.AddMinutes(test.TimeLimit);
             newAttempt.MemberId = memberId;
 
             var newAttemptId = await _attemptRepository.InsertAttempt(newAttempt);

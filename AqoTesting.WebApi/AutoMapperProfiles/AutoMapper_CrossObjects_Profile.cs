@@ -15,6 +15,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
     {
         public AutoMapper_CrossObjects_Profile()
         {
+            #region TestsDB_Test_DTO -> AttemptsDB_Attempt_DTO
             CreateMap<TestsDB_ChoiceOption, AttemptsDB_ChoiceOption>();
             CreateMap<TestsDB_PositionalOption, AttemptsDB_PositionalOption>();
             CreateMap<TestsDB_MatchingOptionsData, AttemptsDB_MatchingOptions>()
@@ -80,6 +81,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
                     x => x.MapFrom(m =>
                         Mapper.Map<Dictionary<string, AttemptsDB_Section_DTO>>(
                             AttemptConstructor.SelectSections(m))));
+            #endregion
         }
     }
 }

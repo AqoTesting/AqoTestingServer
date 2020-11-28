@@ -13,9 +13,19 @@ namespace AqoTesting.Domain.Workers
     public static class AttemptWorker
     {
         #region IO
-        public static async Task<AttemptsDB_Attempt_DTO?> GetAttemptById(ObjectId attemptId)
+        public static async Task<AttemptsDB_Attempt_DTO> GetAttemptById(ObjectId attemptId)
         {
             var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("Id", attemptId);
+            var attempt = await MongoController.AttemptCollection.Find(filter).SingleOrDefaultAsync();
+
+            return attempt;
+        }
+
+        public static async Task<AttemptsDB_Attempt_DTO> GetActiveAttemptByMemberId(ObjectId memberId)
+        {
+            var isCompletedFilter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("IsCompleted", false);
+            var memberIdFilter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("MemberId", memberId);
+            var filter = isCompletedFilter & memberIdFilter;
             var attempt = await MongoController.AttemptCollection.Find(filter).SingleOrDefaultAsync();
 
             return attempt;

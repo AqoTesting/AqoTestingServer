@@ -1,5 +1,7 @@
-﻿using AqoTesting.Shared.Enums;
+﻿using AqoTesting.Core.Utils;
+using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 
 namespace AqoTesting.Shared.DTOs.DB.Attempts
 {
@@ -8,10 +10,11 @@ namespace AqoTesting.Shared.DTOs.DB.Attempts
         public QuestionTypes Type { get; set; }
         public string? Text { get; set; }
         public string? ImageUrl { get; set; }
+        [JsonConverter(typeof(BsonDocumentConverter))]
         public BsonDocument Options { get; set; }
         public int Cost { get; set; }
         public int Weight { get; set; }
-        public int BlurTime { get; set; } = 0;
-        public int TotalTime { get; set; } = 0;
+        public int BlurTime { get; set; }
+        public int TotalTime { get; set; }
     }
 }

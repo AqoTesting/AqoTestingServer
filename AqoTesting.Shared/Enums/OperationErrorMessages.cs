@@ -83,6 +83,9 @@
         MemberIsNotRegistered = 509,
         // Просто для симметрии
         MemberIsRegistered = 510,
+
+        // У мембера нет активной попытки
+        NoActiveAttempt = 511,
         #endregion
 
         #region Attempts

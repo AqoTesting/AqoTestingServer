@@ -17,16 +17,14 @@ namespace AqoTesting.Core.Services
     {
         IMemberRepository _memberRepository;
         IRoomRepository _roomRepository;
-        IWorkContext _workContext;
         ITokenGeneratorService _tokenGeneratorService;
         ITokenRepository _tokenRepository;
         ICacheRepository _cacheRepository;
 
-        public MemberService(IRoomRepository roomRespository, IMemberRepository memberRepository, IWorkContext workContext, ITokenGeneratorService tokenGeneratorService, ITokenRepository tokenRepository, ICacheRepository cacheRepository)
+        public MemberService(IRoomRepository roomRespository, IMemberRepository memberRepository, ITokenGeneratorService tokenGeneratorService, ITokenRepository tokenRepository, ICacheRepository cacheRepository)
         {
             _memberRepository = memberRepository;
             _roomRepository = roomRespository;
-            _workContext = workContext;
             _tokenGeneratorService = tokenGeneratorService;
             _tokenRepository = tokenRepository;
             _cacheRepository = cacheRepository;

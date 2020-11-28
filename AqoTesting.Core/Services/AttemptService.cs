@@ -1,4 +1,5 @@
 ﻿using AqoTesting.Shared.DTOs.API.Common;
+using AqoTesting.Shared.DTOs.API.MemberAPI.Attempts;
 using AqoTesting.Shared.DTOs.API.UserAPI.Attempts;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
@@ -13,12 +14,13 @@ namespace AqoTesting.Core.Services
         IAttemptRepository _attemptRepository;
         IMemberRepository _memberRepository;
         ICacheRepository _cacheRepository;
+        IWorkContext _workContext;
 
-        public AttemptService(IAttemptRepository attemptRepository, IMemberRepository memberRepository, ICacheRepository cacheRepository)
+        public AttemptService(IAttemptRepository attemptRepository, IMemberRepository memberRepository, IWorkContext workContext)
         {
             _attemptRepository = attemptRepository;
             _memberRepository = memberRepository;
-            _cacheRepository = cacheRepository;
+            _workContext = workContext;
         }
 
         #region UserAPI
@@ -54,7 +56,16 @@ namespace AqoTesting.Core.Services
         #endregion
 
         #region MemberAPI
+        public async Task<(OperationErrorMessages, object)> MemberAPI_GetActiveAttempt()
+        {
+            var memberId = _workContext.MemberId;
+            var attempt = await _attemptRepository.GetActiveAttemptByMemberId(memberId);
+            if (attempt == null)
+                return (OperationErrorMessages.NoActiveAttempt, null);
+            var getAttemptDTO = Mapper.Map<MemberAPI_GetAttempt_DTO>(attempt);
 
+            return (OperationErrorMessages.NoError, getAttemptDTO);
+        }
         #endregion
     }
 }

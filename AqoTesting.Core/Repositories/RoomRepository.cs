@@ -19,7 +19,8 @@ namespace AqoTesting.Core.Repositories
 
         public async Task<RoomsDB_Room_DTO> GetRoomById(ObjectId roomId) =>
             _roomById == null ?
-                _roomById = await _cache.Get<RoomsDB_Room_DTO>($"Room:{roomId}", async () => await RoomWorker.GetRoomById(roomId)) :
+                _roomById = await _cache.Get($"Room:{roomId}",
+                    async () => await RoomWorker.GetRoomById(roomId)) :
                 _roomById;
 
         public async Task<RoomsDB_Room_DTO> GetRoomByDomain(string domain) =>

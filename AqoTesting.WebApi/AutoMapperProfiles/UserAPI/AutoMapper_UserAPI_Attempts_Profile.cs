@@ -1,4 +1,5 @@
-﻿using AqoTesting.Shared.DTOs.API.UserAPI.Attempts;
+﻿using AqoTesting.Shared.DTOs.API.MemberAPI.Attempts;
+using AqoTesting.Shared.DTOs.API.UserAPI.Attempts;
 using AqoTesting.Shared.DTOs.API.UserAPI.Attempts.Options;
 using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts.Options;
@@ -47,8 +48,8 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
 
                         m.Type == QuestionTypes.Sequence ?
                             new UserAPI_AttemptOptions_DTO {
-                                Correct = Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>((AttemptsDB_PositionalOption) optionsData.Correct),
-                                Answer = Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>((AttemptsDB_PositionalOption) optionsData.Answer) } :
+                                Correct = Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>((AttemptsDB_PositionalOption[]) optionsData.Correct),
+                                Answer = Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>((AttemptsDB_PositionalOption[]) optionsData.Answer) } :
 
                         new UserAPI_AttemptOptions_DTO();
                     }));
@@ -75,7 +76,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
             #endregion
 
             #region API -> DB
-
+            
             #endregion
         }
     }
