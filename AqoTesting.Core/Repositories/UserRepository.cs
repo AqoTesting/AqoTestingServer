@@ -9,13 +9,13 @@ namespace AqoTesting.Core.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        ICacheRepository _cache;
+        ICacheRepository _redisCache;
         public UserRepository(ICacheRepository cache)
         {
-            _cache = cache;
+            _redisCache = cache;
         }
         public async Task<UsersDB_User_DTO> GetUserById(ObjectId userId) =>
-            await _cache.Get($"User:{userId}", async () => await UserWorker.GetUserById(userId));
+            await _redisCache.Get($"User:{userId}", async () => await UserWorker.GetUserById(userId));
 
         public async Task<UsersDB_User_DTO> GetUserByAuthData(string login, byte[] passwordHash) =>
             await UserWorker.GetUserByAuthData(login, passwordHash);
@@ -31,14 +31,14 @@ namespace AqoTesting.Core.Repositories
 
         public async Task<bool> SetProperty(ObjectId userId, string propertyName, object newPropertyValue)
         {
-            await _cache.Del($"User:{userId}");
+            await _redisCache.Del($"User:{userId}");
 
             return await UserWorker.SetProperty(userId, propertyName, newPropertyValue);
         }
 
         public async Task<bool> SetProperties(ObjectId userId, Dictionary<string, object> properties)
         {
-            await _cache.Del($"User:{userId}");
+            await _redisCache.Del($"User:{userId}");
 
             return await UserWorker.SetProperties(userId, properties);
         }

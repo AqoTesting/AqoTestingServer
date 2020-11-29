@@ -9,14 +9,14 @@ namespace AqoTesting.Core.Repositories
 {
     public class MemberRepository : IMemberRepository
     {
-        ICacheRepository _cache;
+        ICacheRepository _redisCache;
         public MemberRepository(ICacheRepository cache)
         {
-            _cache = cache;
+            _redisCache = cache;
         }
 
         public async Task<MembersDB_Member_DTO> GetMemberById(ObjectId memberId) =>
-            await _cache.Get<MembersDB_Member_DTO>($"Member:{memberId}", async () => await MemberWorker.GetMemberById(memberId));
+            await _redisCache.Get<MembersDB_Member_DTO>($"Member:{memberId}", async () => await MemberWorker.GetMemberById(memberId));
 
         public async Task<MembersDB_Member_DTO> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash) =>
             await Task.Run(() => MemberWorker.GetMemberByAuthData(roomId, login, passwordHash));
@@ -40,21 +40,21 @@ namespace AqoTesting.Core.Repositories
 
         public async Task ReplaceMember(MembersDB_Member_DTO member)
         {
-            await _cache.Del($"Member:{member.Id}");
+            await _redisCache.Del($"Member:{member.Id}");
 
             await Task.Run(() => MemberWorker.ReplaceMember(member));
         }
 
         public async Task<bool> SetProperty(ObjectId memberId, string propertyName, object newPropertyValue)
         {
-            await _cache.Del($"Member:{memberId}");
+            await _redisCache.Del($"Member:{memberId}");
 
             return await MemberWorker.SetProperty(memberId, propertyName, newPropertyValue);
         }
 
         public async Task<bool> SetProperties(ObjectId memberId, Dictionary<string, object> properties)
         {
-            await _cache.Del($"Member:{memberId}");
+            await _redisCache.Del($"Member:{memberId}");
 
             return await MemberWorker.SetProperties(memberId, properties);
         }
@@ -62,7 +62,7 @@ namespace AqoTesting.Core.Repositories
         public async Task<bool> Delete(ObjectId memberId)
         {
             var response = await Task.Run(() => MemberWorker.DeleteMember(memberId));
-            await _cache.Del($"Member:{memberId}");
+            await _redisCache.Del($"Member:{memberId}");
 
             return response;
         }

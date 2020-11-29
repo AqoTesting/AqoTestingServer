@@ -9,14 +9,14 @@ namespace AqoTesting.Core.Repositories
 {
     public class TestRepository : ITestRepository
     {
-        ICacheRepository _cache;
+        ICacheRepository _redisCache;
         public TestRepository(ICacheRepository cache)
         {
-            _cache = cache;
+            _redisCache = cache;
         }
 
         public async Task<TestsDB_Test_DTO> GetTestById(ObjectId testId) =>
-            //await _cache.Get($"Test:{testId}", async () => await TestWorker.GetTestById(testId));
+            //await _redisCache.Get($"Test:{testId}", async () => await TestWorker.GetTestById(testId));
             await TestWorker.GetTestById(testId);
 
         public async Task<TestsDB_Test_DTO[]> GetTestsByRoomId(ObjectId roomId) =>
@@ -28,19 +28,19 @@ namespace AqoTesting.Core.Repositories
         public async Task ReplaceTest(TestsDB_Test_DTO updatedTest)
         {
             await TestWorker.Replace(updatedTest);
-            await _cache.Del($"Test:{updatedTest.Id}");
+            await _redisCache.Del($"Test:{updatedTest.Id}");
         }
 
         public async Task<bool> SetProperty(ObjectId testId, string propertyName, object newPropertyValue)
         {
-            await _cache.Del($"Test:{testId}");
+            await _redisCache.Del($"Test:{testId}");
 
             return await TestWorker.SetProperty(testId, propertyName, newPropertyValue);
         }
 
         public async Task<bool> SetProperties(ObjectId testId, Dictionary<string, object> properties)
         {
-            await _cache.Del($"Test:{testId}");
+            await _redisCache.Del($"Test:{testId}");
 
             return await TestWorker.SetProperties(testId, properties);
         }
@@ -48,7 +48,7 @@ namespace AqoTesting.Core.Repositories
         public async Task<bool> DeleteTest(ObjectId testId)
         {
             var response = await Task.Run(async () => await TestWorker.Delete(testId));
-            await _cache.Del($"Test:{testId}");
+            await _redisCache.Del($"Test:{testId}");
 
             return response;
         }

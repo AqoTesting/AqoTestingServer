@@ -3,45 +3,180 @@ using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AqoTesting.Core.Repositories
 {
     public class AttemptRepository : IAttemptRepository
     {
+        Dictionary<ObjectId, AttemptsDB_Attempt_DTO> _internalByIdCache;
+        Dictionary<ObjectId, ObjectId?> _internalActiveByMemberIdCache;
+        Dictionary<ObjectId, ObjectId[]> _internalByTestIdCache;
+        Dictionary<ObjectId, ObjectId[]> _internalByMemberIdCache;
+        Dictionary<(ObjectId, ObjectId), ObjectId[]> _internalByTestIdAndMemberIdCache;
+
         IWorkContext _workContext;
-        ICacheRepository _cache;
+        ICacheRepository _redisCache;
         public AttemptRepository(IWorkContext workContext, ICacheRepository cache)
         {
             _workContext = workContext;
-            _cache = cache;
+            _redisCache = cache;
+
+            _internalByIdCache = new Dictionary<ObjectId, AttemptsDB_Attempt_DTO>();
+            _internalActiveByMemberIdCache = new Dictionary<ObjectId, ObjectId?>();
+            _internalByTestIdCache = new Dictionary<ObjectId, ObjectId[]>();
+            _internalByMemberIdCache = new Dictionary<ObjectId, ObjectId[]>();
+            _internalByTestIdAndMemberIdCache = new Dictionary<(ObjectId, ObjectId), ObjectId[]>();
         }
 
-        public async Task<AttemptsDB_Attempt_DTO> GetAttemptById(ObjectId attemptId) =>
-            await AttemptWorker.GetAttemptById(attemptId);
+        public async Task<AttemptsDB_Attempt_DTO> GetAttemptById(ObjectId attemptId)
+        {
+            AttemptsDB_Attempt_DTO attempt;
 
-        public async Task<AttemptsDB_Attempt_DTO> GetActiveAttemptByMemberId(ObjectId memberId) =>
-            await _cache.Get($"MemberActiveAttempt:{memberId}",
-                async () => await AttemptWorker.GetActiveAttemptByMemberId(memberId));
+            if(_internalByIdCache.ContainsKey(attemptId))
+                attempt = _internalByIdCache[attemptId];
+            else
+            {
+                attempt = await AttemptWorker.GetAttemptById(attemptId);
 
-        public async Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByTestId(ObjectId testId) =>
-            await AttemptWorker.GetAttemptsByTestId(testId);
+                _internalByIdCache.Add(attemptId, attempt);
+            }
 
-        public async Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByMemberId(ObjectId memberId) =>
-            await AttemptWorker.GetAttemptsByMemberId(memberId);
+            return attempt;
+        }
 
-        public async Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByTestIdAndMemberId (ObjectId testId, ObjectId memberId) =>
-            await AttemptWorker.GetAttemptsByTestIdAndMemberId(testId, memberId);
+        public async Task<AttemptsDB_Attempt_DTO> GetActiveAttemptByMemberId(ObjectId memberId)
+        {
+            AttemptsDB_Attempt_DTO attempt;
 
-        public async Task<ObjectId> InsertAttempt(AttemptsDB_Attempt_DTO newAttempt) =>
-            await AttemptWorker.InsertAttempt(newAttempt);
+            if(!_internalActiveByMemberIdCache.ContainsKey(memberId) || _internalActiveByMemberIdCache[memberId] != null && !_internalByIdCache.ContainsKey(_internalActiveByMemberIdCache[memberId].Value))
+            {
+                attempt = await _redisCache.Get($"MemberActiveAttempt:{memberId}",
+                    async () => await AttemptWorker.GetActiveAttemptByMemberId(memberId));
+
+                if(attempt != null)
+                {
+                    _internalActiveByMemberIdCache.TryAdd(memberId, attempt.Id);
+                    _internalByIdCache.TryAdd(attempt.Id, attempt);
+                }
+                else
+                    _internalActiveByMemberIdCache.TryAdd(memberId, null);
+            }
+            else
+                attempt = _internalActiveByMemberIdCache[memberId] != null ?
+                    _internalByIdCache[_internalActiveByMemberIdCache[memberId].Value] :
+                null;
+
+            return attempt;
+        }
+            
+
+        public async Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByTestId(ObjectId testId)
+        {
+            AttemptsDB_Attempt_DTO[] attempts = new AttemptsDB_Attempt_DTO[0];
+
+            var cached = _internalByTestIdCache.ContainsKey(testId);
+
+            if(cached)
+                attempts = _internalByTestIdCache[testId]
+                    .Where(attemptId => _internalByIdCache.ContainsKey(attemptId))
+                        .Select(attemptId =>
+                            _internalByIdCache[attemptId])
+                                .ToArray();
+
+            if(!cached || attempts.Length != _internalByTestIdCache[testId].Length)
+            {
+                attempts = await AttemptWorker.GetAttemptsByTestId(testId);
+
+                var attemptIds = new ObjectId[attempts.Length];
+                for(var i = 0; i < attempts.Length; i++)
+                {
+                    _internalByIdCache.TryAdd(attempts[i].Id, attempts[i]);
+                    attemptIds[i] = attempts[i].Id;
+                }
+                _internalByTestIdCache.TryAdd(testId, attemptIds);
+            }
+
+            return attempts;
+        }
+
+        public async Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByMemberId(ObjectId memberId)
+        {
+            AttemptsDB_Attempt_DTO[] attempts = new AttemptsDB_Attempt_DTO[0];
+
+            var cached = _internalByMemberIdCache.ContainsKey(memberId);
+
+            if(cached)
+                attempts = _internalByMemberIdCache[memberId]
+                    .Where(attemptId => _internalByIdCache.ContainsKey(attemptId))
+                        .Select(attemptId =>
+                            _internalByIdCache[attemptId])
+                                .ToArray();
+
+            if(!cached || attempts.Length != _internalByMemberIdCache[memberId].Length)
+            {
+                attempts = await AttemptWorker.GetAttemptsByMemberId(memberId);
+
+                var attemptIds = new ObjectId[attempts.Length];
+                for(var i = 0; i < attempts.Length; i++)
+                {
+                    _internalByIdCache.TryAdd(attempts[i].Id, attempts[i]);
+                    attemptIds[i] = attempts[i].Id;
+                }
+                _internalByMemberIdCache.TryAdd(memberId, attemptIds);
+            }
+
+            return attempts;
+        }
+        
+
+        public async Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByTestIdAndMemberId (ObjectId testId, ObjectId memberId)
+        {
+            AttemptsDB_Attempt_DTO[] attempts = new AttemptsDB_Attempt_DTO[0];
+
+            var cached = _internalByTestIdAndMemberIdCache.ContainsKey((testId, memberId));
+
+            if(cached)
+                attempts = _internalByTestIdAndMemberIdCache[(testId, memberId)]
+                    .Where(attemptId => _internalByIdCache.ContainsKey(attemptId))
+                        .Select(attemptId =>
+                            _internalByIdCache[attemptId])
+                                .ToArray();
+
+            if(!cached || attempts.Length != _internalByTestIdAndMemberIdCache[(testId, memberId)].Length)
+            {
+                attempts = await AttemptWorker.GetAttemptsByTestIdAndMemberId(testId, memberId);
+
+                var attemptIds = new ObjectId[attempts.Length];
+                for(var i = 0; i < attempts.Length; i++)
+                {
+                    _internalByIdCache.TryAdd(attempts[i].Id, attempts[i]);
+                    attemptIds[i] = attempts[i].Id;
+                }
+                _internalByTestIdAndMemberIdCache.TryAdd((testId, memberId), attemptIds);
+            }
+
+            return attempts;
+        }
+
+        public async Task<ObjectId> InsertAttempt(AttemptsDB_Attempt_DTO newAttempt)
+        {
+            _internalActiveByMemberIdCache = new Dictionary<ObjectId, ObjectId?>();
+            _internalByTestIdCache = new Dictionary<ObjectId, ObjectId[]>();
+            _internalByMemberIdCache = new Dictionary<ObjectId, ObjectId[]>();
+            _internalByTestIdAndMemberIdCache = new Dictionary<(ObjectId, ObjectId), ObjectId[]>();
+
+            return await AttemptWorker.InsertAttempt(newAttempt);
+        }
 
         public async Task<bool> SetProperty(ObjectId attemptId, string propertyName, object newPropertyValue, ObjectId? memberId = null)
         {
             if (memberId == null)
                 memberId = _workContext.MemberId;
 
-            await _cache.Del($"MemberActiveAttempt:{memberId}");
+            await _redisCache.Del($"MemberActiveAttempt:{memberId.Value}");
+            _internalByIdCache.Remove(attemptId);
 
             return await AttemptWorker.SetProperty(attemptId, propertyName, newPropertyValue);
         }
@@ -51,7 +186,8 @@ namespace AqoTesting.Core.Repositories
             if (memberId == null)
                 memberId = _workContext.MemberId;
 
-            await _cache.Del($"MemberActiveAttempt:{memberId}");
+            await _redisCache.Del($"MemberActiveAttempt:{memberId}");
+            _internalByIdCache.Remove(attemptId);
 
             return await AttemptWorker.SetProperties(attemptId, properties);
         }
