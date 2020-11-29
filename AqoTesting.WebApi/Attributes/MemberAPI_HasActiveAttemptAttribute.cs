@@ -37,7 +37,7 @@ namespace AqoTesting.WebApi.Attributes
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
             var memberId = _workContext.MemberId.Value;
 
-            var activeAttempt = attemptRepository.GetActiveAttemptByMemberId(memberId);
+            var activeAttempt = await attemptRepository.GetActiveAttemptByMemberId(memberId);
             if (activeAttempt == null)
                 return (OperationErrorMessages.HasNoActiveAttempt);
 

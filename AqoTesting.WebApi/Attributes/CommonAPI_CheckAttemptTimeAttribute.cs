@@ -25,14 +25,14 @@ namespace AqoTesting.WebApi.Attributes
 
             if(descriptor != null)
             {
-                var _workContext = context.HttpContext.RequestServices.GetService<IWorkContext>();
+                var workContext = context.HttpContext.RequestServices.GetService<IWorkContext>();
                 var attemptRepository = context.HttpContext.RequestServices.GetService<IAttemptRepository>();
 
                 var attemptsToCheck = new HashSet<AttemptsDB_Attempt_DTO>();
 
-                if (_workContext.MemberId != null)
+                if (workContext.MemberId != null)
                 {
-                    var attempt = await attemptRepository.GetActiveAttemptByMemberId(_workContext.MemberId.Value);
+                    var attempt = await attemptRepository.GetActiveAttemptByMemberId(workContext.MemberId.Value);
 
                     if (attempt != null)
                         attemptsToCheck.Add(attempt);
