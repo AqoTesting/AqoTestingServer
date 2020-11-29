@@ -11,7 +11,7 @@ using MongoDB.Bson;
 using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.API.Common.Identifiers;
 
-namespace AqoTesting.WebApi.Attributes
+namespace AqoTesting.WebApi.Attributes.UserAPI
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
     public class UserAPI_RoomAccessAttribute : ActionFilterAttribute
@@ -32,7 +32,7 @@ namespace AqoTesting.WebApi.Attributes
 
                 foreach(var parameter in parameters)
                 {
-                    if (parameter.ParameterType != typeof(CommonAPI_RoomId_DTO) && parameter.ParameterType != typeof(CommonAPI_RoomDomain_DTO))
+                    if(parameter.ParameterType != typeof(CommonAPI_RoomId_DTO) && parameter.ParameterType != typeof(CommonAPI_RoomDomain_DTO))
                         continue;
 
                     var argument = context.ActionArguments[parameter.Name];
@@ -59,6 +59,7 @@ namespace AqoTesting.WebApi.Attributes
 
             if(room == null)
                 return OperationErrorMessages.RoomNotFound;
+
             else if(room.UserId != userId)
                 return OperationErrorMessages.RoomAccessError;
 

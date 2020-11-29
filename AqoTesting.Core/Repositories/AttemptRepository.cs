@@ -191,5 +191,25 @@ namespace AqoTesting.Core.Repositories
 
             return await AttemptWorker.SetProperties(attemptId, properties);
         }
+
+        public async Task<bool> Delete(ObjectId attemptId)
+        {
+            _internalByIdCache.Remove(attemptId);
+
+            return await AttemptWorker.DeleteAttempt(attemptId);
+        }
+
+        public async Task DeleteAttemptsByMemberId(ObjectId memberId)
+        {
+            await _redisCache.Del($"MemberActiveAttempt:{memberId}");
+
+            if(_internalByMemberIdCache.ContainsKey(memberId))
+                _internalByMemberIdCache[memberId].Select(attemptId =>
+                    _internalByIdCache.Remove(attemptId));
+
+            _internalByMemberIdCache.Remove(memberId);
+
+            await AttemptWorker.DeleteAttemptsByMemberId(memberId);
+        }
     }
 }

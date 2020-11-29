@@ -88,7 +88,7 @@ namespace AqoTesting.Domain.Workers
         public static async Task<bool> Delete(AttemptsDB_Attempt_DTO attempt) =>
             await DeleteAttempt(attempt.Id);
         
-        public static async Task<long?> DeleteAttemptsByMemberId(ObjectId memberId)
+        public static async Task<long> DeleteAttemptsByMemberId(ObjectId memberId)
         {
             var filter = Builders<AttemptsDB_Attempt_DTO>.Filter.Eq("MemberId", memberId);
             return (await MongoController.AttemptCollection.DeleteManyAsync(filter)).DeletedCount;

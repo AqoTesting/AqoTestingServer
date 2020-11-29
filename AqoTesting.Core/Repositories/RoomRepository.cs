@@ -16,6 +16,9 @@ namespace AqoTesting.Core.Repositories
         public RoomRepository(ICacheRepository cache)
         {
             _redisCache = cache;
+
+            _internalByIdCache = new Dictionary<ObjectId, RoomsDB_Room_DTO>();
+            _internalByDomainCache = new Dictionary<string, ObjectId?>();
         }
 
         public async Task<RoomsDB_Room_DTO> GetRoomById(ObjectId roomId)

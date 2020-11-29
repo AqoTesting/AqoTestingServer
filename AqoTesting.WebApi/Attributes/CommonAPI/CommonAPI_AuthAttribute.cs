@@ -1,15 +1,15 @@
 ﻿using AqoTesting.Shared.Enums;
 using Microsoft.AspNetCore.Authorization;
 
-namespace AqoTesting.WebApi.Attributes
+namespace AqoTesting.WebApi.Attributes.CommonAPI
 {
-    public class AuthAttribute : AuthorizeAttribute
+    public class CommonAPI_AuthAttribute : AuthorizeAttribute
     {
         private Role role;
         public Role Role
         {
             get { return role; }
-            set { role = value; base.Roles = value.ToString(); }
+            set { role = value; Roles = value.ToString(); }
         }
     }
 }

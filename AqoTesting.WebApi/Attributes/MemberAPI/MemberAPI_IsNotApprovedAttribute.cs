@@ -4,22 +4,19 @@ using AqoTesting.Shared.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API.MemberAPI.Account;
 
-namespace AqoTesting.WebApi.Attributes
+namespace AqoTesting.WebApi.Attributes.MemberAPI
 {
     public class MemberAPI_IsNotApprovedAttribute : ActionFilterAttribute
     {
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var _workContext = context.HttpContext.RequestServices.GetService<IWorkContext>();
-            var _memberService = context.HttpContext.RequestServices.GetService<IMemberService>();
-            var (result, member) =  await _memberService.MemberAPI_GetMemberById(_workContext.MemberId.Value);
+            var _memberRepository = context.HttpContext.RequestServices.GetService<IMemberRepository>();
+            var member = await _memberRepository.GetMemberById(_workContext.MemberId.Value);
 
-            if (result == OperationErrorMessages.NoError && (member as MemberAPI_GetProfile_DTO).IsApproved)
-            {
+            if(member.IsApproved)
                 context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.MemberIsApproved);
-            }
 
             await base.OnActionExecutionAsync(context, next);
         }

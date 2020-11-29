@@ -3,7 +3,8 @@ using AqoTesting.Shared.DTOs.API.Common.Identifiers;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
-using AqoTesting.WebApi.Attributes;
+using AqoTesting.WebApi.Attributes.CommonAPI;
+using AqoTesting.WebApi.Attributes.UserAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AqoTesting.WebApi.Controllers
@@ -18,9 +19,9 @@ namespace AqoTesting.WebApi.Controllers
             _attemptService = attemptService;
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_AttemptAccess]
-        [CommonAPI_CheckAttemptTime]
+        [CommonAPI_CheckAttemptsTime]
         [HttpGet("/user/attempt/{AttemptId}")]
         public async Task<IActionResult> GetAttempt([FromRoute] CommonAPI_AttemptId_DTO attemptIdDTO)
         {
@@ -29,9 +30,9 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(errorCode, response);
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_TestAccess]
-        [CommonAPI_CheckAttemptTime]
+        [CommonAPI_CheckAttemptsTime]
         [HttpGet("/user/test/{TestId}/attempts")]
         public async Task<IActionResult> GetAttemptsByTestId([FromRoute] CommonAPI_TestId_DTO testIdDTO)
         {
@@ -40,9 +41,9 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(errorCode, response);
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_TestAccess]
-        [CommonAPI_CheckAttemptTime]
+        [CommonAPI_CheckAttemptsTime]
         [HttpGet("/user/member/{MemberId}/attempts")]
         public async Task<IActionResult> GetAttemptsByMemberId([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
         {

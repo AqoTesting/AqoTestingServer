@@ -19,5 +19,8 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<bool> SetProperty(ObjectId attemptId, string propertyName, object newPropertyValue, ObjectId? memberId = null);
         Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> properties, ObjectId? memberId = null);
+
+        Task<bool> Delete(ObjectId attemptId);
+        Task DeleteAttemptsByMemberId(ObjectId memberId);
     }
 }

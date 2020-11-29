@@ -15,10 +15,10 @@ using AqoTesting.Shared.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using AqoTesting.WebApi.Attributes;
 using MongoDB.Bson.Serialization;
 using System;
 using MongoDB.Bson.Serialization.Serializers;
+using AqoTesting.WebApi.Attributes.CommonAPI;
 
 namespace AqoTestingServer
 {
@@ -92,7 +92,7 @@ namespace AqoTestingServer
 
             services.AddMvc(options =>
             {
-                options.Filters.Add(typeof(ValidateModelAttribute));
+                options.Filters.Add(typeof(CommonAPI_ValidateModelAttribute));
 
                 options.EnableEndpointRouting = false;
             });

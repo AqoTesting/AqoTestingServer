@@ -10,7 +10,7 @@ using MongoDB.Bson;
 using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.API.Common.Identifiers;
 
-namespace AqoTesting.WebApi.Attributes
+namespace AqoTesting.WebApi.Attributes.UserAPI
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
     public class UserAPI_TestAccessAttribute : ActionFilterAttribute
@@ -25,19 +25,19 @@ namespace AqoTesting.WebApi.Attributes
 
             var descriptor = context.ActionDescriptor as ControllerActionDescriptor;
 
-            if (descriptor != null)
+            if(descriptor != null)
             {
                 var parameters = descriptor.MethodInfo.GetParameters();
 
-                foreach (var parameter in parameters)
+                foreach(var parameter in parameters)
                 {
-                    if (parameter.ParameterType != typeof(CommonAPI_TestId_DTO))
+                    if(parameter.ParameterType != typeof(CommonAPI_TestId_DTO))
                         continue;
 
                     var argument = context.ActionArguments[parameter.Name];
 
                     var errorCode = await EvaluateValidationAttributes(argument, context.HttpContext, _testRepository, parameter.ParameterType);
-                    if (errorCode != OperationErrorMessages.NoError)
+                    if(errorCode != OperationErrorMessages.NoError)
                         context.Result = ResultResponceExtension.ObjectResultResponse<object>(errorCode);
                 }
             }
@@ -49,11 +49,11 @@ namespace AqoTesting.WebApi.Attributes
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
             var userId = _workContext.UserId;
-            var test = await testRepository.GetTestById(ObjectId.Parse(((CommonAPI_TestId_DTO) argument).TestId));
+            var test = await testRepository.GetTestById(ObjectId.Parse(((CommonAPI_TestId_DTO)argument).TestId));
 
-            if (test == null)
+            if(test == null)
                 return OperationErrorMessages.TestNotFound;
-            else if (test.UserId != userId)
+            else if(test.UserId != userId)
                 return OperationErrorMessages.TestAccessError;
 
             return OperationErrorMessages.NoError;

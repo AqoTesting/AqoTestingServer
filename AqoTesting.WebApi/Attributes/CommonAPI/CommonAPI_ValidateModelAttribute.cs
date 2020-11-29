@@ -1,19 +1,17 @@
 ﻿using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Models;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 
-namespace AqoTesting.WebApi.Attributes
+namespace AqoTesting.WebApi.Attributes.CommonAPI
 {
-    public class ValidateModelAttribute : ActionFilterAttribute
+    public class CommonAPI_ValidateModelAttribute : ActionFilterAttribute
     {
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             if(!context.ModelState.IsValid)
-            {
-                context.Result = ResultResponceExtension.ObjectResultResponse<ModelStateDictionary>(OperationErrorMessages.InvalidModel, context.ModelState);
-            }
+                context.Result = ResultResponceExtension.ObjectResultResponse(OperationErrorMessages.InvalidModel, context.ModelState);
+
             await base.OnActionExecutionAsync(context, next);
         }
     }

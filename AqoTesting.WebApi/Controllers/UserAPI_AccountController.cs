@@ -5,6 +5,7 @@ using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
 using AqoTesting.WebApi.Attributes;
+using AqoTesting.WebApi.Attributes.CommonAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AqoTesting.WebApi.Controllers
@@ -55,7 +56,7 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(OperationErrorMessages.NoError, reponseNewUserToken);
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [HttpGet("/user")]
         public async Task<IActionResult> GetProfile()
         {
@@ -64,7 +65,7 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(OperationErrorMessages.NoError, user);
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [HttpGet("/user/{UserId}")]
         public async Task<IActionResult> GetUser([FromRoute] CommonAPI_UserId_DTO userIdDTO)
         {

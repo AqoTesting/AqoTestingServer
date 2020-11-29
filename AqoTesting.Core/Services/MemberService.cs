@@ -16,14 +16,16 @@ namespace AqoTesting.Core.Services
     public class MemberService : ServiceBase, IMemberService
     {
         IMemberRepository _memberRepository;
+        IAttemptRepository _attemptRepository;
         IRoomRepository _roomRepository;
         ITokenGeneratorService _tokenGeneratorService;
         ITokenRepository _tokenRepository;
         ICacheRepository _cacheRepository;
 
-        public MemberService(IRoomRepository roomRespository, IMemberRepository memberRepository, ITokenGeneratorService tokenGeneratorService, ITokenRepository tokenRepository, ICacheRepository cacheRepository)
+        public MemberService(IRoomRepository roomRespository, IAttemptRepository attemptRepository, IMemberRepository memberRepository, ITokenGeneratorService tokenGeneratorService, ITokenRepository tokenRepository, ICacheRepository cacheRepository)
         {
             _memberRepository = memberRepository;
+            _attemptRepository = attemptRepository;
             _roomRepository = roomRespository;
             _tokenGeneratorService = tokenGeneratorService;
             _tokenRepository = tokenRepository;
@@ -112,7 +114,10 @@ namespace AqoTesting.Core.Services
         {
             var deleted = await _memberRepository.Delete(memberId);
 
-            if (!deleted)
+            if(deleted)
+                await _attemptRepository.DeleteAttemptsByMemberId(memberId);
+
+            else
                 return OperationErrorMessages.MemberNotFound;
 
             return OperationErrorMessages.NoError;
@@ -188,6 +193,9 @@ namespace AqoTesting.Core.Services
             {
                 if (member == null)
                     return (OperationErrorMessages.MemberNotFound, null);
+
+                if(member.IsRegistered)
+                    return (OperationErrorMessages.MemberAlreadyRegistered, null);
 
                 member.Login = signUpDTO.Login;
                 member.PasswordHash = Sha256.Compute(signUpDTO.Password);

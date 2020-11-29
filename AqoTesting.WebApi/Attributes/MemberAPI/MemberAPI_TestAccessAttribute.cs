@@ -10,51 +10,52 @@ using MongoDB.Bson;
 using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.API.Common.Identifiers;
 
-namespace AqoTesting.WebApi.Attributes
+namespace AqoTesting.WebApi.Attributes.MemberAPI
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
-    public class UserAPI_MemberAccessAttribute : ActionFilterAttribute
+    public class MemberAPI_TestAccessAttribute : ActionFilterAttribute
     {
-        public UserAPI_MemberAccessAttribute()
+        public MemberAPI_TestAccessAttribute()
         {
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var _memberRepository = context.HttpContext.RequestServices.GetService<IMemberRepository>();
+            var _testRepository = context.HttpContext.RequestServices.GetService<ITestRepository>();
 
             var descriptor = context.ActionDescriptor as ControllerActionDescriptor;
 
-            if (descriptor != null)
+            if(descriptor != null)
             {
                 var parameters = descriptor.MethodInfo.GetParameters();
 
-                foreach (var parameter in parameters)
+                foreach(var parameter in parameters)
                 {
-                    if (parameter.ParameterType != typeof(CommonAPI_MemberId_DTO))
+                    if(parameter.ParameterType != typeof(CommonAPI_TestId_DTO))
                         continue;
 
                     var argument = context.ActionArguments[parameter.Name];
 
-                    var errorCode = await EvaluateValidationAttributes(argument, context.HttpContext, _memberRepository, parameter.ParameterType);
-                    if (errorCode != OperationErrorMessages.NoError)
+                    var errorCode = await EvaluateValidationAttributes(argument, context.HttpContext, _testRepository, parameter.ParameterType);
+                    if(errorCode != OperationErrorMessages.NoError)
                         context.Result = ResultResponceExtension.ObjectResultResponse<object>(errorCode);
                 }
             }
 
             await base.OnActionExecutionAsync(context, next);
         }
-        private async Task<OperationErrorMessages> EvaluateValidationAttributes(object argument, HttpContext httpContext, IMemberRepository memberRepository, Type dtoType)
+        private async Task<OperationErrorMessages> EvaluateValidationAttributes(object argument, HttpContext httpContext, ITestRepository testRepository, Type dtoType)
         {
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
-            var userId = _workContext.UserId;
-            var member = await memberRepository.GetMemberById(ObjectId.Parse(((CommonAPI_MemberId_DTO) argument).MemberId));
+            var roomId = _workContext.RoomId;
+            var test = await testRepository.GetTestById(ObjectId.Parse(((CommonAPI_TestId_DTO)argument).TestId));
 
-            if (member == null)
-                return OperationErrorMessages.MemberNotFound;
-            else if (member.UserId != userId)
-                return OperationErrorMessages.MemberAccessError;
+            if(test == null)
+                return OperationErrorMessages.TestNotFound;
+
+            else if(test.RoomId != roomId)
+                return OperationErrorMessages.TestAccessError;
 
             return OperationErrorMessages.NoError;
         }

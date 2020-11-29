@@ -5,6 +5,8 @@ using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
 using AqoTesting.WebApi.Attributes;
+using AqoTesting.WebApi.Attributes.CommonAPI;
+using AqoTesting.WebApi.Attributes.UserAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AqoTesting.WebApi.Controllers
@@ -19,7 +21,7 @@ namespace AqoTesting.WebApi.Controllers
             _memberService = memberService;
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_RoomAccess]
         [HttpGet("/user/room/{RoomId}/members")]
         public async Task<IActionResult> GetMembersByRoomId([FromRoute] CommonAPI_RoomId_DTO roomIdDTO)
@@ -29,7 +31,7 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(errorCode, members);
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_RoomAccess]
         [HttpPost("/user/room/{RoomId}/member")]
         public async Task<IActionResult> AddMember([FromRoute] CommonAPI_RoomId_DTO roomIdDTO, [FromBody] UserAPI_PostMember_DTO addMemberDTO)
@@ -39,7 +41,7 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(errorCode, response);
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_MemberAccess]
         [HttpDelete("/user/member/{MemberId}")]
         public async Task<IActionResult> KickMember([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
@@ -49,7 +51,7 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse<object>(OperationErrorMessages.NoError);
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_MemberAccess]
         [HttpPatch("/user/member/{MemberId}/unregister")]
         public async Task<IActionResult> Unregister([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
@@ -59,7 +61,7 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(errorCode, response);
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_MemberAccess]
         [HttpPatch("/user/member/{MemberId}/approve")]
         public async Task<IActionResult> Approve([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)

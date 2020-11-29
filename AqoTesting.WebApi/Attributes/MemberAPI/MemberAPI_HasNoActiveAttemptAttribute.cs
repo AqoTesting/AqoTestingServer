@@ -8,12 +8,12 @@ using AqoTesting.Shared.Models;
 using AqoTesting.Shared.Enums;
 using System.Threading.Tasks;
 
-namespace AqoTesting.WebApi.Attributes
+namespace AqoTesting.WebApi.Attributes.MemberAPI
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
-    public class MemberAPI_HasActiveAttemptAttribute : ActionFilterAttribute
+    public class MemberAPI_HasNoActiveAttemptAttribute : ActionFilterAttribute
     {
-        public MemberAPI_HasActiveAttemptAttribute()
+        public MemberAPI_HasNoActiveAttemptAttribute()
         {
         }
 
@@ -23,10 +23,10 @@ namespace AqoTesting.WebApi.Attributes
 
             var descriptor = context.ActionDescriptor as ControllerActionDescriptor;
 
-            if (descriptor != null)
+            if(descriptor != null)
             {
                 var errorCode = await EvaluateValidationAttributes(context.HttpContext, _attemptRepository);
-                if (errorCode != OperationErrorMessages.NoError)
+                if(errorCode != OperationErrorMessages.NoError)
                     context.Result = ResultResponceExtension.ObjectResultResponse<object>(errorCode);
             }
 
@@ -38,8 +38,8 @@ namespace AqoTesting.WebApi.Attributes
             var memberId = _workContext.MemberId.Value;
 
             var activeAttempt = await attemptRepository.GetActiveAttemptByMemberId(memberId);
-            if (activeAttempt == null)
-                return (OperationErrorMessages.HasNoActiveAttempt);
+            if(activeAttempt != null)
+                return OperationErrorMessages.HasActiveAttempt;
 
             return OperationErrorMessages.NoError;
         }

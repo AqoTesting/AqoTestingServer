@@ -4,6 +4,8 @@ using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
 using AqoTesting.WebApi.Attributes;
+using AqoTesting.WebApi.Attributes.CommonAPI;
+using AqoTesting.WebApi.Attributes.MemberAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AqoTesting.WebApi.Controllers
@@ -20,7 +22,7 @@ namespace AqoTesting.WebApi.Controllers
             _workContext = workContext;
         }
 
-        [Auth(Role = Role.Member)]
+        [CommonAPI_Auth(Role = Role.Member)]
         [MemberAPI_IsApproved]
         [HttpGet("/member/tests")]
         public async Task<IActionResult> GetTests()
@@ -30,7 +32,7 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(errorCode, response);
         }
 
-        [Auth(Role = Role.Member)]
+        [CommonAPI_Auth(Role = Role.Member)]
         [MemberAPI_IsApproved]
         [MemberAPI_TestAccess]
         [HttpGet("/member/test/{TestId}")]
@@ -41,10 +43,10 @@ namespace AqoTesting.WebApi.Controllers
             return this.ResultResponse(errorCode, response);
         }
 
-        [Auth(Role = Role.Member)]
+        [CommonAPI_Auth(Role = Role.Member)]
         [MemberAPI_IsApproved]
         [MemberAPI_TestAccess]
-        [CommonAPI_CheckAttemptTime]
+        [CommonAPI_CheckAttemptsTime]
         [MemberAPI_HasNoActiveAttempt]
         [HttpGet("/member/test/{TestId}/begin")]
         public async Task<IActionResult> BeginTest([FromRoute] CommonAPI_TestId_DTO testIdDTO)
