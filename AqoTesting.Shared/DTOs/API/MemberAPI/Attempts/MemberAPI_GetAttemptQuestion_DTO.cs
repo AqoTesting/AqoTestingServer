@@ -8,7 +8,10 @@ namespace AqoTesting.Shared.DTOs.API.MemberAPI.Attempts
         public string? Text { get; set; }
         public string? ImageUrl { get; set; }
         public MemberAPI_AttemptCommonOption_DTO[] Options { get; set; }
+        public bool Touched { get; set; }
         public int Cost { get; set; }
         public int Weight { get; set; }
+        public int BlurTime { get; set; }
+        public int TotalTime { get; set; }
     }
 }

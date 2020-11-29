@@ -14,7 +14,7 @@ namespace AqoTesting.WebApi.Attributes
         {
             var _workContext = context.HttpContext.RequestServices.GetService<IWorkContext>();
             var _memberService = context.HttpContext.RequestServices.GetService<IMemberService>();
-            var (result, member) = await _memberService.MemberAPI_GetMemberById(_workContext.MemberId);
+            var (result, member) = await _memberService.MemberAPI_GetMemberById(_workContext.MemberId.Value);
 
             if(result == OperationErrorMessages.NoError && !(member as MemberAPI_GetProfile_DTO).IsApproved)
                 context.Result = ResultResponceExtension.ObjectResultResponse<object>(OperationErrorMessages.MemberIsNotApproved);

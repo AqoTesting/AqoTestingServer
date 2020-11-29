@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 namespace AqoTesting.WebApi.Attributes
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
-    public class MemberAPI_HasActiveAttemptAttribute : ActionFilterAttribute
+    public class MemberAPI_HasNoActiveAttemptAttribute : ActionFilterAttribute
     {
-        public MemberAPI_HasActiveAttemptAttribute()
+        public MemberAPI_HasNoActiveAttemptAttribute()
         {
         }
 
@@ -37,9 +37,9 @@ namespace AqoTesting.WebApi.Attributes
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
             var memberId = _workContext.MemberId.Value;
 
-            var activeAttempt = attemptRepository.GetActiveAttemptByMemberId(memberId);
-            if (activeAttempt == null)
-                return (OperationErrorMessages.HasNoActiveAttempt);
+            var activeAttempt = await attemptRepository.GetActiveAttemptByMemberId(memberId);
+            if (activeAttempt != null)
+                return (OperationErrorMessages.HasActiveAttempt);
 
             return OperationErrorMessages.NoError;
         }

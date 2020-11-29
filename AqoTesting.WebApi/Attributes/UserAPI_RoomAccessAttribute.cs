@@ -49,7 +49,7 @@ namespace AqoTesting.WebApi.Attributes
         {
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
-            var userId = _workContext.UserId;
+            var userId = _workContext.UserId.Value;
             var room = new RoomsDB_Room_DTO();
 
             if(dtoType == typeof(CommonAPI_RoomId_DTO))

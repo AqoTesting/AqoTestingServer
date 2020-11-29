@@ -71,6 +71,8 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
                     Mapper.Map<AttemptsDB_Section_DTO>(x.Value)));
 
             CreateMap<TestsDB_Test_DTO, AttemptsDB_Attempt_DTO>()
+                .ForMember(x => x.Id,
+                    x => x.Ignore())
                 .ForMember(x => x.TestId,
                     x => x.MapFrom(m =>
                         m.Id))

@@ -2,6 +2,7 @@
 using AqoTesting.Shared.DTOs.API.Common.Identifiers;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Attempts;
 using AqoTesting.Shared.DTOs.API.UserAPI.Attempts;
+using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AutoMapper;
@@ -61,10 +62,10 @@ namespace AqoTesting.Core.Services
         #region MemberAPI
         public async Task<(OperationErrorMessages, object)> MemberAPI_GetActiveAttempt()
         {
-            var memberId = _workContext.MemberId;
+            var memberId = _workContext.MemberId.Value;
             var attempt = await _attemptRepository.GetActiveAttemptByMemberId(memberId);
             if (attempt == null)
-                return (OperationErrorMessages.NoActiveAttempt, null);
+                return (OperationErrorMessages.HasNoActiveAttempt, null);
             var getAttemptDTO = Mapper.Map<MemberAPI_GetAttempt_DTO>(attempt);
 
             return (OperationErrorMessages.NoError, getAttemptDTO);
@@ -72,19 +73,12 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> MemberAPI_Answer(CommonAPI_TestSectionId_DTO sectionIdDTO, CommonAPI_TestQuestionId_DTO questionIdDTO, MemberAPI_CommonTestAnswer_DTO commonAnswerDTO)
         {
-            var memberId = _workContext.MemberId;
+            var memberId = _workContext.MemberId.Value;
 
             var sectionId = sectionIdDTO.SectionId;
             var questionId = questionIdDTO.QuestionId;
 
             var attempt = await _attemptRepository.GetActiveAttemptByMemberId(memberId);
-
-            // Тут чёто ошибка
-            if (attempt.StartDate != attempt.EndDate && DateTime.Now > attempt.EndDate)
-            {
-                (_, var getAttemptDTO) = await this.MemberAPI_FinishCurrentAttempt();
-                return (OperationErrorMessages.TimeIsUp, getAttemptDTO);
-            }
 
             var (valid, errorCode, response) = AttemptUtils.ApplyAnswer(attempt.Sections, sectionId, questionId, commonAnswerDTO);
             if (!valid)
@@ -99,26 +93,29 @@ namespace AqoTesting.Core.Services
             return (OperationErrorMessages.NoError, null);
         }
 
-        public async Task<(OperationErrorMessages, object)> MemberAPI_FinishCurrentAttempt()
+        public async Task<(OperationErrorMessages, object)> CommonAPI_FinishAttempt(AttemptsDB_Attempt_DTO attempt)
         {
-            var memberId = _workContext.MemberId;
-            var attempt = await _attemptRepository.GetActiveAttemptByMemberId(memberId);
-
-            attempt.IsActive = false;
             var propertiesToUpdate = new Dictionary<string, object> {
                 ["IsActive"] = false };
 
             var timeNow = DateTime.Now;
             if (timeNow <= attempt.EndDate)
-            {
-                attempt.EndDate = timeNow;
                 propertiesToUpdate.Add("EndDate", timeNow);
-            }
 
             await _attemptRepository.SetProperties(attempt.Id, propertiesToUpdate);
 
-            return (OperationErrorMessages.NoError, Mapper.Map<MemberAPI_GetAttempt_DTO>(attempt));
+            return (OperationErrorMessages.NoError, null);
         }
+        public async Task<(OperationErrorMessages, object)> MemberAPI_FinishAttemptByMemberId(ObjectId memberId) =>
+            await this.CommonAPI_FinishAttempt(
+                await _attemptRepository.GetActiveAttemptByMemberId(memberId));
+        public async Task<(OperationErrorMessages, object)> MemberAPI_FinishAttemptByMemberId(CommonAPI_MemberId_DTO memberIdDTO) =>
+            await this.MemberAPI_FinishAttemptByMemberId(ObjectId.Parse(memberIdDTO.MemberId));
+        public async Task<(OperationErrorMessages, object)> MemberAPI_FinishAttemptById(ObjectId attemptId) =>
+            await this.CommonAPI_FinishAttempt(
+                await _attemptRepository.GetAttemptById(attemptId));
+        public async Task<(OperationErrorMessages, object)> MemberAPI_FinishAttemptById(CommonAPI_AttemptId_DTO attemptIdDTO) =>
+            await this.MemberAPI_FinishAttemptById(ObjectId.Parse(attemptIdDTO.AttemptId));
         #endregion
     }
 }

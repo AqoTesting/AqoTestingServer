@@ -20,6 +20,7 @@ namespace AqoTesting.WebApi.Controllers
 
         [Auth(Role = Role.User)]
         [UserAPI_AttemptAccess]
+        [CommonAPI_CheckAttemptTime]
         [HttpGet("/user/attempt/{AttemptId}")]
         public async Task<IActionResult> GetAttempt([FromRoute] CommonAPI_AttemptId_DTO attemptIdDTO)
         {
@@ -30,6 +31,7 @@ namespace AqoTesting.WebApi.Controllers
 
         [Auth(Role = Role.User)]
         [UserAPI_TestAccess]
+        [CommonAPI_CheckAttemptTime]
         [HttpGet("/user/test/{TestId}/attempts")]
         public async Task<IActionResult> GetAttemptsByTestId([FromRoute] CommonAPI_TestId_DTO testIdDTO)
         {
@@ -40,6 +42,7 @@ namespace AqoTesting.WebApi.Controllers
 
         [Auth(Role = Role.User)]
         [UserAPI_TestAccess]
+        [CommonAPI_CheckAttemptTime]
         [HttpGet("/user/member/{MemberId}/attempts")]
         public async Task<IActionResult> GetAttemptsByMemberId([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
         {

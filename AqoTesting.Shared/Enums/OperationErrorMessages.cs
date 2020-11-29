@@ -91,7 +91,9 @@
         MemberIsRegistered = 510,
 
         // У мембера нет активной попытки
-        NoActiveAttempt = 511,
+        HasNoActiveAttempt = 511,
+        // У мембера есть активная попытка (нельзя начать ещё одну)
+        HasActiveAttempt = 512,
         #endregion
 
         // 600

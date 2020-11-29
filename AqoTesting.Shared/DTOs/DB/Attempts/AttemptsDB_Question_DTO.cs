@@ -12,6 +12,7 @@ namespace AqoTesting.Shared.DTOs.DB.Attempts
         public string? ImageUrl { get; set; }
         [JsonConverter(typeof(BsonDocumentConverter))]
         public BsonDocument Options { get; set; }
+        public bool Touched { get; set; }
         public int Cost { get; set; }
         public int Weight { get; set; }
         public int BlurTime { get; set; }

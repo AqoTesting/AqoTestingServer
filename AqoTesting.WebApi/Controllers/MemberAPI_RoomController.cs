@@ -25,7 +25,7 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/member/room")]
         public async Task<IActionResult> GetRoom()
         {
-            var (errorCode, response) = await _roomService.MemberAPI_GetRoomById(_workContext.RoomId);
+            var (errorCode, response) = await _roomService.MemberAPI_GetRoomById(_workContext.RoomId.Value);
 
             return this.ResultResponse(errorCode, response);
         }

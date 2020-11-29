@@ -23,6 +23,7 @@ namespace AqoTesting.WebApi.Controllers
 
         [Auth(Role = Role.Member)]
         [MemberAPI_IsApproved]
+        [CommonAPI_CheckAttemptTime]
         [HttpGet("/member/attempt/active")]
         public async Task<IActionResult> GetActiveAttempt()
         {
@@ -34,6 +35,7 @@ namespace AqoTesting.WebApi.Controllers
         [Auth(Role = Role.Member)]
         [MemberAPI_IsApproved]
         [MemberAPI_HasActiveAttempt]
+        [CommonAPI_CheckAttemptTime]
         [HttpPost("/member/attempt/active/section/{SectionId}/question/{QuestionId}/answer")]
         public async Task<IActionResult> Answer([FromRoute] CommonAPI_TestSectionId_DTO sectionIdDTO, [FromRoute] CommonAPI_TestQuestionId_DTO questionIdDTO, [FromBody] MemberAPI_CommonTestAnswer_DTO answerDTO)
         {

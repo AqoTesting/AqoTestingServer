@@ -55,7 +55,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_CreateTest(ObjectId roomId, UserAPI_PostTest_DTO postTestDTO)
         {
             var newTest = Mapper.Map<TestsDB_Test_DTO>(postTestDTO);
-            newTest.UserId = _workContext.UserId;
+            newTest.UserId = _workContext.UserId.Value;
             newTest.RoomId = roomId;
             newTest.CreationDate = DateTime.UtcNow;
 
@@ -160,7 +160,7 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> MemberAPI_BeginTest(ObjectId testId)
         {
-            var memberId = _workContext.MemberId;
+            var memberId = _workContext.MemberId.Value;
 
             var test = await _testRepository.GetTestById(testId);
             if (!test.IsActive && (test.DeactivationDate == null || test.DeactivationDate < DateTime.Now || (test.ActivationDate != null && test.ActivationDate.Value > DateTime.Now)))
@@ -173,7 +173,7 @@ namespace AqoTesting.Core.Services
 
             var newAttempt = Mapper.Map<AttemptsDB_Attempt_DTO>(test);
             newAttempt.StartDate = DateTime.Now;
-            newAttempt.EndDate = newAttempt.StartDate.Value.AddMinutes(test.TimeLimit);
+            newAttempt.EndDate = newAttempt.StartDate.Value.AddSeconds(test.TimeLimit);
             newAttempt.MemberId = memberId;
 
             var newAttemptId = await _attemptRepository.InsertAttempt(newAttempt);

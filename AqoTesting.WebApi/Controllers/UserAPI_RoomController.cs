@@ -45,7 +45,7 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/user/rooms")]
         public async Task<IActionResult> GetRoomsByUserId()
         {
-            var (errorCode, response) = await _roomService.UserAPI_GetRoomsByUserId(_workContext.UserId);
+            var (errorCode, response) = await _roomService.UserAPI_GetRoomsByUserId(_workContext.UserId.Value);
 
             return this.ResultResponse(errorCode, response);
         }

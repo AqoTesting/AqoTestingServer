@@ -25,124 +25,124 @@ namespace AqoTesting.Core.Utils
 
             var question = questions[questionId];
 
-            BsonDocument optionsBson;
-
             if (question.Type == QuestionTypes.SingleChoice)
             {
                 var selectedOption = testAnswerDTO.SelectedOption;
-                if (selectedOption == null)
-                    return (false, OperationErrorMessages.AnswerNotPassed, null);
+                if (selectedOption != null)
+                {
+                    var optionsContainer = BsonSerializer.Deserialize<AttemptsDB_ChoiceOptions_Container>(question.Options);
 
-                var optionsContainer = BsonSerializer.Deserialize<AttemptsDB_ChoiceOptions_Container>(question.Options);
+                    if (selectedOption >= optionsContainer.Options.Length)
+                        return (false, OperationErrorMessages.SelectedOptionOutOfRange, null);
 
-                if (selectedOption >= optionsContainer.Options.Length)
-                    return (false, OperationErrorMessages.SelectedOptionOutOfRange, null);
+                    for (var i = 0; i < optionsContainer.Options.Length; i++)
+                        optionsContainer.Options[i].Chosen = i == selectedOption;
 
-                for (var i = 0; i < optionsContainer.Options.Length; i++)
-                    optionsContainer.Options[i].Chosen = i == selectedOption;
-
-                optionsBson = optionsContainer.ToBsonDocument();
+                    question.Options = optionsContainer.ToBsonDocument();
+                }
             }
             else if (question.Type == QuestionTypes.MultipleChoice)
             {
                 var selectedOptions = testAnswerDTO.SelectedOptions;
-                if (selectedOptions == null)
-                    return (false, OperationErrorMessages.AnswerNotPassed, null);
-
-                var optionsContainer = BsonSerializer.Deserialize<AttemptsDB_ChoiceOptions_Container>(question.Options);
-                var optionsCount = optionsContainer.Options.Length;
-
-                var uniques = new HashSet<int>();
-                for (var i = 0; i < selectedOptions.Length; i++)
+                if (selectedOptions != null)
                 {
-                    if (selectedOptions[i] >= optionsCount)
-                        return (false, OperationErrorMessages.SelectedOptionOutOfRange, null);
+                    var optionsContainer = BsonSerializer.Deserialize<AttemptsDB_ChoiceOptions_Container>(question.Options);
+                    var optionsCount = optionsContainer.Options.Length;
 
-                    if (!uniques.Add(selectedOptions[i]))
-                        return (false, OperationErrorMessages.NonUniqueOption, new CommonAPI_Error_DTO { ErrorSubject = selectedOptions[i] });
+                    var uniques = new HashSet<int>();
+                    for (var i = 0; i < selectedOptions.Length; i++)
+                    {
+                        if (selectedOptions[i] >= optionsCount)
+                            return (false, OperationErrorMessages.SelectedOptionOutOfRange, null);
+
+                        if (!uniques.Add(selectedOptions[i]))
+                            return (false, OperationErrorMessages.NonUniqueOption, new CommonAPI_Error_DTO { ErrorSubject = selectedOptions[i] });
+                    }
+
+                    for (var i = 0; i < optionsCount; i++)
+                        optionsContainer.Options[i].Chosen = selectedOptions.Contains(i);
+
+                    question.Options = optionsContainer.ToBsonDocument();
                 }
-
-                for (var i = 0; i < optionsCount; i++)
-                    optionsContainer.Options[i].Chosen = selectedOptions.Contains(i);
-
-                optionsBson = optionsContainer.ToBsonDocument();
             }
             else if(question.Type == QuestionTypes.Matching)
             {
                 var leftSequence = testAnswerDTO.LeftSequence;
                 var rightSequence = testAnswerDTO.RightSequence;
-                if(leftSequence == null || rightSequence == null)
-                    return (false, OperationErrorMessages.AnswerNotPassed, null);
-
-                var optionsContainer = BsonSerializer.Deserialize<AttemptsDB_MatchingOptions_Container>(question.Options);
-                var optionsCount = optionsContainer.LeftAnswerSequence.Length;
-
-                if(leftSequence.Length != optionsCount)
-                    return (false, OperationErrorMessages.WrongOptionsCount, new CommonAPI_Error_DTO { ErrorSubject = "left" });
-
-                if (rightSequence.Length != optionsCount)
-                    return (false, OperationErrorMessages.WrongOptionsCount, new CommonAPI_Error_DTO { ErrorSubject = "right" });
-
-                var leftUniques = new HashSet<int>();
-                var rightUniques = new HashSet<int>();
-                for (var i = 0; i < leftSequence.Length; i++)
+                if (leftSequence != null && rightSequence != null)
                 {
-                    if(leftSequence[i] >= optionsCount)
-                        return (false, OperationErrorMessages.SelectedOptionOutOfRange, new CommonAPI_Error_DTO { ErrorSubject = new object[] { "left", leftSequence[i] } });
-                    if (rightSequence[i] >= optionsCount)
-                        return (false, OperationErrorMessages.SelectedOptionOutOfRange, new CommonAPI_Error_DTO { ErrorSubject = new object[] { "right", rightSequence[i] } });
+                    var optionsContainer = BsonSerializer.Deserialize<AttemptsDB_MatchingOptions_Container>(question.Options);
+                    var optionsCount = optionsContainer.LeftAnswerSequence.Length;
 
-                    if(!leftUniques.Add(leftSequence[i]))
-                        return (false, OperationErrorMessages.NonUniqueOption, new CommonAPI_Error_DTO { ErrorSubject = new object[] { "left", leftSequence[i] } });
-                    if (!rightUniques.Add(rightSequence[i]))
-                        return (false, OperationErrorMessages.NonUniqueOption, new CommonAPI_Error_DTO { ErrorSubject = new object[] { "right", rightSequence[i] } });
+                    if (leftSequence.Length != optionsCount)
+                        return (false, OperationErrorMessages.WrongOptionsCount, new CommonAPI_Error_DTO { ErrorSubject = "left" });
+
+                    if (rightSequence.Length != optionsCount)
+                        return (false, OperationErrorMessages.WrongOptionsCount, new CommonAPI_Error_DTO { ErrorSubject = "right" });
+
+                    var leftUniques = new HashSet<int>();
+                    var rightUniques = new HashSet<int>();
+                    for (var i = 0; i < leftSequence.Length; i++)
+                    {
+                        if (leftSequence[i] >= optionsCount)
+                            return (false, OperationErrorMessages.SelectedOptionOutOfRange, new CommonAPI_Error_DTO { ErrorSubject = new object[] { "left", leftSequence[i] } });
+                        if (rightSequence[i] >= optionsCount)
+                            return (false, OperationErrorMessages.SelectedOptionOutOfRange, new CommonAPI_Error_DTO { ErrorSubject = new object[] { "right", rightSequence[i] } });
+
+                        if (!leftUniques.Add(leftSequence[i]))
+                            return (false, OperationErrorMessages.NonUniqueOption, new CommonAPI_Error_DTO { ErrorSubject = new object[] { "left", leftSequence[i] } });
+                        if (!rightUniques.Add(rightSequence[i]))
+                            return (false, OperationErrorMessages.NonUniqueOption, new CommonAPI_Error_DTO { ErrorSubject = new object[] { "right", rightSequence[i] } });
+                    }
+
+                    var tempLeftSequence = new AttemptsDB_PositionalOption[optionsCount];
+                    var tempRightSequence = new AttemptsDB_PositionalOption[optionsCount];
+                    for (var i = 0; i < optionsCount; i++)
+                    {
+                        tempLeftSequence[i] = optionsContainer.LeftAnswerSequence[leftSequence[i]];
+                        tempRightSequence[i] = optionsContainer.RightAnswerSequence[rightSequence[i]];
+                    }
+                    optionsContainer.LeftAnswerSequence = tempLeftSequence;
+                    optionsContainer.RightAnswerSequence = tempRightSequence;
+
+                    question.Options = optionsContainer.ToBsonDocument();
                 }
-
-                var tempLeftSequence = new AttemptsDB_PositionalOption[optionsCount];
-                var tempRightSequence = new AttemptsDB_PositionalOption[optionsCount];
-                for(var i = 0; i < optionsCount; i++)
-                {
-                    tempLeftSequence[i] = optionsContainer.LeftAnswerSequence[leftSequence[i]];
-                    tempRightSequence[i] = optionsContainer.RightAnswerSequence[rightSequence[i]];
-                }
-                optionsContainer.LeftAnswerSequence = tempLeftSequence;
-                optionsContainer.RightAnswerSequence = tempRightSequence;
-
-                optionsBson = optionsContainer.ToBsonDocument();
             }
             else if(question.Type == QuestionTypes.Sequence)
             {
                 var sequence = testAnswerDTO.Sequence;
-                if(sequence == null)
-                    return (false, OperationErrorMessages.AnswerNotPassed, null);
-
-                var optionsContainer = BsonSerializer.Deserialize<AttemptsDB_SequenceOptions_Container>(question.Options);
-                var optionsCount = optionsContainer.AnswerSequence.Length;
-
-                if (sequence.Length != optionsCount)
-                    return (false, OperationErrorMessages.WrongOptionsCount, null);
-
-                var uniques = new HashSet<int>();
-                for (var i = 0; i < sequence.Length; i++)
+                if (sequence != null)
                 {
-                    if (sequence[i] >= optionsCount)
-                        return (false, OperationErrorMessages.SelectedOptionOutOfRange, new CommonAPI_Error_DTO { ErrorSubject = sequence[i] });
+                    var optionsContainer = BsonSerializer.Deserialize<AttemptsDB_SequenceOptions_Container>(question.Options);
+                    var optionsCount = optionsContainer.AnswerSequence.Length;
 
-                    if (!uniques.Add(sequence[i]))
-                        return (false, OperationErrorMessages.NonUniqueOption, new CommonAPI_Error_DTO { ErrorSubject = sequence[i] });
+                    if (sequence.Length != optionsCount)
+                        return (false, OperationErrorMessages.WrongOptionsCount, null);
+
+                    var uniques = new HashSet<int>();
+                    for (var i = 0; i < sequence.Length; i++)
+                    {
+                        if (sequence[i] >= optionsCount)
+                            return (false, OperationErrorMessages.SelectedOptionOutOfRange, new CommonAPI_Error_DTO { ErrorSubject = sequence[i] });
+
+                        if (!uniques.Add(sequence[i]))
+                            return (false, OperationErrorMessages.NonUniqueOption, new CommonAPI_Error_DTO { ErrorSubject = sequence[i] });
+                    }
+
+                    var temptOptions = new AttemptsDB_PositionalOption[optionsCount];
+                    for (var i = 0; i < optionsCount; i++)
+                        temptOptions[i] = optionsContainer.AnswerSequence[sequence[i]];
+                    optionsContainer.AnswerSequence = temptOptions;
+
+                    question.Options = optionsContainer.ToBsonDocument();
                 }
-
-                var temptOptions = new AttemptsDB_PositionalOption[optionsCount];
-                for (var i = 0; i < optionsCount; i++)
-                    temptOptions[i] = optionsContainer.AnswerSequence[sequence[i]];
-                optionsContainer.AnswerSequence = temptOptions;
-
-                optionsBson = optionsContainer.ToBsonDocument();
             }
-            else
-                optionsBson = new BsonDocument();
 
-            sections[sectionId].Questions[questionId].Options = optionsBson;
+            question.Touched = true;
+            question.BlurTime += testAnswerDTO.BlurTimeAddition;
+            question.TotalTime += testAnswerDTO.TotalTimeAddition;
+
+            sections[sectionId].Questions[questionId] = question;
 
             return (true, OperationErrorMessages.NoError, sections);
         }

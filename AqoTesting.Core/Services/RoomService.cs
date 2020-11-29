@@ -77,7 +77,7 @@ namespace AqoTesting.Core.Services
                 return (OperationErrorMessages.DomainAlreadyTaken, null);
 
             var newRoom = Mapper.Map<RoomsDB_Room_DTO>(postRoomDto);
-            newRoom.UserId = _workContext.UserId;
+            newRoom.UserId = _workContext.UserId.Value;
 
             var newRoomId = await _roomRepository.InsertRoom(newRoom);
             var newRoomIdDTO = new CommonAPI_RoomId_DTO { RoomId = newRoomId.ToString() };

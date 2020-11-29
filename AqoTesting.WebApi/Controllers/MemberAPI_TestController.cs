@@ -25,7 +25,7 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/member/tests")]
         public async Task<IActionResult> GetTests()
         {
-            var (errorCode, response) = await _testService.MemberAPI_GetTestsByRoomId(_workContext.RoomId);
+            var (errorCode, response) = await _testService.MemberAPI_GetTestsByRoomId(_workContext.RoomId.Value);
 
             return this.ResultResponse(errorCode, response);
         }
@@ -44,6 +44,8 @@ namespace AqoTesting.WebApi.Controllers
         [Auth(Role = Role.Member)]
         [MemberAPI_IsApproved]
         [MemberAPI_TestAccess]
+        [CommonAPI_CheckAttemptTime]
+        [MemberAPI_HasNoActiveAttempt]
         [HttpGet("/member/test/{TestId}/begin")]
         public async Task<IActionResult> BeginTest([FromRoute] CommonAPI_TestId_DTO testIdDTO)
         {

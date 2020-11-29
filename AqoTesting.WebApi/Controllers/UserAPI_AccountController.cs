@@ -59,7 +59,7 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/user")]
         public async Task<IActionResult> GetProfile()
         {
-            var user = await _userService.GetUserById(_workContext.UserId);
+            var user = await _userService.GetUserById(_workContext.UserId.Value);
 
             return this.ResultResponse(OperationErrorMessages.NoError, user);
         }

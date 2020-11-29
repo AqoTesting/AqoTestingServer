@@ -1,5 +1,6 @@
 ﻿using AqoTesting.Shared.DTOs.API.Common.Identifiers;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Attempts;
+using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
 using System.Threading.Tasks;
@@ -21,6 +22,11 @@ namespace AqoTesting.Shared.Interfaces
         Task<(OperationErrorMessages, object)> MemberAPI_GetActiveAttempt();
 
         Task<(OperationErrorMessages, object)> MemberAPI_Answer(CommonAPI_TestSectionId_DTO sectionIdDTO, CommonAPI_TestQuestionId_DTO questionIdDTO, MemberAPI_CommonTestAnswer_DTO commonAnswerDTO);
-        Task<(OperationErrorMessages, object)> MemberAPI_FinishCurrentAttempt();
+
+        Task<(OperationErrorMessages, object)> CommonAPI_FinishAttempt(AttemptsDB_Attempt_DTO attempt);
+        Task<(OperationErrorMessages, object)> MemberAPI_FinishAttemptByMemberId(ObjectId memberId);
+        Task<(OperationErrorMessages, object)> MemberAPI_FinishAttemptByMemberId(CommonAPI_MemberId_DTO memberIdDTO);
+        Task<(OperationErrorMessages, object)> MemberAPI_FinishAttemptById(ObjectId attemptId);
+        Task<(OperationErrorMessages, object)> MemberAPI_FinishAttemptById(CommonAPI_AttemptId_DTO attemptIdDTO);
     }
 }

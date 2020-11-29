@@ -41,7 +41,7 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/member")]
         public async Task<IActionResult> GetProfile()
         {
-            (var errorCode, var response) = await _memberService.MemberAPI_GetMemberById(_workContext.MemberId);
+            (var errorCode, var response) = await _memberService.MemberAPI_GetMemberById(_workContext.MemberId.Value);
 
             return this.ResultResponse(errorCode, response);
         }
