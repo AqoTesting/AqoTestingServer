@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using AqoTesting.WebApi.Attributes;
+using MongoDB.Bson.Serialization;
+using System;
+using MongoDB.Bson.Serialization.Serializers;
 
 namespace AqoTestingServer
 {
@@ -101,7 +104,9 @@ namespace AqoTestingServer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if(env.IsDevelopment())
+            BsonSerializer.RegisterSerializer(typeof(DateTime), DateTimeSerializer.LocalInstance);
+
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
