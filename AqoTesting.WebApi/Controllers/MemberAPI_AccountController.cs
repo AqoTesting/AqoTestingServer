@@ -3,7 +3,7 @@ using AqoTesting.Shared.DTOs.API.MemberAPI.Account;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
-using AqoTesting.WebApi.Attributes;
+using AqoTesting.WebApi.Attributes.CommonAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AqoTesting.WebApi.Controllers
@@ -22,7 +22,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [HttpPost("/member/signin")]
-        public async Task<IActionResult> SignIn([FromBody] MemberAPI_SignIn_DTO authData)
+        public async Task<IActionResult> SignIn([FromBody] MemberAPI_SignInDTO authData)
         {
             (var errorCode, var response) = await _memberService.MemberAPI_SignIn(authData);
 
@@ -30,18 +30,18 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [HttpPost("/member/signup")]
-        public async Task<IActionResult> SignUpByFields([FromBody] MemberAPI_SignUp_DTO signUpDTO)
+        public async Task<IActionResult> SignUp([FromBody] MemberAPI_SignUpDTO signUpDTO)
         {
             (var errorCode, var response) = await _memberService.MemberAPI_SignUp(signUpDTO);
 
             return this.ResultResponse(errorCode, response);
         }
 
-        [Auth(Role = Role.Member)]
+        [CommonAPI_Auth(Role = Role.Member)]
         [HttpGet("/member")]
         public async Task<IActionResult> GetProfile()
         {
-            (var errorCode, var response) = await _memberService.MemberAPI_GetMemberById(_workContext.MemberId);
+            (var errorCode, var response) = await _memberService.MemberAPI_GetMemberById(_workContext.MemberId.Value);
 
             return this.ResultResponse(errorCode, response);
         }

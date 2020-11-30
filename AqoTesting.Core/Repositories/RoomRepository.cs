@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AqoTesting.Domain.Workers;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
 
@@ -8,36 +9,103 @@ namespace AqoTesting.Core.Repositories
 {
     public class RoomRepository : IRoomRepository
     {
-        Room _roomById;
-        Room _roomByDomain;
+        Dictionary<ObjectId, RoomsDB_RoomDTO> _internalByIdCache;
+        Dictionary<string, ObjectId?> _internalByDomainCache;
 
-        public async Task<Room> GetRoomById(ObjectId roomId) =>
-            await Task.Run(() =>
+        ICacheRepository _redisCache;
+        public RoomRepository(ICacheRepository cache)
+        {
+            _redisCache = cache;
+
+            _internalByIdCache = new Dictionary<ObjectId, RoomsDB_RoomDTO>();
+            _internalByDomainCache = new Dictionary<string, ObjectId?>();
+        }
+
+        public async Task<RoomsDB_RoomDTO> GetRoomById(ObjectId roomId)
+        {
+            RoomsDB_RoomDTO room;
+
+            if(_internalByIdCache.ContainsKey(roomId))
+                room = _internalByIdCache[roomId];
+            else
             {
-                if(_roomById == null) _roomById = RoomWorker.GetRoomById(roomId);
-                return _roomById;
-            });
+                room = await _redisCache.Get($"Room:{roomId}",
+                    async () => await RoomWorker.GetRoomById(roomId));
 
-        public async Task<Room> GetRoomByDomain(string domain) =>
-            await Task.Run(() =>
+                _internalByIdCache.Add(roomId, room);
+            }
+
+            return room;
+        }
+
+        public async Task<RoomsDB_RoomDTO> GetRoomByDomain(string roomDomain)
+        {
+            RoomsDB_RoomDTO room;
+
+            if(!_internalByDomainCache.ContainsKey(roomDomain) || _internalByDomainCache[roomDomain] != null && !_internalByIdCache.ContainsKey(_internalByDomainCache[roomDomain].Value))
             {
-                if(_roomByDomain == null) _roomByDomain = RoomWorker.GetRoomByDomain(domain);
-                return _roomByDomain;
-            });
+                room = await RoomWorker.GetRoomByDomain(roomDomain);
 
-        public async Task<Room[]> GetRoomsByOwnerId(ObjectId ownerId) =>
-            await Task.Run(() => UserWorker.GetUserRooms(ownerId));
+                if(room != null)
+                {
+                    _internalByDomainCache.TryAdd(roomDomain, room.Id);
+                    _internalByIdCache.TryAdd(room.Id, room);
+                }
+                else
+                    _internalByDomainCache.TryAdd(roomDomain, null);
+            }
+            else
+                room = _internalByDomainCache[roomDomain] != null ?
+                    _internalByIdCache[_internalByDomainCache[roomDomain].Value] :
+                null;
 
-        public async Task<ObjectId> InsertRoom(Room newRoom) =>
-            await Task.Run(() => RoomWorker.InsertRoom(newRoom));
+            return room;
+        }
 
-        public async Task ReplaceRoom(Room update) =>
-            await Task.Run(() => RoomWorker.ReplaceRoom(update));
+        public async Task<RoomsDB_RoomDTO[]> GetRoomsByUserId(ObjectId userId) =>
+            await RoomWorker.GetRoomsByUserId(userId);
 
-        public async Task<bool> RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId) =>
-            await Task.Run(() => RoomWorker.RemoveMemberFromRoomById(roomId, memberId));
+        public async Task<ObjectId> InsertRoom(RoomsDB_RoomDTO newRoom) =>
+            await RoomWorker.InsertRoom(newRoom);
 
-        public async Task<bool> DeleteRoomById(ObjectId roomId) =>
-            await Task.Run(() => RoomWorker.DeleteRoomById(roomId));
+        public async Task ReplaceRoom(RoomsDB_RoomDTO update)
+        {
+            await _redisCache.Del($"Room:{update.Id}");
+            _internalByIdCache.Remove(update.Id);
+            _internalByDomainCache.Remove(update.Domain);
+            await RoomWorker.ReplaceRoom(update);
+        }
+
+        public async Task SetTags(ObjectId roomId, RoomsDB_TagDTO[] newValue)
+        {
+            await _redisCache.Del($"Room:{roomId}");
+            _internalByIdCache.Remove(roomId);
+            _internalByDomainCache = new Dictionary<string, ObjectId?>();
+            await RoomWorker.SetProperty(roomId, "Tags", newValue);
+        }
+
+        public async Task<bool> SetProperty(ObjectId roomId, string propertyName, object newPropertyValue)
+        {
+            await _redisCache.Del($"Room:{roomId}");
+            _internalByIdCache.Remove(roomId);
+            _internalByDomainCache = new Dictionary<string, ObjectId?>();
+
+            return await RoomWorker.SetProperty(roomId, propertyName, newPropertyValue);
+        }
+
+        public async Task<bool> SetProperties(ObjectId roomId, Dictionary<string, object> properties)
+        {
+            await _redisCache.Del($"Room:{roomId}");
+
+            return await RoomWorker.SetProperties(roomId, properties);
+        }
+
+        public async Task<bool> DeleteRoomById(ObjectId roomId)
+        {
+            var response = await RoomWorker.DeleteRoomById(roomId);
+            await _redisCache.Del($"Room:{roomId}");
+
+            return response;
+        }
     }
 }

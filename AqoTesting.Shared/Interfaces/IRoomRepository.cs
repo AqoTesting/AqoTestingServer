@@ -1,22 +1,26 @@
-﻿using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AqoTesting.Shared.DTOs.DB.Rooms;
 using MongoDB.Bson;
 
 namespace AqoTesting.Shared.Interfaces
 {
     public interface IRoomRepository
     {
-        Task<Room> GetRoomById(ObjectId roomId);
+        Task<RoomsDB_RoomDTO> GetRoomById(ObjectId roomId);
 
-        Task<Room> GetRoomByDomain(string domain);
+        Task<RoomsDB_RoomDTO> GetRoomByDomain(string domain);
 
-        Task<Room[]> GetRoomsByOwnerId(ObjectId ownerId);
+        Task<RoomsDB_RoomDTO[]> GetRoomsByUserId(ObjectId userId);
 
-        Task<ObjectId> InsertRoom(Room newRoom);
+        Task<ObjectId> InsertRoom(RoomsDB_RoomDTO newRoom);
 
-        Task ReplaceRoom(Room update);
+        Task ReplaceRoom(RoomsDB_RoomDTO update);
 
-        Task<bool> RemoveMemberFromRoomById(ObjectId roomId, ObjectId memberId);
+        Task SetTags(ObjectId roomId, RoomsDB_TagDTO[] newValue);
+
+        Task<bool> SetProperty(ObjectId roomId, string propertyName, object newPropertyValue);
+        Task<bool> SetProperties(ObjectId roomId, Dictionary<string, object> properties);
 
         Task<bool> DeleteRoomById(ObjectId roomId);
     }

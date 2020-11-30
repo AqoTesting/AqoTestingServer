@@ -15,7 +15,10 @@ using AqoTesting.Shared.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using AqoTesting.WebApi.Attributes;
+using MongoDB.Bson.Serialization;
+using System;
+using MongoDB.Bson.Serialization.Serializers;
+using AqoTesting.WebApi.Attributes.CommonAPI;
 
 namespace AqoTestingServer
 {
@@ -44,15 +47,20 @@ namespace AqoTestingServer
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<ITestService, TestService>();
             services.AddScoped<IMemberService, MemberService>();
+            services.AddScoped<IAttemptService, AttemptService>();
+
+            services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
 
             // Load repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<ITestRepository, TestRepository>();
             services.AddScoped<IMemberRepository, MemberRepository>();
+            services.AddScoped<IAttemptRepository, AttemptRepository>();
+
             services.AddSingleton<ICacheRepository, CacheRepository>();
             services.AddSingleton<ITokenRepository, TokenRepository>();
-            services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
+            
 
             services.AddCors();
 
@@ -84,7 +92,7 @@ namespace AqoTestingServer
 
             services.AddMvc(options =>
             {
-                options.Filters.Add(typeof(ValidateModelAttribute));
+                options.Filters.Add(typeof(CommonAPI_ValidateModelAttribute));
 
                 options.EnableEndpointRouting = false;
             });
@@ -96,7 +104,9 @@ namespace AqoTestingServer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if(env.IsDevelopment())
+            BsonSerializer.RegisterSerializer(typeof(DateTime), DateTimeSerializer.LocalInstance);
+
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }

@@ -15,4 +15,8 @@
     <ProjectReference Include="..\AqoTesting.Shared\AqoTesting.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Tests\" />
+  </ItemGroup>
+
 </Project>

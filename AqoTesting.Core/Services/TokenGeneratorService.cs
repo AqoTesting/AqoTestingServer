@@ -1,5 +1,4 @@
-﻿using AqoTesting.Shared.DTOs.API;
-using AqoTesting.Shared.Enums;
+﻿using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Infrastructure;
 using AqoTesting.Shared.Interfaces;
 using Microsoft.IdentityModel.Tokens;
@@ -20,13 +19,13 @@ namespace AqoTesting.Core.Services
         }
         public string GenerateToken(ObjectId id, Role role)
         {
-            var identity = GetIdentity(id, role, ObjectId.Empty, false);
+            var identity = GetIdentity(id, role, ObjectId.Empty);
 
             return GetTokenByIdentity(identity, role, id);
         }
-        public string GenerateToken(ObjectId id, Role role, ObjectId roomId, bool isChecked = true)
+        public string GenerateToken(ObjectId id, Role role, ObjectId roomId)
         {
-            var identity = GetIdentity(id, role, roomId, isChecked);
+            var identity = GetIdentity(id, role, roomId);
 
             return GetTokenByIdentity(identity, role, id);
         }
@@ -40,14 +39,14 @@ namespace AqoTesting.Core.Services
                     audience: AuthOptions.AUDIENCE,
                     notBefore: now,
                     claims: identity.Claims,
-                    expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+                    expires: now.Add(TimeSpan.FromSeconds(AuthOptions.LIFETIME)),
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
-            _tokenRepository.Add(role, id, jwt, AuthOptions.LIFETIME * 60);
+            _tokenRepository.Add(role, id, jwt, AuthOptions.LIFETIME);
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
-        private ClaimsIdentity GetIdentity(ObjectId id, Role role, ObjectId roomId, bool isChecked)
+        private ClaimsIdentity GetIdentity(ObjectId id, Role role, ObjectId roomId)
         {
 
             List<Claim> claims = new List<Claim>
@@ -58,7 +57,6 @@ namespace AqoTesting.Core.Services
 
             if (role == Role.Member)
             {
-                claims.Add(new Claim("isChecked", isChecked.ToString()));
                 claims.Add(new Claim("roomId", roomId.ToString()));
             }
 

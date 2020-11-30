@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AqoTesting.Shared.Infrastructure
+﻿namespace AqoTesting.Shared.Infrastructure
 {
     public class RedisConnectionConfig
     {

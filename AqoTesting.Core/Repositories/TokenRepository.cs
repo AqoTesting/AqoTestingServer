@@ -2,10 +2,7 @@
 using AqoTesting.Shared.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AqoTesting.Core.Repositories
@@ -18,7 +15,7 @@ namespace AqoTesting.Core.Repositories
         {
             _cacheRepository = cacheRepository;
         }
-        public async void Add(Role role, ObjectId id, JwtSecurityToken jwt, int second)
+        public async Task Add(Role role, ObjectId id, JwtSecurityToken jwt, int second)
         {
             await _cacheRepository.Set($"{role}:{id}:{jwt.EncodedPayload}", "1", second);
         }
@@ -29,12 +26,12 @@ namespace AqoTesting.Core.Repositories
             if (exist == 0) return false;
             return true;
         }
-        public async void DelAll(Role role, ObjectId id)
+        public async Task DelAll(Role role, ObjectId id)
         {
             var keys = await _cacheRepository.Keys($"{role}:{id}:*");
-            await _cacheRepository.DelAll(keys);
+            if(keys.Length != 0) await _cacheRepository.DelAll(keys);
         }
-        public async void Del(Role role, ObjectId id, SecurityToken token)
+        public async Task Del(Role role, ObjectId id, SecurityToken token)
         {
             JwtSecurityToken jwt = SecurityTokenConvertToJwtSecurityToken(token);
             await _cacheRepository.Del($"{role}:{id}:{jwt.EncodedPayload}");

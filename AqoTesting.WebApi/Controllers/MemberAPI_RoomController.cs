@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API.Common;
-using AqoTesting.Shared.DTOs.API.MemberAPI.Rooms;
+using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
-using AqoTesting.WebApi.Attributes;
+using AqoTesting.WebApi.Attributes.CommonAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AqoTesting.WebApi.Controllers
@@ -22,17 +21,17 @@ namespace AqoTesting.WebApi.Controllers
             _workContext = workContext;
         }
 
-        [Auth(Role = Role.Member)]
+        [CommonAPI_Auth(Role = Role.Member)]
         [HttpGet("/member/room")]
         public async Task<IActionResult> GetRoom()
         {
-            var (errorCode, response) = await _roomService.MemberAPI_GetRoomById(_workContext.RoomId);
+            var (errorCode, response) = await _roomService.MemberAPI_GetRoomById(_workContext.RoomId.Value);
 
             return this.ResultResponse(errorCode, response);
         }
 
         [HttpGet("/member/room/{RoomId}")]
-        public async Task<IActionResult> GetRoomById([FromRoute] RoomId_DTO roomIdDTO)
+        public async Task<IActionResult> GetRoomById([FromRoute] CommonAPI_RoomIdDTO roomIdDTO)
         {
             var (errorCode, response) = await _roomService.MemberAPI_GetRoomById(roomIdDTO);
 
@@ -40,7 +39,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [HttpGet("/member/room/domain/{RoomDomain}")]
-        public async Task<IActionResult> GetRoomByDomain([FromRoute] RoomDomain_DTO roomDomainDTO)
+        public async Task<IActionResult> GetRoomByDomain([FromRoute] CommonAPI_RoomDomainDTO roomDomainDTO)
         {
             var (errorCode, response) = await _roomService.MemberAPI_GetRoomByDomain(roomDomainDTO);
 

@@ -1,7 +1,8 @@
-﻿using AqoTesting.Shared.DTOs.DB.Members;
+﻿using AqoTesting.Shared.DTOs.DB.Attempts;
+using AqoTesting.Shared.DTOs.DB.Members;
+using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.DTOs.DB.Users;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using MongoDB.Driver;
 
 namespace AqoTesting.Domain.Controllers
@@ -11,11 +12,11 @@ namespace AqoTesting.Domain.Controllers
         public static string? leshaPidor;
         public static MongoClient? client;
         public static IMongoDatabase? mainDatabase;
-        public static IMongoCollection<Room>? RoomCollection;
-        public static IMongoCollection<Test>? TestCollection;
-        public static IMongoCollection<User>? UserCollection;
-        public static IMongoCollection<Member>? MemberCollection;
-        public static IMongoCollection<Attempt>? AttemptCollection;
+        public static IMongoCollection<RoomsDB_RoomDTO>? RoomCollection;
+        public static IMongoCollection<TestsDB_TestDTO>? TestCollection;
+        public static IMongoCollection<UsersDB_UserDTO>? UserCollection;
+        public static IMongoCollection<MembersDB_MemberDTO>? MemberCollection;
+        public static IMongoCollection<AttemptsDB_AttemptDTO>? AttemptCollection;
 
 
         public static MongoClient? ConnectToDB(string? username, string? password, string host, ushort? port, string? defaultauthdb, string? options)
@@ -48,10 +49,10 @@ namespace AqoTesting.Domain.Controllers
 
         //ниже нет защиты, все вызовы должны проводится после успешного коннекта
 
-        public static IMongoCollection<Room> GetRoomsCollection() => mainDatabase.GetCollection<Room>("rooms");
-        public static IMongoCollection<Test> GetTestsCollection() => mainDatabase.GetCollection<Test>("tests");
-        public static IMongoCollection<User> GetUsersCollection() => mainDatabase.GetCollection<User>("users");
-        public static IMongoCollection<Member> GetMembersCollection() => mainDatabase.GetCollection<Member>("members");
-        public static IMongoCollection<Attempt> GetAttemptsCollection() => mainDatabase.GetCollection<Attempt>("attempts");
+        public static IMongoCollection<RoomsDB_RoomDTO> GetRoomsCollection() => mainDatabase.GetCollection<RoomsDB_RoomDTO>("rooms");
+        public static IMongoCollection<TestsDB_TestDTO> GetTestsCollection() => mainDatabase.GetCollection<TestsDB_TestDTO>("tests");
+        public static IMongoCollection<UsersDB_UserDTO> GetUsersCollection() => mainDatabase.GetCollection<UsersDB_UserDTO>("users");
+        public static IMongoCollection<MembersDB_MemberDTO> GetMembersCollection() => mainDatabase.GetCollection<MembersDB_MemberDTO>("members");
+        public static IMongoCollection<AttemptsDB_AttemptDTO> GetAttemptsCollection() => mainDatabase.GetCollection<AttemptsDB_AttemptDTO>("attempts");
     }
 }

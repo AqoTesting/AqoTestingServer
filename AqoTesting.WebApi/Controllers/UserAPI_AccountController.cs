@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
-using AqoTesting.Core.Utils;
-using AqoTesting.Shared.DTOs.API.Common;
+using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
 using AqoTesting.Shared.DTOs.API.UserAPI.Account;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
-using AqoTesting.WebApi.Attributes;
+using AqoTesting.WebApi.Attributes.CommonAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AqoTesting.WebApi.Controllers
@@ -26,20 +25,20 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [HttpPost("/user/signin")]
-        public async Task<IActionResult> SignIn([FromBody] UserAPI_SignIn_DTO authData)
+        public async Task<IActionResult> SignIn([FromBody] UserAPI_SignInDTO authData)
         {
             var user = await _userService.GetUserByAuthData(authData);
             if(user == null)
                 return this.ResultResponse<object>(OperationErrorMessages.WrongAuthData);
 
             var userToken = _tokenGeneratorService.GenerateToken(user.Id, Role.User);
-            var responseUserToken = new Token_DTO { Token = userToken };
+            var responseUserToken = new CommonAPI_TokenDTO { Token = userToken };
 
             return this.ResultResponse(OperationErrorMessages.NoError, responseUserToken);
         }
 
         [HttpPost("/user/signup")]
-        public async Task<IActionResult> SignUp([FromBody] UserAPI_SignUp_DTO signUpUserDTO)
+        public async Task<IActionResult> SignUp([FromBody] UserAPI_SignUpDTO signUpUserDTO)
         {
             var loginAlreadyTaken = await _userService.GetUserByLogin(signUpUserDTO.Login);
             if(loginAlreadyTaken != null)
@@ -51,23 +50,23 @@ namespace AqoTesting.WebApi.Controllers
 
             var newUser = await _userService.InsertUser(signUpUserDTO);
             var newUserToken = _tokenGeneratorService.GenerateToken(newUser.Id, Role.User);
-            var reponseNewUserToken = new Token_DTO { Token = newUserToken };
+            var reponseNewUserToken = new CommonAPI_TokenDTO { Token = newUserToken };
 
             return this.ResultResponse(OperationErrorMessages.NoError, reponseNewUserToken);
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [HttpGet("/user")]
         public async Task<IActionResult> GetProfile()
         {
-            var user = await _userService.GetUserById(_workContext.UserId);
+            var user = await _userService.GetUserById(_workContext.UserId.Value);
 
             return this.ResultResponse(OperationErrorMessages.NoError, user);
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [HttpGet("/user/{UserId}")]
-        public async Task<IActionResult> GetUser([FromRoute] UserId_DTO userIdDTO)
+        public async Task<IActionResult> GetUser([FromRoute] CommonAPI_UserIdDTO userIdDTO)
         {
             var user = await _userService.GetUserById(userIdDTO);
 

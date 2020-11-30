@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.DB.Members;
 using MongoDB.Bson;
 
@@ -6,24 +7,27 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IMemberRepository
     {
-        Task<Member> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash);
-        
+        Task<MembersDB_MemberDTO> GetMemberById(ObjectId memberId);
+
+        Task<MembersDB_MemberDTO> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash);
+
         Task<bool> CheckLoginTaken(ObjectId roomId, string login);
         Task<bool> CheckEmailTaken(ObjectId roomId, string email);
 
-        Task<Member> GetMemberById(ObjectId memberId);
+        Task<MembersDB_MemberDTO[]> GetMembersByIds(ObjectId[] memberIds);
+        Task<MembersDB_MemberDTO[]> GetMembersByRoomId(ObjectId roomId);
 
-        Task<Member[]> GetMembersByIds(ObjectId[] memberIds);
+        Task<MembersDB_MemberDTO> GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash);
 
-        Task<Member[]> GetMembersByRoomId(ObjectId roomId);
+        Task<ObjectId> InsertMember(MembersDB_MemberDTO newMember);
 
-        Task<Member> GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash);
+        Task ReplaceMember(MembersDB_MemberDTO member);
 
-        Task<ObjectId> InsertMember(Member newMember);
+        Task SetTags(ObjectId memberId, MembersDB_TagDTO[] newValue);
 
-        Task ReplaceMember(Member updatedMember);
+        Task<bool> SetProperty(ObjectId memberId, string propertyName, object newPropertyValue);
+        Task<bool> SetProperties(ObjectId memberId, Dictionary<string, object> properties);
 
-        Task<bool> SetIsRegistered(ObjectId memberId, bool newValue);
-        Task<bool> SetIsApproved(ObjectId memberId, bool newValue);
+        Task<bool> Delete(ObjectId memberId);
     }
 }

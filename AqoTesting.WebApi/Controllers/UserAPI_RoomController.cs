@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API.Common;
+using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
 using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AqoTesting.Shared.Models;
-using AqoTesting.WebApi.Attributes;
+using AqoTesting.WebApi.Attributes.CommonAPI;
+using AqoTesting.WebApi.Attributes.UserAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AqoTesting.WebApi.Controllers
@@ -21,38 +22,38 @@ namespace AqoTesting.WebApi.Controllers
             _workContext = workContext;
         }
 
-        [Auth(Role = Role.User)]
-        [OnlyRoomOwner]
+        [CommonAPI_Auth(Role = Role.User)]
+        [UserAPI_RoomAccess]
         [HttpGet("/user/room/{RoomId}")]
-        public async Task<IActionResult> GetRoomById([FromRoute] RoomId_DTO roomIdDTO)
+        public async Task<IActionResult> GetRoomById([FromRoute] CommonAPI_RoomIdDTO roomIdDTO)
         {
             var (errorCode, response) = await _roomService.UserAPI_GetRoomById(roomIdDTO);
 
             return this.ResultResponse(errorCode, response);
         }
 
-        [Auth(Role = Role.User)]
-        [OnlyRoomOwner]
+        [CommonAPI_Auth(Role = Role.User)]
+        [UserAPI_RoomAccess]
         [HttpGet("/user/room/domain/{RoomDomain}")]
-        public async Task<IActionResult> GetRoomByDomain([FromRoute] RoomDomain_DTO roomDomainDTO)
+        public async Task<IActionResult> GetRoomByDomain([FromRoute] CommonAPI_RoomDomainDTO roomDomainDTO)
         {
             var (errorCode, response) = await _roomService.UserAPI_GetRoomByDomain(roomDomainDTO);
 
             return this.ResultResponse(errorCode, response);
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [HttpGet("/user/rooms")]
-        public async Task<IActionResult> GetRoomsByOwnerId()
+        public async Task<IActionResult> GetRoomsByUserId()
         {
-            var (errorCode, response) = await _roomService.UserAPI_GetRoomsByOwnerId(_workContext.UserId);
+            var (errorCode, response) = await _roomService.UserAPI_GetRoomsByUserId(_workContext.UserId.Value);
 
             return this.ResultResponse(errorCode, response);
         }
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [HttpGet("/user/room/domainExists/{RoomDomain}")]
-        public async Task<IActionResult> DomainExists([FromRoute] RoomDomain_DTO roomDomainDTO)
+        public async Task<IActionResult> DomainExists([FromRoute] CommonAPI_RoomDomainDTO roomDomainDTO)
         {
             var (errorCode, response) = await _roomService.UserAPI_GetRoomByDomain(roomDomainDTO);
 
@@ -60,33 +61,43 @@ namespace AqoTesting.WebApi.Controllers
         }
 
 
-        [Auth(Role = Role.User)]
+        [CommonAPI_Auth(Role = Role.User)]
         [HttpPost("/user/room")]
-        public async Task<IActionResult> CreateRoom([FromBody] UserAPI_PostRoom_DTO newRoom)
+        public async Task<IActionResult> CreateRoom([FromBody] UserAPI_PostRoomDTO newRoom)
         {
-            var (errorCode, response) = await _roomService.UserAPI_InsertRoom(newRoom);
+            var (errorCode, response) = await _roomService.UserAPI_CreateRoom(newRoom);
 
             return this.ResultResponse(errorCode, response);
         }
 
-        [Auth(Role = Role.User)]
-        [OnlyRoomOwner]
+        [CommonAPI_Auth(Role = Role.User)]
+        [UserAPI_RoomAccess]
         [HttpPut("/user/room/{RoomId}")]
-        public async Task<IActionResult> EditRoom([FromRoute] RoomId_DTO roomIdDTO, [FromBody] UserAPI_PostRoom_DTO updatedRoom)
+        public async Task<IActionResult> EditRoom([FromRoute] CommonAPI_RoomIdDTO roomIdDTO, [FromBody] UserAPI_PostRoomDTO updatedRoom)
         {
-            var errorCode = await _roomService.UserAPI_EditRoom(roomIdDTO, updatedRoom);
+            var (errorCode, response) = await _roomService.UserAPI_EditRoom(roomIdDTO, updatedRoom);
 
-            return this.ResultResponse<object>(errorCode);
+            return this.ResultResponse(errorCode, response);
         }
 
-        [Auth(Role = Role.User)]
-        [OnlyRoomOwner]
-        [HttpDelete("/user/room/{RoomId}")]
-        public async Task<IActionResult> DeleteRoom([FromRoute] RoomId_DTO roomIdDTO)
+        [CommonAPI_Auth(Role = Role.User)]
+        [UserAPI_RoomAccess]
+        [HttpPatch("/user/room/{RoomId}/tags")]
+        public async Task<IActionResult> SetRoomTags([FromRoute] CommonAPI_RoomIdDTO roomIdDTO, [FromBody] UserAPI_PostRoomTagsDTO postRoomTagsDTO)
         {
-            var errorCode = await _roomService.UserAPI_DeleteRoomById(roomIdDTO);
+            var (errorCode, response) = await _roomService.UserAPI_SetRoomTags(roomIdDTO, postRoomTagsDTO);
 
-            return this.ResultResponse<object>(errorCode);
+            return this.ResultResponse(errorCode, response);
+        }
+
+        [CommonAPI_Auth(Role = Role.User)]
+        [UserAPI_RoomAccess]
+        [HttpDelete("/user/room/{RoomId}")]
+        public async Task<IActionResult> DeleteRoom([FromRoute] CommonAPI_RoomIdDTO roomIdDTO)
+        {
+            var (errorCode, response) = await _roomService.UserAPI_DeleteRoomById(roomIdDTO);
+
+            return this.ResultResponse(errorCode, response);
         }
     }
 }
