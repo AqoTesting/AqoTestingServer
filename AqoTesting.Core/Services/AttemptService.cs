@@ -176,8 +176,8 @@ namespace AqoTesting.Core.Services
             if(attempt.StartDate == attempt.EndDate || timeNow <= attempt.EndDate)
                 propertiesToUpdate.Add("EndDate", timeNow);
 
-            var (scoreRatio, penalRatio) = AttemptUtils.CalculateScore(attempt.Sections);
-            propertiesToUpdate.Add("CorrectRatio", scoreRatio);
+            var (successRatio, penalRatio) = AttemptUtils.CalculateScore(attempt.Sections);
+            propertiesToUpdate.Add("CorrectRatio", successRatio);
             propertiesToUpdate.Add("PenalRatio", penalRatio);
 
             await _attemptRepository.SetProperties(attempt.Id, propertiesToUpdate);

@@ -6,7 +6,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
     public class UserAPI_TestRankDTO
     {
         [Required]
-        [Range(0, int.MaxValue)]
+        [Range((float) 0.0, (float) 1.0)]
         public float MinimumSuccessRatio { get; set; }
 
         [Required]
