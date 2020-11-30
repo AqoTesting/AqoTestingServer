@@ -147,19 +147,19 @@ namespace AqoTesting.Core.Utils
             return (true, OperationErrorMessages.NoError, sections);
         }
 
-        public static (float, float) CalculateScore(Dictionary<string, AttemptsDB_SectionDTO> sections)
+        public static (int, int, int, float, float) CalculateScore(Dictionary<string, AttemptsDB_SectionDTO> sections)
         {
-            var maxScore = 0;
-            var penalScore = 0;
-            var score = 0;
+            var maxPoints = 0;
+            var correctPoints = 0;
+            var penalPoints = 0;
 
             foreach(var section in sections)
                 foreach(var question in section.Value.Questions)
                 {
-                    maxScore += question.Value.Cost;
+                    maxPoints += question.Value.Cost;
 
                     if((float)question.Value.BlurTime / question.Value.TotalTime >= 0.5)
-                        penalScore += question.Value.Cost;
+                        penalPoints += question.Value.Cost;
 
                     if(question.Value.Type == QuestionTypes.SingleChoice || question.Value.Type == QuestionTypes.MultipleChoice)
                     {
@@ -174,7 +174,7 @@ namespace AqoTesting.Core.Utils
                             }
 
                         if(correct)
-                            score += question.Value.Cost;
+                            correctPoints += question.Value.Cost;
                     }
                     else if(question.Value.Type == QuestionTypes.Matching)
                     {
@@ -190,7 +190,7 @@ namespace AqoTesting.Core.Utils
                             }
 
                         if(correct)
-                            score += question.Value.Cost;
+                            correctPoints += question.Value.Cost;
                     }
                     else if(question.Value.Type == QuestionTypes.Sequence)
                     {
@@ -205,12 +205,14 @@ namespace AqoTesting.Core.Utils
                             }
 
                         if(correct)
-                            score += question.Value.Cost;
+                            correctPoints += question.Value.Cost;
                     }
                 }
 
-            return ( (float)score / maxScore,
-                (float)penalScore / maxScore);
+            var correctRatio = (float)correctPoints / maxPoints;
+            var penalRatio = (float)penalPoints / maxPoints;
+
+            return (maxPoints, correctPoints, penalPoints, correctRatio, penalRatio);
         }
     }
 }

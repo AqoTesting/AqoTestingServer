@@ -12,10 +12,10 @@ namespace AqoTesting.Shared.DTOs.API.MemberAPI.Attempts
         
         [Required]
         [Range(0, int.MaxValue)]
-        public int BlurTimeAddition { get; set; }
+        public int? BlurTimeAddition { get; set; }
         
         [Required]
         [Range(0, int.MaxValue)]
-        public int TotalTimeAddition { get; set; }
+        public int? TotalTimeAddition { get; set; }
     }
 }
