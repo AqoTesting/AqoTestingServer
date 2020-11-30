@@ -7,7 +7,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
     {
         [Required]
         [Range(0, int.MaxValue)]
-        public int MinimumScore { get; set; }
+        public float MinimumSuccessRatio { get; set; }
 
         [Required]
         [StringLength(32, MinimumLength = 1)]
