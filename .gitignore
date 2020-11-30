@@ -352,3 +352,4 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 AqoTesting.WebApi/Properties/launchSettings.json
+AqoTesting.WebApi/Properties/launchSettings.json
