@@ -173,7 +173,7 @@ namespace AqoTesting.Core.Repositories
         public async Task<bool> SetProperty(ObjectId attemptId, string propertyName, object newPropertyValue, ObjectId? memberId = null)
         {
             if (memberId == null)
-                memberId = _workContext.MemberId;
+                memberId = _workContext.MemberId.Value;
 
             await _redisCache.Del($"MemberActiveAttempt:{memberId.Value}");
             _internalByIdCache.Remove(attemptId);
@@ -184,7 +184,7 @@ namespace AqoTesting.Core.Repositories
         public async Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> properties, ObjectId? memberId = null)
         {
             if (memberId == null)
-                memberId = _workContext.MemberId;
+                memberId = _workContext.MemberId.Value;
 
             await _redisCache.Del($"MemberActiveAttempt:{memberId}");
             _internalByIdCache.Remove(attemptId);
@@ -194,6 +194,18 @@ namespace AqoTesting.Core.Repositories
 
         public async Task<bool> Delete(ObjectId attemptId)
         {
+            var attempt = _internalByIdCache.ContainsKey(attemptId) ?
+                _internalByIdCache[attemptId] :
+            await AttemptWorker.GetAttemptById(attemptId);
+
+            if(attempt == null)
+                return false;
+
+            var memberId = attempt.MemberId;
+
+            await _redisCache.Del($"MemberActiveAttempt:{memberId}");
+
+            _internalActiveByMemberIdCache.Remove(memberId);
             _internalByIdCache.Remove(attemptId);
 
             return await AttemptWorker.DeleteAttempt(attemptId);

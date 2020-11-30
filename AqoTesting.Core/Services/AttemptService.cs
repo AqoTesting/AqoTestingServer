@@ -54,6 +54,18 @@ namespace AqoTesting.Core.Services
         }
         public async Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByMemberId(CommonAPI_MemberId_DTO memberIdDTO) =>
             await this.UserAPI_GetAttemptsByMemberId(ObjectId.Parse(memberIdDTO.MemberId));
+
+        public async Task<(OperationErrorMessages, object)> UserAPI_DeleteAttempt(ObjectId attemptId)
+        {
+            var deleted = await _attemptRepository.Delete(attemptId);
+
+            if(!deleted)
+                return (OperationErrorMessages.AttemptNotFound, null);
+
+            return (OperationErrorMessages.NoError, null);
+        }
+        public async Task<(OperationErrorMessages, object)> UserAPI_DeleteAttempt(CommonAPI_AttemptId_DTO attemptIdDTO) =>
+            await this.UserAPI_DeleteAttempt(ObjectId.Parse(attemptIdDTO.AttemptId));
         #endregion
 
         #region MemberAPI

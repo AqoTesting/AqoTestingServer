@@ -10,7 +10,7 @@ namespace AqoTesting.Shared.DTOs.API.MemberAPI.Attempts
         public string? TestId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public bool IsCompleted { get; set; }
+        public bool IsActive { get; set; }
         public bool Ignore { get; set; }
         public int Score { get; set; }
     }

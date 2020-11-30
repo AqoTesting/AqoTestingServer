@@ -51,5 +51,16 @@ namespace AqoTesting.WebApi.Controllers
 
             return this.ResultResponse(errorCode, response);
         }
+
+        [CommonAPI_Auth(Role = Role.User)]
+        [UserAPI_AttemptAccess]
+        [CommonAPI_CheckAttemptsTime]
+        [HttpDelete("/user/attempt/{AttemptId}")]
+        public async Task<IActionResult> DeleteAttempt([FromRoute] CommonAPI_AttemptId_DTO attemptIdDTO)
+        {
+            var (errorCode, response) = await _attemptService.UserAPI_DeleteAttempt(attemptIdDTO);
+
+            return this.ResultResponse(errorCode, response);
+        }
     }
 }

@@ -8,10 +8,9 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Attempts
         public string? MemberId { get; set; }
         public string? UserId { get; set; }
         public string? TestId { get; set; }
-        //public Dictionary<string, TestsDB_Question_DTO> Questions { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public bool IsCompleted { get; set; }
+        public bool IsActive { get; set; }
         public bool Ignore { get; set; }
         public int Score { get; set; }
     }

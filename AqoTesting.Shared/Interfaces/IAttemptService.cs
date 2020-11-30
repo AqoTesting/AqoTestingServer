@@ -18,6 +18,9 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByMemberId(ObjectId memberId);
         Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByMemberId(CommonAPI_MemberId_DTO memberIdDTO);
+
+        Task<(OperationErrorMessages, object)> UserAPI_DeleteAttempt(ObjectId attemptId);
+        Task<(OperationErrorMessages, object)> UserAPI_DeleteAttempt(CommonAPI_AttemptId_DTO attemptIdDTO);
         #endregion
 
         #region MemberAPI
