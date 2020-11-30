@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AqoTesting.Shared.Enums;
+using System;
 
 namespace AqoTesting.Shared.DTOs.API.MemberAPI.Tests
 {
@@ -17,5 +18,6 @@ namespace AqoTesting.Shared.DTOs.API.MemberAPI.Tests
         public DateTime? ActivationDate { get; set; }
         public DateTime? DeactivationDate { get; set; }
         public MemberAPI_TestRankDTO[]? Ranks { get; set; }
+        public FinalResultCalculationMethod FinalResultCalculationMethod { get; set; }
     }
 }
