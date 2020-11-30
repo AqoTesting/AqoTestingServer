@@ -29,7 +29,7 @@ namespace AqoTesting.Core.Repositories
         public async Task DelAll(Role role, ObjectId id)
         {
             var keys = await _cacheRepository.Keys($"{role}:{id}:*");
-            await _cacheRepository.DelAll(keys);
+            if(keys.Length != 0) await _cacheRepository.DelAll(keys);
         }
         public async Task Del(Role role, ObjectId id, SecurityToken token)
         {
