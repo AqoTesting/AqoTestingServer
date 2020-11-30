@@ -19,5 +19,6 @@ namespace AqoTesting.Shared.Interfaces
         Task<bool> SetProperties(ObjectId testId, Dictionary<string, object> properties);
 
         Task<bool> DeleteTest(ObjectId testId);
+        Task<long> DeleteTestsByRoomId(ObjectId roomId);
     }
 }

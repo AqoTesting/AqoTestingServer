@@ -21,6 +21,7 @@ namespace AqoTesting.Shared.Interfaces
         Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> properties, ObjectId? memberId = null);
 
         Task<bool> Delete(ObjectId attemptId);
-        Task DeleteAttemptsByMemberId(ObjectId memberId);
+        Task<long> DeleteAttemptsByMemberId(ObjectId memberId);
+        Task<long> DeleteAttemptsByRoomId(ObjectId roomId);
     }
 }

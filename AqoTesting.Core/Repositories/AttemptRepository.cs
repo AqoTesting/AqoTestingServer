@@ -15,6 +15,7 @@ namespace AqoTesting.Core.Repositories
         Dictionary<ObjectId, ObjectId[]> _internalByTestIdCache;
         Dictionary<ObjectId, ObjectId[]> _internalByMemberIdCache;
         Dictionary<(ObjectId, ObjectId), ObjectId[]> _internalByTestIdAndMemberIdCache;
+        Dictionary<ObjectId, ObjectId[]> _internalByRoomIdCache;
 
         IWorkContext _workContext;
         ICacheRepository _redisCache;
@@ -23,11 +24,13 @@ namespace AqoTesting.Core.Repositories
             _workContext = workContext;
             _redisCache = cache;
 
+            // Это тупое говно, зачем я это сделал, так даже больше запросов в базу
             _internalByIdCache = new Dictionary<ObjectId, AttemptsDB_AttemptDTO>();
             _internalActiveByMemberIdCache = new Dictionary<ObjectId, ObjectId?>();
             _internalByTestIdCache = new Dictionary<ObjectId, ObjectId[]>();
             _internalByMemberIdCache = new Dictionary<ObjectId, ObjectId[]>();
             _internalByTestIdAndMemberIdCache = new Dictionary<(ObjectId, ObjectId), ObjectId[]>();
+            _internalByRoomIdCache = new Dictionary<ObjectId, ObjectId[]>();
         }
 
         public async Task<AttemptsDB_AttemptDTO> GetAttemptById(ObjectId attemptId)
@@ -160,12 +163,42 @@ namespace AqoTesting.Core.Repositories
             return attempts;
         }
 
+        public async Task<AttemptsDB_AttemptDTO[]> GetAttemptsByRoomId(ObjectId roomId)
+        {
+            AttemptsDB_AttemptDTO[] attempts = new AttemptsDB_AttemptDTO[0];
+
+            var cached = _internalByRoomIdCache.ContainsKey(roomId);
+
+            if(cached)
+                attempts = _internalByRoomIdCache[roomId]
+                    .Where(attemptId => _internalByIdCache.ContainsKey(attemptId))
+                        .Select(attemptId =>
+                            _internalByIdCache[attemptId])
+                                .ToArray();
+
+            if(!cached || attempts.Length != _internalByRoomIdCache[roomId].Length)
+            {
+                attempts = await AttemptWorker.GetAttemptsByRoomId(roomId);
+
+                var attemptIds = new ObjectId[attempts.Length];
+                for(var i = 0; i < attempts.Length; i++)
+                {
+                    _internalByIdCache.TryAdd(attempts[i].Id, attempts[i]);
+                    attemptIds[i] = attempts[i].Id;
+                }
+                _internalByRoomIdCache.TryAdd(roomId, attemptIds);
+            }
+
+            return attempts;
+        }
+
         public async Task<ObjectId> InsertAttempt(AttemptsDB_AttemptDTO newAttempt)
         {
             _internalActiveByMemberIdCache = new Dictionary<ObjectId, ObjectId?>();
             _internalByTestIdCache = new Dictionary<ObjectId, ObjectId[]>();
             _internalByMemberIdCache = new Dictionary<ObjectId, ObjectId[]>();
             _internalByTestIdAndMemberIdCache = new Dictionary<(ObjectId, ObjectId), ObjectId[]>();
+            _internalByRoomIdCache = new Dictionary<ObjectId, ObjectId[]>();
 
             return await AttemptWorker.InsertAttempt(newAttempt);
         }
@@ -220,7 +253,7 @@ namespace AqoTesting.Core.Repositories
             return await AttemptWorker.DeleteAttempt(attemptId);
         }
 
-        public async Task DeleteAttemptsByMemberId(ObjectId memberId)
+        public async Task<long> DeleteAttemptsByMemberId(ObjectId memberId)
         {
             await _redisCache.Del($"MemberActiveAttempt:{memberId}");
 
@@ -230,7 +263,20 @@ namespace AqoTesting.Core.Repositories
 
             _internalByMemberIdCache.Remove(memberId);
 
-            await AttemptWorker.DeleteAttemptsByMemberId(memberId);
+            return await AttemptWorker.DeleteAttemptsByMemberId(memberId);
+        }
+
+        public async Task<long> DeleteAttemptsByRoomId(ObjectId roomId)
+        {
+            (await MemberWorker.GetMembersByRoomId(roomId))
+                .Select(async member =>
+                    await _redisCache.Del($"MemberActiveAttempt:{member.Id}"));
+
+            if(_internalByRoomIdCache.ContainsKey(roomId))
+                _internalByRoomIdCache[roomId].Select(attemptId =>
+                    _internalByIdCache.Remove(attemptId));
+
+            return await AttemptWorker.DeleteAttemptsByRoomId(roomId);
         }
     }
 }

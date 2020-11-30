@@ -7,6 +7,7 @@ namespace AqoTesting.Shared.DTOs.API.MemberAPI.Attempts
         public string? Id { get; set; }
         public string? MemberId { get; set; }
         public string? UserId { get; set; }
+        public string? RoomId { get; set; }
         public string? TestId { get; set; }
         public string CurrentSectionId { get; set; }
         public string CurrentQuestionId { get; set; }

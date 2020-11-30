@@ -13,14 +13,20 @@ namespace AqoTesting.Core.Services
 {
     public class RoomService : ServiceBase, IRoomService
     {
-        IUserRepository _userRepository;
         IRoomRepository _roomRepository;
+        IUserRepository _userRepository;
+        IMemberRepository _memberRepository;
+        ITestRepository _testRepository;
+        IAttemptRepository _attemptRepository;
         IWorkContext _workContext;
 
-        public RoomService(IUserRepository userRepository, IRoomRepository roomRespository, IWorkContext workContext)
+        public RoomService(IRoomRepository roomRespository, IUserRepository userRepository, IMemberRepository memberRepository, ITestRepository testRepository, IAttemptRepository attemptRepository, IWorkContext workContext)
         {
-            _userRepository = userRepository;
             _roomRepository = roomRespository;
+            _userRepository = userRepository;
+            _memberRepository = memberRepository;
+            _testRepository = testRepository;
+            _attemptRepository = attemptRepository;
             _workContext = workContext;
         }
 
@@ -123,9 +129,12 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_DeleteRoomById(ObjectId roomId)
         {
             var deleted = await _roomRepository.DeleteRoomById(roomId);
-
-            if(deleted)
+            if(!deleted)
                 return (OperationErrorMessages.RoomNotFound, null);
+
+            await _testRepository.DeleteTestsByRoomId(roomId);
+            await _attemptRepository.DeleteAttemptsByRoomId(roomId);
+            await _memberRepository.DeleteMembersByRoomId(roomId);
 
             return (OperationErrorMessages.NoError, null);
         }

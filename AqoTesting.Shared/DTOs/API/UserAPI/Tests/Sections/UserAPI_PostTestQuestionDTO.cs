@@ -19,6 +19,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
         public bool Shuffle { get; set; } = false;
 
         [RequiredIf("Deleted", false)]
+        [MinLength(2)]
         [MaxLength(16)]
         public UserAPI_TestCommonOptionDTO[]? Options { get; set; } = new UserAPI_TestCommonOptionDTO[0];
 

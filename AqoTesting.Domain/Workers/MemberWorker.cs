@@ -111,6 +111,14 @@ namespace AqoTesting.Domain.Workers
             return isDeleteSuccessful;
         }
         public static async Task<bool> DeleteFromDB(this MembersDB_MemberDTO member) => await DeleteMember(member.Id);
+
+        public static async Task<long> DeleteMembersByRoomId(ObjectId roomId)
+        {
+            var filter = Builders<MembersDB_MemberDTO>.Filter.Eq("RoomId", roomId);
+            var deletedCount = (await MongoController.MemberCollection.DeleteManyAsync(filter)).DeletedCount;
+
+            return deletedCount;
+        }
         #endregion
 
         #region Properties

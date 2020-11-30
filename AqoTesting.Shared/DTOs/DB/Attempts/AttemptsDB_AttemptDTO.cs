@@ -17,6 +17,8 @@ namespace AqoTesting.Shared.DTOs.DB.Attempts
         [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId UserId { get; set; }
         [JsonConverter(typeof(ObjectIdConverter))]
+        public ObjectId RoomId { get; set; }
+        [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId TestId { get; set; }
         public Dictionary<string, AttemptsDB_SectionDTO> Sections { get; set; }
         public string CurrentSectionId { get; set; }

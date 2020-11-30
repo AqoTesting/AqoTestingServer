@@ -44,7 +44,15 @@ namespace AqoTesting.Domain.Workers
         public static async Task<bool> Delete(ObjectId testId)
         {
             var filter = Builders<TestsDB_TestDTO>.Filter.Eq("Id", testId);
+            
             return (await MongoController.TestCollection.DeleteOneAsync(filter)).DeletedCount == 1;
+        }
+
+        public static async Task<long> DeleteTestsByRoomId(ObjectId roomId)
+        {
+            var filter = Builders<TestsDB_TestDTO>.Filter.Eq("RoomId", roomId);
+            
+            return (await MongoController.TestCollection.DeleteManyAsync(filter)).DeletedCount;
         }
         #endregion
 

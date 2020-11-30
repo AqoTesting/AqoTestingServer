@@ -56,6 +56,14 @@ namespace AqoTesting.Domain.Workers
             return attempts.ToArray();
         }
 
+        public static async Task<AttemptsDB_AttemptDTO[]> GetAttemptsByRoomId(ObjectId roomId)
+        {
+            var filter = Builders<AttemptsDB_AttemptDTO>.Filter.Eq("RoomId", roomId);
+            var attempts = await MongoController.AttemptCollection.Find(filter).ToListAsync();
+
+            return attempts.ToArray();
+        }
+
         public static async Task<ObjectId> InsertAttempt(AttemptsDB_AttemptDTO attempt)
         {
             await MongoController.AttemptCollection.InsertOneAsync(attempt);
@@ -91,6 +99,12 @@ namespace AqoTesting.Domain.Workers
         public static async Task<long> DeleteAttemptsByMemberId(ObjectId memberId)
         {
             var filter = Builders<AttemptsDB_AttemptDTO>.Filter.Eq("MemberId", memberId);
+            return (await MongoController.AttemptCollection.DeleteManyAsync(filter)).DeletedCount;
+        }
+
+        public static async Task<long> DeleteAttemptsByRoomId(ObjectId roomId)
+        {
+            var filter = Builders<AttemptsDB_AttemptDTO>.Filter.Eq("RoomId", roomId);
             return (await MongoController.AttemptCollection.DeleteManyAsync(filter)).DeletedCount;
         }
         #endregion

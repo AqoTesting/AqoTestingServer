@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AqoTesting.Domain.Workers;
 using AqoTesting.Shared.DTOs.DB.Tests;
@@ -47,10 +48,19 @@ namespace AqoTesting.Core.Repositories
 
         public async Task<bool> DeleteTest(ObjectId testId)
         {
-            var response = await Task.Run(async () => await TestWorker.Delete(testId));
+            var response = await TestWorker.Delete(testId);
             await _redisCache.Del($"Test:{testId}");
 
             return response;
+        }
+
+        public async Task<long> DeleteTestsByRoomId(ObjectId roomId)
+        {
+            (await TestWorker.GetTestsByRoomId(roomId))
+                .Select(async test =>
+                    await _redisCache.Del($"Test:{test.Id}"));
+
+            return await TestWorker.DeleteTestsByRoomId(roomId);
         }
     }
 }

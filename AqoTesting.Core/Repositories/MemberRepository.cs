@@ -3,6 +3,7 @@ using AqoTesting.Shared.DTOs.DB.Members;
 using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AqoTesting.Core.Repositories
@@ -67,10 +68,19 @@ namespace AqoTesting.Core.Repositories
 
         public async Task<bool> Delete(ObjectId memberId)
         {
-            var response = await Task.Run(() => MemberWorker.DeleteMember(memberId));
+            var response = await MemberWorker.DeleteMember(memberId);
             await _redisCache.Del($"Member:{memberId}");
 
             return response;
+        }
+
+        public async Task<long> DeleteMembersByRoomId(ObjectId roomId)
+        {
+            (await MemberWorker.GetMembersByRoomId(roomId))
+                .Select(async member =>
+                    await _redisCache.Del($"Member:{member.Id}"));
+
+            return await MemberWorker.DeleteMembersByRoomId(roomId);
         }
     }
 }
