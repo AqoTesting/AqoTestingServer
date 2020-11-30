@@ -45,6 +45,12 @@ namespace AqoTesting.Core.Repositories
             await Task.Run(() => MemberWorker.ReplaceMember(member));
         }
 
+        public async Task SetTags(ObjectId memberId, MembersDB_TagDTO[] newValue)
+        {
+            await _redisCache.Del($"Member:{memberId}");
+            await MemberWorker.SetProperty(memberId, "Tags", newValue);
+        }
+
         public async Task<bool> SetProperty(ObjectId memberId, string propertyName, object newPropertyValue)
         {
             await _redisCache.Del($"Member:{memberId}");

@@ -3,7 +3,7 @@ using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 
-namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
+namespace AqoTesting.Shared.DTOs.DB.Rooms
 {
     public class RoomsDB_FieldDTO
     {

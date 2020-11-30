@@ -1,5 +1,5 @@
 ﻿using AqoTesting.Shared.DTOs.API.CommonAPI;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.Enums;
 using System;
 using System.Collections.Generic;

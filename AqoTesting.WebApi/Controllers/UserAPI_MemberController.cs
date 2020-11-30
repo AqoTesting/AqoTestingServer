@@ -42,12 +42,22 @@ namespace AqoTesting.WebApi.Controllers
 
         [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_MemberAccess]
-        [HttpDelete("/user/member/{MemberId}")]
-        public async Task<IActionResult> KickMember([FromRoute] CommonAPI_MemberIdDTO memberIdDTO)
+        [HttpPatch("/user/member/{MemberId}/tags")]
+        public async Task<IActionResult> SetMemberTags([FromRoute] CommonAPI_MemberIdDTO memberIdDTO, [FromBody] UserAPI_PostMemberTagsDTO postTagsDTO)
         {
-            await _memberService.UserAPI_Delete(memberIdDTO);
+            await _memberService.UserAPI_SetMemberTags(memberIdDTO, postTagsDTO);
 
             return this.ResultResponse<object>(OperationErrorMessages.NoError);
+        }
+
+        [CommonAPI_Auth(Role = Role.User)]
+        [UserAPI_MemberAccess]
+        [HttpPatch("/user/member/{MemberId}/approve")]
+        public async Task<IActionResult> Approve([FromRoute] CommonAPI_MemberIdDTO memberIdDTO)
+        {
+            var (errorCode, response) = await _memberService.UserAPI_Approve(memberIdDTO);
+
+            return this.ResultResponse(errorCode, response);
         }
 
         [CommonAPI_Auth(Role = Role.User)]
@@ -62,12 +72,12 @@ namespace AqoTesting.WebApi.Controllers
 
         [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_MemberAccess]
-        [HttpPatch("/user/member/{MemberId}/approve")]
-        public async Task<IActionResult> Approve([FromRoute] CommonAPI_MemberIdDTO memberIdDTO)
+        [HttpDelete("/user/member/{MemberId}")]
+        public async Task<IActionResult> DeleteMember([FromRoute] CommonAPI_MemberIdDTO memberIdDTO)
         {
-            var (errorCode, response) = await _memberService.UserAPI_Approve(memberIdDTO);
+            await _memberService.UserAPI_Delete(memberIdDTO);
 
-            return this.ResultResponse(errorCode, response);
+            return this.ResultResponse<object>(OperationErrorMessages.NoError);
         }
     }
 }

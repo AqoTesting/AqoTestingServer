@@ -3,11 +3,11 @@ using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
 using AqoTesting.Shared.DTOs.API.CommonAPI;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Rooms;
 using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Interfaces;
 using AutoMapper;
 using MongoDB.Bson;
+using AqoTesting.Shared.DTOs.DB.Rooms;
 
 namespace AqoTesting.Core.Services
 {
@@ -85,7 +85,7 @@ namespace AqoTesting.Core.Services
             return (OperationErrorMessages.NoError, newRoomIdDTO);
         }
 
-        public async Task<OperationErrorMessages> UserAPI_EditRoom(ObjectId roomId, UserAPI_PostRoomDTO postRoomDTO)
+        public async Task<(OperationErrorMessages, object)> UserAPI_EditRoom(ObjectId roomId, UserAPI_PostRoomDTO postRoomDTO)
         {
             var outdatedRoom = await _roomRepository.GetRoomById(roomId);
 
@@ -94,7 +94,7 @@ namespace AqoTesting.Core.Services
                 var alreadyTaken = await _roomRepository.GetRoomByDomain(postRoomDTO.Domain);
 
                 if(alreadyTaken != null)
-                    return OperationErrorMessages.DomainAlreadyTaken;
+                    return (OperationErrorMessages.DomainAlreadyTaken, null);
             }
 
 
@@ -105,21 +105,31 @@ namespace AqoTesting.Core.Services
 
             await _roomRepository.ReplaceRoom(updatedRoom);
 
-            return OperationErrorMessages.NoError;
+            return (OperationErrorMessages.NoError, null);
         }
-        public async Task<OperationErrorMessages> UserAPI_EditRoom(CommonAPI_RoomIdDTO roomIdDTO, UserAPI_PostRoomDTO roomUpdates) =>
-            await UserAPI_EditRoom(ObjectId.Parse(roomIdDTO.RoomId), roomUpdates);
+        public async Task<(OperationErrorMessages, object)> UserAPI_EditRoom(CommonAPI_RoomIdDTO roomIdDTO, UserAPI_PostRoomDTO postRoomDTO) =>
+            await UserAPI_EditRoom(ObjectId.Parse(roomIdDTO.RoomId), postRoomDTO);
 
-        public async Task<OperationErrorMessages> UserAPI_DeleteRoomById(ObjectId roomId)
+        public async Task<(OperationErrorMessages, object)> UserAPI_SetRoomTags(ObjectId roomId, UserAPI_RoomTagDTO[] postRoomTagDTOs)
+        {
+            var tags = Mapper.Map<RoomsDB_TagDTO[]>(postRoomTagDTOs);
+            await _roomRepository.SetTags(roomId, tags);
+
+            return (OperationErrorMessages.NoError, null);
+        }
+        public async Task<(OperationErrorMessages, object)> UserAPI_SetRoomTags(CommonAPI_RoomIdDTO roomIdDTO, UserAPI_PostRoomTagsDTO postRoomTagsDTO) =>
+            await this.UserAPI_SetRoomTags(ObjectId.Parse(roomIdDTO.RoomId), postRoomTagsDTO.Tags);
+
+        public async Task<(OperationErrorMessages, object)> UserAPI_DeleteRoomById(ObjectId roomId)
         {
             var deleted = await _roomRepository.DeleteRoomById(roomId);
 
             if(deleted)
-                return OperationErrorMessages.RoomNotFound;
+                return (OperationErrorMessages.RoomNotFound, null);
 
-            return OperationErrorMessages.NoError;
+            return (OperationErrorMessages.NoError, null);
         }
-        public async Task<OperationErrorMessages> UserAPI_DeleteRoomById(CommonAPI_RoomIdDTO roomIdDTO) =>
+        public async Task<(OperationErrorMessages, object)> UserAPI_DeleteRoomById(CommonAPI_RoomIdDTO roomIdDTO) =>
             await UserAPI_DeleteRoomById(ObjectId.Parse(roomIdDTO.RoomId));
 
         #endregion

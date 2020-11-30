@@ -27,5 +27,8 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Rooms
 
         [Required]
         public bool? IsRegistrationEnabled { get; set; }
+
+        [MaxLength(128)]
+        public UserAPI_RoomTagDTO[]? Tags { get; set; } = new UserAPI_RoomTagDTO[0];
     }
 }

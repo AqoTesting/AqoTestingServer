@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AqoTesting.Domain.Controllers;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+using AqoTesting.Shared.DTOs.DB.Rooms;
 using MongoDB.Bson;
 using MongoDB.Driver;
 

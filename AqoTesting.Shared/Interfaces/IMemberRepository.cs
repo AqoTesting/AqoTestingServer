@@ -23,6 +23,8 @@ namespace AqoTesting.Shared.Interfaces
 
         Task ReplaceMember(MembersDB_MemberDTO member);
 
+        Task SetTags(ObjectId memberId, MembersDB_TagDTO[] newValue);
+
         Task<bool> SetProperty(ObjectId memberId, string propertyName, object newPropertyValue);
         Task<bool> SetProperties(ObjectId memberId, Dictionary<string, object> properties);
 

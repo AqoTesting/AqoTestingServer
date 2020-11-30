@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AqoTesting.Domain.Workers;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
+using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
 
@@ -74,6 +74,14 @@ namespace AqoTesting.Core.Repositories
             _internalByIdCache.Remove(update.Id);
             _internalByDomainCache.Remove(update.Domain);
             await RoomWorker.ReplaceRoom(update);
+        }
+
+        public async Task SetTags(ObjectId roomId, RoomsDB_TagDTO[] newValue)
+        {
+            await _redisCache.Del($"Room:{roomId}");
+            _internalByIdCache.Remove(roomId);
+            _internalByDomainCache = new Dictionary<string, ObjectId?>();
+            await RoomWorker.SetProperty(roomId, "Tags", newValue);
         }
 
         public async Task<bool> SetProperty(ObjectId roomId, string propertyName, object newPropertyValue)

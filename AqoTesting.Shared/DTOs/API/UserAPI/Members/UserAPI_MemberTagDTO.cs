@@ -1,13 +1,10 @@
 ﻿using AqoTesting.Shared.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
+namespace AqoTesting.Shared.DTOs.API.UserAPI.Members
 {
-    public class UserAPI_TestRankDTO
+    public class UserAPI_MemberTagDTO
     {
-        [Required]
-        [Range(0, int.MaxValue)]
-        public int MinimumScore { get; set; }
 
         [Required]
         [StringLength(32, MinimumLength = 1)]

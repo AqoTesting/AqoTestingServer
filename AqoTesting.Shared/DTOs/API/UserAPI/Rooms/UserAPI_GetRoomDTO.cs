@@ -11,5 +11,6 @@
         public bool IsActive { get; set; }
         public bool IsApproveManually { get; set; }
         public bool IsRegistrationEnabled { get; set; }
+        public UserAPI_RoomTagDTO[]? Tags { get; set; }
     }
 }

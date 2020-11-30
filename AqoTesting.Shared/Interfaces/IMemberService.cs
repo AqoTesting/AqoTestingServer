@@ -18,6 +18,9 @@ namespace AqoTesting.Shared.Interfaces
         Task<(OperationErrorMessages, object)> UserAPI_ManualMemberAdd(ObjectId roomId, UserAPI_PostMemberDTO postMemberDTO);
         Task<(OperationErrorMessages, object)> UserAPI_ManualMemberAdd(CommonAPI_RoomIdDTO roomIdDTO, UserAPI_PostMemberDTO postMemberDTO);
 
+        Task<(OperationErrorMessages, object)> UserAPI_SetMemberTags(ObjectId memberId, UserAPI_MemberTagDTO[] memberTagsDTO);
+        Task<(OperationErrorMessages, object)> UserAPI_SetMemberTags(CommonAPI_MemberIdDTO memberIdDTO, UserAPI_PostMemberTagsDTO postMemberTagsDTO);
+
         Task<(OperationErrorMessages, object)> UserAPI_Unregister(ObjectId memberId);
         Task<(OperationErrorMessages, object)> UserAPI_Unregister(CommonAPI_MemberIdDTO memberIdDTO);
 

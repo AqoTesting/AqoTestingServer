@@ -12,5 +12,6 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Members
         public bool IsRegistered { get; set; }
         public bool IsApproved { get; set; }
         public Dictionary<string, string>? Fields { get; set; }
+        public UserAPI_MemberTagDTO[]? Tags { get; set; }
     }
 }

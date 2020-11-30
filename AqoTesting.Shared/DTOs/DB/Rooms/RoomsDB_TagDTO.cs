@@ -1,13 +1,12 @@
 ﻿using AqoTesting.Shared.Enums;
 
-namespace AqoTesting.Shared.DTOs.DB.Tests
+namespace AqoTesting.Shared.DTOs.DB.Rooms
 {
-    public class TestsDB_RankDTO
+    public class RoomsDB_TagDTO
     {
-        public int MinimumScore { get; set; }
         public string Title { get; set; }
         public string? BackgroundColor { get; set; }
         public string? TextColor { get; set; }
-        public FontStyles FontStyle { get; set; } = FontStyles.Normal;
+        public FontStyles FontStyle { get; set; }
     }
 }

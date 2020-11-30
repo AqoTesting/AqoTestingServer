@@ -22,5 +22,6 @@ namespace AqoTesting.Shared.DTOs.DB.Members
         public bool IsApproved { get; set; }
         public Dictionary<string, string>? Fields { get; set; }
         public byte[]? FieldsHash { get; set; }
+        public MembersDB_TagDTO[] Tags { get; set; }
     }
 }

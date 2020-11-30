@@ -1,8 +1,8 @@
 ﻿using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Members;
+using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.DTOs.DB.Users;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using MongoDB.Driver;
 
 namespace AqoTesting.Domain.Controllers

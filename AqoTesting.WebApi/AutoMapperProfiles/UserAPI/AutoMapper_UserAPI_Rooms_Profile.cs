@@ -1,6 +1,5 @@
 ﻿using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
 using AqoTesting.Shared.DTOs.DB.Rooms;
-using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Enums;
 using AutoMapper;
 using MongoDB.Bson;

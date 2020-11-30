@@ -3,7 +3,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 
-namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
+namespace AqoTesting.Shared.DTOs.DB.Rooms
 {
     public class RoomsDB_RoomDTO
     {
@@ -21,5 +21,6 @@ namespace AqoTesting.Shared.DTOs.DB.Users.Rooms
         public bool IsActive { get; set; }
         public bool IsApproveManually { get; set; }
         public bool IsRegistrationEnabled { get; set; }
+        public RoomsDB_TagDTO[] Tags { get; set; }
     }
 }

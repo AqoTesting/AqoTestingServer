@@ -86,18 +86,15 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_ManualMemberAdd(CommonAPI_RoomIdDTO roomIdDTO, UserAPI_PostMemberDTO postMemberDTO) =>
             await this.UserAPI_ManualMemberAdd(ObjectId.Parse(roomIdDTO.RoomId), postMemberDTO);
 
-        public async Task<(OperationErrorMessages, object)> UserAPI_Unregister(ObjectId memberId)
+        public async Task<(OperationErrorMessages, object)> UserAPI_SetMemberTags(ObjectId memberId, UserAPI_MemberTagDTO[] memberTagsDTO)
         {
-            var unregistered = await _memberRepository.SetProperty(memberId, "IsRegistered", false);
-            if (!unregistered)
-                return (OperationErrorMessages.MemberIsNotRegistered, null);
-
-            await _cacheRepository.DelAll(await _cacheRepository.Keys($"Member:{memberId}*"));
+            var tags = Mapper.Map<MembersDB_TagDTO[]>(memberTagsDTO);
+            await _memberRepository.SetTags(memberId, tags);
 
             return (OperationErrorMessages.NoError, null);
         }
-        public async Task<(OperationErrorMessages, object)> UserAPI_Unregister(CommonAPI_MemberIdDTO memberIdDTO) =>
-            await this.UserAPI_Unregister(ObjectId.Parse(memberIdDTO.MemberId));
+        public async Task<(OperationErrorMessages, object)> UserAPI_SetMemberTags(CommonAPI_MemberIdDTO memberIdDTO, UserAPI_PostMemberTagsDTO postMemberTagsDTO) =>
+            await this.UserAPI_SetMemberTags(ObjectId.Parse(memberIdDTO.MemberId), postMemberTagsDTO.Tags);
 
         public async Task<(OperationErrorMessages, object)> UserAPI_Approve(ObjectId memberId)
         {
@@ -109,6 +106,19 @@ namespace AqoTesting.Core.Services
         }
         public async Task<(OperationErrorMessages, object)> UserAPI_Approve(CommonAPI_MemberIdDTO memberIdDTO) =>
             await this.UserAPI_Approve(ObjectId.Parse(memberIdDTO.MemberId));
+
+        public async Task<(OperationErrorMessages, object)> UserAPI_Unregister(ObjectId memberId)
+        {
+            var unregistered = await _memberRepository.SetProperty(memberId, "IsRegistered", false);
+            if(!unregistered)
+                return (OperationErrorMessages.MemberIsNotRegistered, null);
+
+            await _cacheRepository.DelAll(await _cacheRepository.Keys($"Member:{memberId}*"));
+
+            return (OperationErrorMessages.NoError, null);
+        }
+        public async Task<(OperationErrorMessages, object)> UserAPI_Unregister(CommonAPI_MemberIdDTO memberIdDTO) =>
+            await this.UserAPI_Unregister(ObjectId.Parse(memberIdDTO.MemberId));
 
         public async Task<OperationErrorMessages> UserAPI_Delete(ObjectId memberId)
         {
