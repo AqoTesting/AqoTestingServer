@@ -18,16 +18,16 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
             CreateMap<AttemptsDB_ChoiceOption, MemberAPI_AttemptCommonOption_DTO>();
             CreateMap<AttemptsDB_MatchingOptions_Container, MemberAPI_AttemptCommonOption_DTO[]>()
                 .ConstructUsing(x => {
-                    var optionsLength = x.LeftCorrectSequence.Length;
+                    var optionsLength = x.LeftSequence.Length;
 
                     var commonOptionDTOs = new MemberAPI_AttemptCommonOption_DTO[optionsLength];
                     for (var i = 0; i < optionsLength; i++)
                         commonOptionDTOs[i] = new MemberAPI_AttemptCommonOption_DTO
                         {
-                            LeftText = x.LeftAnswerSequence[i].Text,
-                            LeftImageUrl = x.LeftAnswerSequence[i].ImageUrl,
-                            RightText = x.RightAnswerSequence[i].Text,
-                            RightImageUrl = x.RightAnswerSequence[i].ImageUrl
+                            LeftText = x.LeftSequence[i].Text,
+                            LeftImageUrl = x.LeftSequence[i].ImageUrl,
+                            RightText = x.RightSequence[i].Text,
+                            RightImageUrl = x.RightSequence[i].ImageUrl
                         };
 
                     return commonOptionDTOs;
@@ -47,7 +47,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
 
                         m.Type == QuestionTypes.Sequence ?
                             Mapper.Map<MemberAPI_AttemptCommonOption_DTO[]>(
-                                BsonSerializer.Deserialize<AttemptsDB_SequenceOptions_Container>(m.Options, null).AnswerSequence) :
+                                BsonSerializer.Deserialize<AttemptsDB_SequenceOptions_Container>(m.Options, null).Sequence) :
 
                         new MemberAPI_AttemptCommonOption_DTO[0]));
             CreateMap<KeyValuePair<string, AttemptsDB_Question_DTO>, KeyValuePair<string, MemberAPI_GetAttemptQuestion_DTO>>()
@@ -69,6 +69,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
                     x => x.MapFrom(m => Mapper.Map<Dictionary<string, MemberAPI_GetAttemptSection_DTO>>(m.Sections)));
             #endregion
 
+            CreateMap<AttemptsDB_Attempt_DTO, MemberAPI_ActiveAttemptResumeData_DTO>();
             CreateMap<AttemptsDB_Attempt_DTO, MemberAPI_GetAttemptsItem_DTO>();
             #endregion
 

@@ -21,13 +21,13 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
             CreateMap<TestsDB_ChoiceOption, UserAPI_TestCommonOption_DTO>();
             CreateMap<TestsDB_MatchingOptions_Container, UserAPI_TestCommonOption_DTO[]>()
                 .ConstructUsing(x => {
-                    var commonOptionDTOs = new UserAPI_TestCommonOption_DTO[x.LeftOptions.Length];
-                    for (var i = 0; i < x.LeftOptions.Length; i++)
+                    var commonOptionDTOs = new UserAPI_TestCommonOption_DTO[x.LeftSequence.Length];
+                    for (var i = 0; i < x.LeftSequence.Length; i++)
                         commonOptionDTOs[i] = new UserAPI_TestCommonOption_DTO {
-                            LeftText = x.LeftOptions[i].Text,
-                            LeftImageUrl = x.LeftOptions[i].ImageUrl,
-                            RightText = x.RightOptions[i].Text,
-                            RightImageUrl = x.RightOptions[i].ImageUrl };
+                            LeftText = x.LeftSequence[i].Text,
+                            LeftImageUrl = x.LeftSequence[i].ImageUrl,
+                            RightText = x.RightSequence[i].Text,
+                            RightImageUrl = x.RightSequence[i].ImageUrl };
 
                     return commonOptionDTOs;
                 });
@@ -46,7 +46,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
 
                         m.Type == QuestionTypes.Sequence ?
                             Mapper.Map<UserAPI_TestCommonOption_DTO[]>(
-                                BsonSerializer.Deserialize<TestsDB_SequenceOptions_Container>(m.Options, null).Options) :
+                                BsonSerializer.Deserialize<TestsDB_SequenceOptions_Container>(m.Options, null).Sequence) :
 
                         new UserAPI_TestCommonOption_DTO[0]));
             CreateMap<KeyValuePair<string, TestsDB_Question_DTO>, KeyValuePair<string, UserAPI_GetTestQuestion_DTO>>()
@@ -73,14 +73,14 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
             #region UserAPI_PostSection_DTO -> TestsDB_Section_DTO
             CreateMap<UserAPI_TestCommonOption_DTO, TestsDB_ChoiceOption>();
             CreateMap<UserAPI_TestCommonOption_DTO[], TestsDB_MatchingOptions_Container>()
-                .ForMember(x => x.LeftOptions,
+                .ForMember(x => x.LeftSequence,
                     x => x.MapFrom(m =>
                         m.Select(option => new TestsDB_PositionalOption
                         {
                             Text = option.LeftText,
                             ImageUrl = option.LeftImageUrl
                         })))
-                .ForMember(x => x.RightOptions,
+                .ForMember(x => x.RightSequence,
                     x => x.MapFrom(m =>
                         m.Select(option => new TestsDB_PositionalOption
                         {
@@ -103,7 +103,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
                         m.Type == QuestionTypes.Sequence ?
                             new TestsDB_SequenceOptions_Container
                             {
-                                Options = Mapper.Map<TestsDB_PositionalOption[]>(m.Options)
+                                Sequence = Mapper.Map<TestsDB_PositionalOption[]>(m.Options)
                             }.ToBsonDocument(null, null, default) :
 
                         new BsonDocument()));

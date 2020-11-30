@@ -4,10 +4,7 @@ namespace AqoTesting.Shared.DTOs.DB.Attempts.OptionsData
 {
     public class AttemptsDB_MatchingOptions_Container
     {
-        public AttemptsDB_PositionalOption[] LeftCorrectSequence { get; set; }
-        public AttemptsDB_PositionalOption[] RightCorrectSequence { get; set; }
-
-        public AttemptsDB_PositionalOption[] LeftAnswerSequence { get; set; }
-        public AttemptsDB_PositionalOption[] RightAnswerSequence { get; set; }
+        public AttemptsDB_PositionalOption[] LeftSequence { get; set; }
+        public AttemptsDB_PositionalOption[] RightSequence { get; set; }
     }
 }

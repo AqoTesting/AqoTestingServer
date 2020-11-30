@@ -72,7 +72,7 @@ namespace AqoTesting.Core.Utils
                 if (leftSequence != null && rightSequence != null)
                 {
                     var optionsContainer = BsonSerializer.Deserialize<AttemptsDB_MatchingOptions_Container>(question.Options);
-                    var optionsCount = optionsContainer.LeftAnswerSequence.Length;
+                    var optionsCount = optionsContainer.LeftSequence.Length;
 
                     if (leftSequence.Length != optionsCount)
                         return (false, OperationErrorMessages.WrongOptionsCount, new CommonAPI_Error_DTO { ErrorSubject = "left" });
@@ -99,11 +99,11 @@ namespace AqoTesting.Core.Utils
                     var tempRightSequence = new AttemptsDB_PositionalOption[optionsCount];
                     for (var i = 0; i < optionsCount; i++)
                     {
-                        tempLeftSequence[i] = optionsContainer.LeftAnswerSequence[leftSequence[i]];
-                        tempRightSequence[i] = optionsContainer.RightAnswerSequence[rightSequence[i]];
+                        tempLeftSequence[i] = optionsContainer.LeftSequence[leftSequence[i]];
+                        tempRightSequence[i] = optionsContainer.RightSequence[rightSequence[i]];
                     }
-                    optionsContainer.LeftAnswerSequence = tempLeftSequence;
-                    optionsContainer.RightAnswerSequence = tempRightSequence;
+                    optionsContainer.LeftSequence = tempLeftSequence;
+                    optionsContainer.RightSequence = tempRightSequence;
 
                     question.Options = optionsContainer.ToBsonDocument();
                 }
@@ -114,7 +114,7 @@ namespace AqoTesting.Core.Utils
                 if (sequence != null)
                 {
                     var optionsContainer = BsonSerializer.Deserialize<AttemptsDB_SequenceOptions_Container>(question.Options);
-                    var optionsCount = optionsContainer.AnswerSequence.Length;
+                    var optionsCount = optionsContainer.Sequence.Length;
 
                     if (sequence.Length != optionsCount)
                         return (false, OperationErrorMessages.WrongOptionsCount, null);
@@ -131,8 +131,8 @@ namespace AqoTesting.Core.Utils
 
                     var temptOptions = new AttemptsDB_PositionalOption[optionsCount];
                     for (var i = 0; i < optionsCount; i++)
-                        temptOptions[i] = optionsContainer.AnswerSequence[sequence[i]];
-                    optionsContainer.AnswerSequence = temptOptions;
+                        temptOptions[i] = optionsContainer.Sequence[sequence[i]];
+                    optionsContainer.Sequence = temptOptions;
 
                     question.Options = optionsContainer.ToBsonDocument();
                 }
@@ -145,6 +145,72 @@ namespace AqoTesting.Core.Utils
             sections[sectionId].Questions[questionId] = question;
 
             return (true, OperationErrorMessages.NoError, sections);
+        }
+
+        public static (float, float) CalculateScore(Dictionary<string, AttemptsDB_Section_DTO> sections)
+        {
+            var maxScore = 0;
+            var penalScore = 0;
+            var score = 0;
+
+            foreach(var section in sections)
+                foreach(var question in section.Value.Questions)
+                {
+                    maxScore += question.Value.Cost;
+
+                    if((float)question.Value.BlurTime / question.Value.TotalTime >= 0.5)
+                        penalScore += question.Value.Cost;
+
+                    if(question.Value.Type == QuestionTypes.SingleChoice || question.Value.Type == QuestionTypes.MultipleChoice)
+                    {
+                        var options = BsonSerializer.Deserialize<AttemptsDB_ChoiceOptions_Container>(question.Value.Options).Options;
+
+                        var correct = true;
+                        foreach(var option in options)
+                            if(option.Chosen != option.IsCorrect)
+                            {
+                                correct = false;
+                                break;
+                            }
+
+                        if(correct)
+                            score += question.Value.Cost;
+                    }
+                    else if(question.Value.Type == QuestionTypes.Matching)
+                    {
+                        var sequences = BsonSerializer.Deserialize<AttemptsDB_MatchingOptions_Container>(question.Value.Options);
+                        var (leftSequence, rightSequence) = (sequences.LeftSequence, sequences.RightSequence);
+
+                        var correct = true;
+                        for(var i = 0; i < sequences.LeftSequence.Length; i++)
+                            if(leftSequence[i].CorrectIndex != rightSequence[i].CorrectIndex)
+                            {
+                                correct = false;
+                                break;
+                            }
+
+                        if(correct)
+                            score += question.Value.Cost;
+                    }
+                    else if(question.Value.Type == QuestionTypes.Sequence)
+                    {
+                        var sequence = BsonSerializer.Deserialize<AttemptsDB_SequenceOptions_Container>(question.Value.Options).Sequence;
+
+                        var correct = true;
+                        for(var i = 0; i < sequence.Length; i++)
+                            if(sequence[i].CorrectIndex != i)
+                            {
+                                correct = false;
+                                break;
+                            }
+
+                        if(correct)
+                            score += question.Value.Cost;
+                    }
+                }
+
+            return ( (float)score / maxScore,
+                (float)penalScore / maxScore);
         }
     }
 }

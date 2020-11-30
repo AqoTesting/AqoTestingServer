@@ -19,63 +19,44 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
             CreateMap<AttemptsDB_ChoiceOption, UserAPI_AttemptCommonOption_DTO>();
             CreateMap<AttemptsDB_PositionalOption, UserAPI_AttemptCommonOption_DTO>();
 
-            CreateMap<AttemptsDB_ChoiceOptions_Container, UserAPI_AttemptOptions_DTO>()
+            CreateMap<AttemptsDB_ChoiceOptions_Container, UserAPI_AttemptCommonOption_DTO[]>()
                 .ConstructUsing(x =>
-                    new UserAPI_AttemptOptions_DTO {
-                        CorrectOptions = null,
-                        AnswerOptions = Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>(x.Options)
-                    });
-            CreateMap<AttemptsDB_MatchingOptions_Container, UserAPI_AttemptOptions_DTO>()
+                    Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>(x.Options));
+            CreateMap<AttemptsDB_MatchingOptions_Container, UserAPI_AttemptCommonOption_DTO[]>()
                 .ConstructUsing(x =>
                 {
-                    var optionsLength = x.LeftCorrectSequence.Length;
-                    var correctOptions = new UserAPI_AttemptCommonOption_DTO[optionsLength];
-                    var answerOptions = new UserAPI_AttemptCommonOption_DTO[optionsLength];
+                    var optionsLength = x.LeftSequence.Length;
+                    var sequence = new UserAPI_AttemptCommonOption_DTO[optionsLength];
                     for(var i = 0; i < optionsLength; i++)
-                    {
-                        correctOptions[i] = new UserAPI_AttemptCommonOption_DTO {
-                            LeftText = x.LeftCorrectSequence[i].Text,
-                            LeftImageUrl = x.LeftCorrectSequence[i].ImageUrl,
-                            RightText = x.RightCorrectSequence[i].Text,
-                            RightImageUrl = x.RightCorrectSequence[i].ImageUrl
+                        sequence[i] = new UserAPI_AttemptCommonOption_DTO {
+                            LeftText = x.LeftSequence[i].Text,
+                            LeftImageUrl = x.LeftSequence[i].ImageUrl,
+                            RightText = x.RightSequence[i].Text,
+                            RightImageUrl = x.RightSequence[i].ImageUrl
                         };
 
-                        answerOptions[i] = new UserAPI_AttemptCommonOption_DTO {
-                            LeftText = x.LeftAnswerSequence[i].Text,
-                            LeftImageUrl = x.LeftAnswerSequence[i].ImageUrl,
-                            RightText = x.RightAnswerSequence[i].Text,
-                            RightImageUrl = x.RightAnswerSequence[i].ImageUrl
-                        };
-                    }
-
-                    return new UserAPI_AttemptOptions_DTO
-                    {
-                        CorrectOptions = correctOptions,
-                        AnswerOptions = answerOptions
-                    };
+                    return sequence;
                 });
-            CreateMap<AttemptsDB_SequenceOptions_Container, UserAPI_AttemptOptions_DTO>()
+            CreateMap<AttemptsDB_SequenceOptions_Container, UserAPI_AttemptCommonOption_DTO[]>()
                 .ConstructUsing(x =>
-                    new UserAPI_AttemptOptions_DTO {
-                        CorrectOptions = Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>(x.AnswerSequence),
-                        AnswerOptions = Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>(x.AnswerSequence) });
+                    Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>(x.Sequence));
 
             CreateMap<AttemptsDB_Question_DTO, UserAPI_GetAttemptQuestion_DTO>()
                 .ForMember(x => x.Options,
                     x => x.MapFrom(m =>
                         m.Type == QuestionTypes.SingleChoice || m.Type == QuestionTypes.MultipleChoice ?
-                            Mapper.Map<UserAPI_AttemptOptions_DTO>(
+                            Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>(
                                 BsonSerializer.Deserialize<AttemptsDB_ChoiceOptions_Container>(m.Options, null)) :
 
                         m.Type == QuestionTypes.Matching ?
-                            Mapper.Map<UserAPI_AttemptOptions_DTO>(
+                            Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>(
                                 BsonSerializer.Deserialize<AttemptsDB_MatchingOptions_Container>(m.Options, null)) :
 
                         m.Type == QuestionTypes.Sequence ?
-                            Mapper.Map<UserAPI_AttemptOptions_DTO>(
+                            Mapper.Map<UserAPI_AttemptCommonOption_DTO[]>(
                                 BsonSerializer.Deserialize<AttemptsDB_SequenceOptions_Container>(m.Options, null)) :
 
-                        new UserAPI_AttemptOptions_DTO()
+                        new UserAPI_AttemptCommonOption_DTO[0]
                     ));
             CreateMap<KeyValuePair<string, AttemptsDB_Question_DTO>, KeyValuePair<string, UserAPI_GetAttemptQuestion_DTO>>()
                 .ConstructUsing(x => new KeyValuePair<string, UserAPI_GetAttemptQuestion_DTO>(

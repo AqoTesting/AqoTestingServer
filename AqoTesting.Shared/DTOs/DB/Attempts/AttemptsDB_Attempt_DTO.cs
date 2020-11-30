@@ -25,6 +25,7 @@ namespace AqoTesting.Shared.DTOs.DB.Attempts
         public DateTime? EndDate { get; set; }
         public bool IsActive { get; set; }
         public bool Ignore { get; set; }
-        public int Score { get; set; }
+        public float CorrectRatio { get; set; }
+        public float PenalRatio { get; set; }
     }
 }

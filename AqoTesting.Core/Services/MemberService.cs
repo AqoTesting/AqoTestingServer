@@ -115,7 +115,10 @@ namespace AqoTesting.Core.Services
             var deleted = await _memberRepository.Delete(memberId);
 
             if(deleted)
+            {
                 await _attemptRepository.DeleteAttemptsByMemberId(memberId);
+                await _tokenRepository.DelAll(Role.Member, memberId);
+            }
 
             else
                 return OperationErrorMessages.MemberNotFound;

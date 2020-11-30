@@ -25,7 +25,7 @@ namespace AqoTesting.Shared.Interfaces
         Task<(OperationErrorMessages, object)> MemberAPI_GetAttempt(CommonAPI_AttemptId_DTO attemptIdDTO);
 
         Task<(OperationErrorMessages, object)> MemberAPI_GetActiveAttempt();
-        Task<(OperationErrorMessages, object)> MemberAPI_GetActiveAttemptId();
+        Task<(OperationErrorMessages, object)> MemberAPI_GetActiveAttemptResumeInfo();
 
         Task<(OperationErrorMessages, object)> MemberAPI_GetAttemptsByMemberId(ObjectId memberId);
         Task<(OperationErrorMessages, object)> MemberAPI_GetAttemptsByMemberId(CommonAPI_MemberId_DTO memberIdDTO);

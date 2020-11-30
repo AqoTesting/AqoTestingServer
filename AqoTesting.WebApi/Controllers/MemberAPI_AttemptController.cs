@@ -73,10 +73,10 @@ namespace AqoTesting.WebApi.Controllers
         [MemberAPI_IsApproved]
         [CommonAPI_CheckAttemptsTime]
         [MemberAPI_HasActiveAttempt]
-        [HttpGet("/member/attempt/active/id")]
-        public async Task<IActionResult> GetActiveAttemptId()
+        [HttpGet("/member/attempt/active/resumeData")]
+        public async Task<IActionResult> GetActiveAttemptResumeData()
         {
-            var (errorCode, response) = await _attemptService.MemberAPI_GetActiveAttemptId();
+            var (errorCode, response) = await _attemptService.MemberAPI_GetActiveAttemptResumeInfo();
 
             return this.ResultResponse(errorCode, response);
         }

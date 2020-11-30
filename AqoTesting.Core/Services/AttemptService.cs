@@ -75,13 +75,13 @@ namespace AqoTesting.Core.Services
 
             return (OperationErrorMessages.NoError, getAttemptDTO);
         }
-        public async Task<(OperationErrorMessages, object)> MemberAPI_GetActiveAttemptId()
+        public async Task<(OperationErrorMessages, object)> MemberAPI_GetActiveAttemptResumeInfo()
         {
             var memberId = _workContext.MemberId.Value;
             var attempt = await _attemptRepository.GetActiveAttemptByMemberId(memberId);
-            var attemptIdDTO = new CommonAPI_AttemptId_DTO { AttemptId = attempt.Id.ToString() };
+            var resumeInfoDTO = Mapper.Map<MemberAPI_ActiveAttemptResumeData_DTO>(attempt);
 
-            return (OperationErrorMessages.NoError, attemptIdDTO);
+            return (OperationErrorMessages.NoError, resumeInfoDTO);
         }
 
         public async Task<(OperationErrorMessages, object)> MemberAPI_GetAttemptsByMemberId(ObjectId memberId)
@@ -147,8 +147,12 @@ namespace AqoTesting.Core.Services
             };
 
             var timeNow = DateTime.Now;
-            if(timeNow <= attempt.EndDate)
+            if(attempt.StartDate == attempt.EndDate || timeNow <= attempt.EndDate)
                 propertiesToUpdate.Add("EndDate", timeNow);
+
+            var (scoreRatio, penalRatio) = AttemptUtils.CalculateScore(attempt.Sections);
+            propertiesToUpdate.Add("CorrectRatio", scoreRatio);
+            propertiesToUpdate.Add("PenalRatio", penalRatio);
 
             await _attemptRepository.SetProperties(attempt.Id, propertiesToUpdate);
 

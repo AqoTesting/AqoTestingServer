@@ -19,7 +19,16 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
         {
             #region TestsDB_Test_DTO -> AttemptsDB_Attempt_DTO
             CreateMap<TestsDB_ChoiceOption, AttemptsDB_ChoiceOption>();
-            CreateMap<TestsDB_PositionalOption, AttemptsDB_PositionalOption>();
+            CreateMap<TestsDB_PositionalOption[], AttemptsDB_PositionalOption[]>()
+                .ConstructUsing(x => {
+                    var attemptOptions = new AttemptsDB_PositionalOption[x.Length];
+                    for(var i = 0; i < x.Length; i++)
+                        attemptOptions[i] = new AttemptsDB_PositionalOption {
+                            CorrectIndex = i,
+                            Text = x[i].Text,
+                            ImageUrl = x[i].ImageUrl };
+
+                    return attemptOptions; });
 
             CreateMap<TestsDB_Question_DTO, AttemptsDB_Question_DTO>()
                 .ForMember(x => x.Options,
@@ -28,6 +37,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
                             case QuestionTypes.SingleChoice:
                             case QuestionTypes.MultipleChoice:
                                 var choiceOptionsData = BsonSerializer.Deserialize<TestsDB_ChoiceOptions_Container>(m.Options, null);
+                                
                                 return new AttemptsDB_ChoiceOptions_Container {
                                     Options = Mapper.Map<AttemptsDB_ChoiceOption[]>(m.Shuffle.Value ?
                                         AttemptConstructor.ShuffleArray(choiceOptionsData.Options) :
@@ -36,21 +46,20 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
 
                             case QuestionTypes.Matching:
                                 var matchingOptionsData = BsonSerializer.Deserialize<TestsDB_MatchingOptions_Container>(m.Options, null);
+
                                 return new AttemptsDB_MatchingOptions_Container {
-                                    LeftCorrectSequence = Mapper.Map<AttemptsDB_PositionalOption[]>(matchingOptionsData.LeftOptions),
-                                    RightCorrectSequence = Mapper.Map<AttemptsDB_PositionalOption[]>(matchingOptionsData.RightOptions),
-                                    LeftAnswerSequence = Mapper.Map<AttemptsDB_PositionalOption[]>(
-                                        AttemptConstructor.ShuffleArray(matchingOptionsData.LeftOptions)),
-                                    RightAnswerSequence = Mapper.Map<AttemptsDB_PositionalOption[]>(
-                                        AttemptConstructor.ShuffleArray(matchingOptionsData.RightOptions))
+                                    LeftSequence = AttemptConstructor.ShuffleArray(
+                                        Mapper.Map<AttemptsDB_PositionalOption[]>(matchingOptionsData.LeftSequence)),
+                                    RightSequence = AttemptConstructor.ShuffleArray(
+                                        Mapper.Map<AttemptsDB_PositionalOption[]>(matchingOptionsData.RightSequence))
                                 }.ToBsonDocument();
 
                             case QuestionTypes.Sequence:
                                 var sequenceOptionsContainer = BsonSerializer.Deserialize<TestsDB_SequenceOptions_Container>(m.Options, null);
+                                
                                 return new AttemptsDB_SequenceOptions_Container {
-                                    CorrectSequence = Mapper.Map<AttemptsDB_PositionalOption[]>(sequenceOptionsContainer.Options),
-                                    AnswerSequence = Mapper.Map<AttemptsDB_PositionalOption[]>(
-                                        AttemptConstructor.ShuffleArray(sequenceOptionsContainer.Options))
+                                    Sequence = AttemptConstructor.ShuffleArray(
+                                        Mapper.Map<AttemptsDB_PositionalOption[]>(sequenceOptionsContainer.Sequence))
                                 }.ToBsonDocument();
 
                             default:
