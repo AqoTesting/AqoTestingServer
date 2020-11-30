@@ -139,8 +139,8 @@ namespace AqoTesting.Core.Utils
             }
 
             question.Touched = true;
-            question.BlurTime += testAnswerDTO.BlurTimeAddition;
-            question.TotalTime += testAnswerDTO.TotalTimeAddition;
+            question.BlurTime += testAnswerDTO.BlurTimeAddition.Value;
+            question.TotalTime += testAnswerDTO.TotalTimeAddition.Value;
 
             sections[sectionId].Questions[questionId] = question;
 
