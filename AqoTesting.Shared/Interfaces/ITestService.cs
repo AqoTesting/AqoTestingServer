@@ -1,4 +1,4 @@
-﻿using AqoTesting.Shared.DTOs.API.Common.Identifiers;
+﻿using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests;
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
 using AqoTesting.Shared.Enums;

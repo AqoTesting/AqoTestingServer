@@ -1,5 +1,6 @@
 ﻿using AqoTesting.Core.Utils;
-using AqoTesting.Shared.DTOs.API.Common.Identifiers;
+using AqoTesting.Shared.DTOs.API.CommonAPI;
+using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Attempts;
 using AqoTesting.Shared.DTOs.API.UserAPI.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts;
@@ -54,6 +55,19 @@ namespace AqoTesting.Core.Services
         }
         public async Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByMemberId(CommonAPI_MemberId_DTO memberIdDTO) =>
             await this.UserAPI_GetAttemptsByMemberId(ObjectId.Parse(memberIdDTO.MemberId));
+
+        public async Task<(OperationErrorMessages, object)> UserAPI_SetAttemptIgnore(ObjectId attemptId, bool newValue)
+        {
+            await _attemptRepository.SetProperty(attemptId, "Ignore", newValue);
+
+            return (OperationErrorMessages.NoError, null);
+        }
+        public async Task<(OperationErrorMessages, object)> UserAPI_SetAttemptIgnore(CommonAPI_AttemptId_DTO attemptIdDTO, bool newValue) =>
+            await this.UserAPI_SetAttemptIgnore(ObjectId.Parse(attemptIdDTO.AttemptId), newValue);
+        public async Task<(OperationErrorMessages, object)> UserAPI_SetAttemptIgnore(ObjectId attemptId, CommonAPI_BooleanValue_DTO booleanValueDTO) =>
+            await this.UserAPI_SetAttemptIgnore(attemptId, booleanValueDTO.BooleanValue.Value);
+        public async Task<(OperationErrorMessages, object)> UserAPI_SetAttemptIgnore(CommonAPI_AttemptId_DTO attemptIdDTO, CommonAPI_BooleanValue_DTO booleanValueDTO) =>
+            await this.UserAPI_SetAttemptIgnore(ObjectId.Parse(attemptIdDTO.AttemptId), booleanValueDTO.BooleanValue.Value);
 
         public async Task<(OperationErrorMessages, object)> UserAPI_DeleteAttempt(ObjectId attemptId)
         {

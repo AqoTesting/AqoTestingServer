@@ -1,4 +1,4 @@
-﻿using AqoTesting.Shared.DTOs.API.Common;
+﻿using AqoTesting.Shared.DTOs.API.CommonAPI;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts.Options;

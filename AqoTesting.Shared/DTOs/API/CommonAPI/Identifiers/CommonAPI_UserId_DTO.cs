@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AqoTesting.Shared.DTOs.API.Common.Identifiers
+namespace AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers
 {
-    public class CommonAPI_AttemptId_DTO
+    public class CommonAPI_UserId_DTO
     {
         [Required]
         [StringLength(24, MinimumLength = 24)]
         [RegularExpression(@"^[0-9abcdef]+$")]
-        public string? AttemptId { get; set; }
+        public string? UserId { get; set; }
     }
 }

@@ -8,7 +8,7 @@ using AqoTesting.Shared.Models;
 using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
 using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API.Common.Identifiers;
+using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
 
 namespace AqoTesting.WebApi.Attributes.UserAPI
 {

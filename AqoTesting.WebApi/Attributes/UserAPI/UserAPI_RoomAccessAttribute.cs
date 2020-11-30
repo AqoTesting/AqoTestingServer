@@ -9,7 +9,7 @@ using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using MongoDB.Bson;
 using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API.Common.Identifiers;
+using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
 
 namespace AqoTesting.WebApi.Attributes.UserAPI
 {

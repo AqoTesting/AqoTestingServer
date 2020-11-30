@@ -173,7 +173,16 @@ namespace AqoTesting.Core.Repositories
         public async Task<bool> SetProperty(ObjectId attemptId, string propertyName, object newPropertyValue, ObjectId? memberId = null)
         {
             if (memberId == null)
-                memberId = _workContext.MemberId.Value;
+                if(_workContext.MemberId != null)
+                    memberId = _workContext.MemberId.Value;
+                else
+                {
+                    var attempt = await AttemptWorker.GetAttemptById(attemptId);
+                    if(attempt == null)
+                        return false;
+
+                    memberId = attempt.MemberId;
+                }
 
             await _redisCache.Del($"MemberActiveAttempt:{memberId.Value}");
             _internalByIdCache.Remove(attemptId);

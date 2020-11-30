@@ -1,4 +1,4 @@
-﻿namespace AqoTesting.Shared.DTOs.API.Common
+﻿namespace AqoTesting.Shared.DTOs.API.CommonAPI
 {
     public class CommonAPI_Error_DTO
     {

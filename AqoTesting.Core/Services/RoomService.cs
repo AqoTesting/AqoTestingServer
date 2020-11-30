@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using AqoTesting.Shared.DTOs.API.Common;
-using AqoTesting.Shared.DTOs.API.Common.Identifiers;
+using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
+using AqoTesting.Shared.DTOs.API.CommonAPI;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Rooms;
 using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
@@ -29,7 +29,7 @@ namespace AqoTesting.Core.Services
         {
             var roomExists = await _roomRepository.GetRoomByDomain(roomDomain);
 
-            var booleanResponse_DTO = new CommonAPI_BooleanResponse_DTO { BooleanValue = roomExists != null };
+            var booleanResponse_DTO = new CommonAPI_BooleanValue_DTO { BooleanValue = roomExists != null };
 
             return (OperationErrorMessages.NoError, booleanResponse_DTO);
         }

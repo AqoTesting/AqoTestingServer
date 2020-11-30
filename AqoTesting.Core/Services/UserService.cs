@@ -7,7 +7,7 @@ using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
 using AutoMapper;
 using AqoTesting.Shared.DTOs.API.UserAPI.Account;
-using AqoTesting.Shared.DTOs.API.Common.Identifiers;
+using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
 
 namespace AqoTesting.Core.Services
 {

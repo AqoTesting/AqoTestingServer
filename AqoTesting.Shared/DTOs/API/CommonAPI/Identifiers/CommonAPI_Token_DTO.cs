@@ -1,4 +1,4 @@
-﻿namespace AqoTesting.Shared.DTOs.API.Common.Identifiers
+﻿namespace AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers
 {
     public class CommonAPI_Token_DTO
     {

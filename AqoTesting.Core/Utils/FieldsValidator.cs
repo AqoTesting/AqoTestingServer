@@ -1,4 +1,4 @@
-﻿using AqoTesting.Shared.DTOs.API.Common;
+﻿using AqoTesting.Shared.DTOs.API.CommonAPI;
 using AqoTesting.Shared.DTOs.DB.Users.Rooms;
 using AqoTesting.Shared.Enums;
 using System;

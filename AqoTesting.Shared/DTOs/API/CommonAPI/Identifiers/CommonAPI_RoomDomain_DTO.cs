@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AqoTesting.Shared.DTOs.API.Common.Identifiers
+namespace AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers
 {
     public class CommonAPI_RoomDomain_DTO
     {

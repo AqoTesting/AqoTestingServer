@@ -1,4 +1,5 @@
-﻿using AqoTesting.Shared.DTOs.API.Common.Identifiers;
+﻿using AqoTesting.Shared.DTOs.API.CommonAPI;
+using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
 using AqoTesting.Shared.DTOs.API.MemberAPI.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.Enums;
@@ -18,6 +19,10 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByMemberId(ObjectId memberId);
         Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByMemberId(CommonAPI_MemberId_DTO memberIdDTO);
+
+        Task<(OperationErrorMessages, object)> UserAPI_SetAttemptIgnore(CommonAPI_AttemptId_DTO attemptIdDTO, bool newValue);
+        Task<(OperationErrorMessages, object)> UserAPI_SetAttemptIgnore(ObjectId attemptId, CommonAPI_BooleanValue_DTO booleanValueDTO);
+        Task<(OperationErrorMessages, object)> UserAPI_SetAttemptIgnore(CommonAPI_AttemptId_DTO attemptIdDTO, CommonAPI_BooleanValue_DTO booleanValueDTO);
 
         Task<(OperationErrorMessages, object)> UserAPI_DeleteAttempt(ObjectId attemptId);
         Task<(OperationErrorMessages, object)> UserAPI_DeleteAttempt(CommonAPI_AttemptId_DTO attemptIdDTO);
