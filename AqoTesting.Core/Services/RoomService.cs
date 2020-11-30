@@ -72,7 +72,7 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_CreateRoom(UserAPI_PostRoomDTO postRoomDto)
         {
-            var domainTaken = _roomRepository.GetRoomByDomain(postRoomDto.Domain);
+            var domainTaken = await _roomRepository.GetRoomByDomain(postRoomDto.Domain);
             if(domainTaken != null)
                 return (OperationErrorMessages.DomainAlreadyTaken, null);
 
