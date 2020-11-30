@@ -22,7 +22,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [HttpPost("/member/signin")]
-        public async Task<IActionResult> SignIn([FromBody] MemberAPI_SignIn_DTO authData)
+        public async Task<IActionResult> SignIn([FromBody] MemberAPI_SignInDTO authData)
         {
             (var errorCode, var response) = await _memberService.MemberAPI_SignIn(authData);
 
@@ -30,7 +30,7 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [HttpPost("/member/signup")]
-        public async Task<IActionResult> SignUp([FromBody] MemberAPI_SignUp_DTO signUpDTO)
+        public async Task<IActionResult> SignUp([FromBody] MemberAPI_SignUpDTO signUpDTO)
         {
             (var errorCode, var response) = await _memberService.MemberAPI_SignUp(signUpDTO);
 

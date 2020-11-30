@@ -13,11 +13,11 @@ using System.Collections.Generic;
 
 namespace AqoTesting.WebApi.AutoMapperProfiles
 {
-    public class AutoMapper_CrossObjects_Profile : Profile
+    public class AutoMapper_CrossObjectsProfile : Profile
     {
-        public AutoMapper_CrossObjects_Profile()
+        public AutoMapper_CrossObjectsProfile()
         {
-            #region TestsDB_Test_DTO -> AttemptsDB_Attempt_DTO
+            #region TestsDB_TestDTO -> AttemptsDB_AttemptDTO
             CreateMap<TestsDB_ChoiceOption, AttemptsDB_ChoiceOption>();
             CreateMap<TestsDB_PositionalOption[], AttemptsDB_PositionalOption[]>()
                 .ConstructUsing(x => {
@@ -30,24 +30,24 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
 
                     return attemptOptions; });
 
-            CreateMap<TestsDB_Question_DTO, AttemptsDB_Question_DTO>()
+            CreateMap<TestsDB_QuestionDTO, AttemptsDB_QuestionDTO>()
                 .ForMember(x => x.Options,
                     x => x.ResolveUsing(m => {
                         switch(m.Type) {
                             case QuestionTypes.SingleChoice:
                             case QuestionTypes.MultipleChoice:
-                                var choiceOptionsData = BsonSerializer.Deserialize<TestsDB_ChoiceOptions_Container>(m.Options, null);
+                                var choiceOptionsData = BsonSerializer.Deserialize<TestsDB_ChoiceOptionsContainer>(m.Options, null);
                                 
-                                return new AttemptsDB_ChoiceOptions_Container {
+                                return new AttemptsDB_ChoiceOptionsContainer {
                                     Options = Mapper.Map<AttemptsDB_ChoiceOption[]>(m.Shuffle.Value ?
                                         AttemptConstructor.ShuffleArray(choiceOptionsData.Options) :
                                     choiceOptionsData.Options)
                                 }.ToBsonDocument();
 
                             case QuestionTypes.Matching:
-                                var matchingOptionsData = BsonSerializer.Deserialize<TestsDB_MatchingOptions_Container>(m.Options, null);
+                                var matchingOptionsData = BsonSerializer.Deserialize<TestsDB_MatchingOptionsContainer>(m.Options, null);
 
-                                return new AttemptsDB_MatchingOptions_Container {
+                                return new AttemptsDB_MatchingOptionsContainer {
                                     LeftSequence = AttemptConstructor.ShuffleArray(
                                         Mapper.Map<AttemptsDB_PositionalOption[]>(matchingOptionsData.LeftSequence)),
                                     RightSequence = AttemptConstructor.ShuffleArray(
@@ -55,9 +55,9 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
                                 }.ToBsonDocument();
 
                             case QuestionTypes.Sequence:
-                                var sequenceOptionsContainer = BsonSerializer.Deserialize<TestsDB_SequenceOptions_Container>(m.Options, null);
+                                var sequenceOptionsContainer = BsonSerializer.Deserialize<TestsDB_SequenceOptionsContainer>(m.Options, null);
                                 
-                                return new AttemptsDB_SequenceOptions_Container {
+                                return new AttemptsDB_SequenceOptionsContainer {
                                     Sequence = AttemptConstructor.ShuffleArray(
                                         Mapper.Map<AttemptsDB_PositionalOption[]>(sequenceOptionsContainer.Sequence))
                                 }.ToBsonDocument();
@@ -65,21 +65,21 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
                             default:
                                 return new BsonDocument();
                         }}));
-            CreateMap<KeyValuePair<string, TestsDB_Question_DTO>, KeyValuePair<string, AttemptsDB_Question_DTO>>()
-                .ConstructUsing(x => new KeyValuePair<string, AttemptsDB_Question_DTO>(
+            CreateMap<KeyValuePair<string, TestsDB_QuestionDTO>, KeyValuePair<string, AttemptsDB_QuestionDTO>>()
+                .ConstructUsing(x => new KeyValuePair<string, AttemptsDB_QuestionDTO>(
                     x.Key,
-                    Mapper.Map<AttemptsDB_Question_DTO>(x.Value)));
+                    Mapper.Map<AttemptsDB_QuestionDTO>(x.Value)));
 
-            CreateMap<TestsDB_Section_DTO, AttemptsDB_Section_DTO>()
+            CreateMap<TestsDB_SectionDTO, AttemptsDB_SectionDTO>()
                 .ForMember(x => x.Questions,
                     x => x.MapFrom(m =>
-                        Mapper.Map<Dictionary<string, AttemptsDB_Question_DTO>>(m.Questions)));
-            CreateMap<KeyValuePair<string, TestsDB_Section_DTO>, KeyValuePair<string, AttemptsDB_Section_DTO>>()
-                .ConstructUsing(x => new KeyValuePair<string, AttemptsDB_Section_DTO>(
+                        Mapper.Map<Dictionary<string, AttemptsDB_QuestionDTO>>(m.Questions)));
+            CreateMap<KeyValuePair<string, TestsDB_SectionDTO>, KeyValuePair<string, AttemptsDB_SectionDTO>>()
+                .ConstructUsing(x => new KeyValuePair<string, AttemptsDB_SectionDTO>(
                     x.Key,
-                    Mapper.Map<AttemptsDB_Section_DTO>(x.Value)));
+                    Mapper.Map<AttemptsDB_SectionDTO>(x.Value)));
 
-            CreateMap<TestsDB_Test_DTO, AttemptsDB_Attempt_DTO>()
+            CreateMap<TestsDB_TestDTO, AttemptsDB_AttemptDTO>()
                 .ForMember(x => x.Id,
                     x => x.Ignore())
                 .ForMember(x => x.TestId,
@@ -87,7 +87,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
                         m.Id))
                 .ForMember(x => x.Sections,
                     x => x.MapFrom(m =>
-                        Mapper.Map<Dictionary<string, AttemptsDB_Section_DTO>>(
+                        Mapper.Map<Dictionary<string, AttemptsDB_SectionDTO>>(
                             AttemptConstructor.SelectSections(m))));
             #endregion
         }

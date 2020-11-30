@@ -32,7 +32,7 @@ namespace AqoTesting.WebApi.Attributes.UserAPI
 
                 foreach(var parameter in parameters)
                 {
-                    if(parameter.ParameterType != typeof(CommonAPI_RoomId_DTO) && parameter.ParameterType != typeof(CommonAPI_RoomDomain_DTO))
+                    if(parameter.ParameterType != typeof(CommonAPI_RoomIdDTO) && parameter.ParameterType != typeof(CommonAPI_RoomDomainDTO))
                         continue;
 
                     var argument = context.ActionArguments[parameter.Name];
@@ -50,12 +50,12 @@ namespace AqoTesting.WebApi.Attributes.UserAPI
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
             var userId = _workContext.UserId.Value;
-            var room = new RoomsDB_Room_DTO();
+            var room = new RoomsDB_RoomDTO();
 
-            if(dtoType == typeof(CommonAPI_RoomId_DTO))
-                room = await roomRepository.GetRoomById(ObjectId.Parse(((CommonAPI_RoomId_DTO)argument).RoomId));
-            else if(dtoType == typeof(CommonAPI_RoomDomain_DTO))
-                room = await roomRepository.GetRoomByDomain(((CommonAPI_RoomDomain_DTO)argument).RoomDomain);
+            if(dtoType == typeof(CommonAPI_RoomIdDTO))
+                room = await roomRepository.GetRoomById(ObjectId.Parse(((CommonAPI_RoomIdDTO)argument).RoomId));
+            else if(dtoType == typeof(CommonAPI_RoomDomainDTO))
+                room = await roomRepository.GetRoomByDomain(((CommonAPI_RoomDomainDTO)argument).RoomDomain);
 
             if(room == null)
                 return OperationErrorMessages.RoomNotFound;

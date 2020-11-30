@@ -35,7 +35,7 @@ namespace AqoTesting.WebApi.Controllers
         [MemberAPI_IsApproved]
         [MemberAPI_TestAccess]
         [HttpGet("/member/test/{TestId}")]
-        public async Task<IActionResult> GetTest([FromRoute] CommonAPI_TestId_DTO testIdDTO)
+        public async Task<IActionResult> GetTest([FromRoute] CommonAPI_TestIdDTO testIdDTO)
         {
             var (errorCode, response) = await _testService.MemberAPI_GetTestById(testIdDTO);
 
@@ -48,7 +48,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_CheckAttemptsTime]
         [MemberAPI_HasNoActiveAttempt]
         [HttpGet("/member/test/{TestId}/begin")]
-        public async Task<IActionResult> BeginTest([FromRoute] CommonAPI_TestId_DTO testIdDTO)
+        public async Task<IActionResult> BeginTest([FromRoute] CommonAPI_TestIdDTO testIdDTO)
         {
             var (errorCode, response) = await _testService.MemberAPI_BeginTest(testIdDTO);
 

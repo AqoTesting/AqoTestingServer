@@ -31,7 +31,7 @@ namespace AqoTesting.WebApi.Attributes.UserAPI
 
                 foreach(var parameter in parameters)
                 {
-                    if(parameter.ParameterType != typeof(CommonAPI_AttemptId_DTO))
+                    if(parameter.ParameterType != typeof(CommonAPI_AttemptIdDTO))
                         continue;
 
                     var argument = context.ActionArguments[parameter.Name];
@@ -49,7 +49,7 @@ namespace AqoTesting.WebApi.Attributes.UserAPI
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
             var userId = _workContext.UserId;
-            var attempt = await attemptRepository.GetAttemptById(ObjectId.Parse(((CommonAPI_AttemptId_DTO)argument).AttemptId));
+            var attempt = await attemptRepository.GetAttemptById(ObjectId.Parse(((CommonAPI_AttemptIdDTO)argument).AttemptId));
 
             if(attempt == null)
                 return OperationErrorMessages.AttemptNotFound;

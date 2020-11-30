@@ -31,7 +31,7 @@ namespace AqoTesting.WebApi.Attributes.UserAPI
 
                 foreach(var parameter in parameters)
                 {
-                    if(parameter.ParameterType != typeof(CommonAPI_MemberId_DTO))
+                    if(parameter.ParameterType != typeof(CommonAPI_MemberIdDTO))
                         continue;
 
                     var argument = context.ActionArguments[parameter.Name];
@@ -49,7 +49,7 @@ namespace AqoTesting.WebApi.Attributes.UserAPI
             var _workContext = httpContext.RequestServices.GetService<IWorkContext>();
 
             var userId = _workContext.UserId;
-            var member = await memberRepository.GetMemberById(ObjectId.Parse(((CommonAPI_MemberId_DTO)argument).MemberId));
+            var member = await memberRepository.GetMemberById(ObjectId.Parse(((CommonAPI_MemberIdDTO)argument).MemberId));
 
             if(member == null)
                 return OperationErrorMessages.MemberNotFound;

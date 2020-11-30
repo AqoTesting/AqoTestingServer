@@ -4,16 +4,16 @@ using AutoMapper;
 
 namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
 {
-    public class AutoMapper_UserAPI_Members_Profile : Profile
+    public class AutoMapper_UserAPI_MembersProfile : Profile
     {
-        public AutoMapper_UserAPI_Members_Profile()
+        public AutoMapper_UserAPI_MembersProfile()
         {
             #region DB -> API
 
             #endregion
 
             #region API -> DB
-            CreateMap<UserAPI_PostMember_DTO, MembersDB_Member_DTO>();
+            CreateMap<UserAPI_PostMemberDTO, MembersDB_MemberDTO>();
             #endregion
         }
     }

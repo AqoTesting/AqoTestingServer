@@ -28,7 +28,7 @@ namespace AqoTesting.WebApi.Attributes.CommonAPI
                 var workContext = context.HttpContext.RequestServices.GetService<IWorkContext>();
                 var attemptRepository = context.HttpContext.RequestServices.GetService<IAttemptRepository>();
 
-                var attemptsToCheck = new HashSet<AttemptsDB_Attempt_DTO>();
+                var attemptsToCheck = new HashSet<AttemptsDB_AttemptDTO>();
 
                 if(workContext.MemberId != null)
                 {
@@ -39,27 +39,27 @@ namespace AqoTesting.WebApi.Attributes.CommonAPI
                 }
 
                 foreach(var parameter in descriptor.MethodInfo.GetParameters())
-                    if(parameter.ParameterType == typeof(CommonAPI_MemberId_DTO))
+                    if(parameter.ParameterType == typeof(CommonAPI_MemberIdDTO))
                     {
                         var attempt = await attemptRepository.GetActiveAttemptByMemberId(
-                            ObjectId.Parse(((CommonAPI_MemberId_DTO)context.ActionArguments[parameter.Name]).MemberId));
+                            ObjectId.Parse(((CommonAPI_MemberIdDTO)context.ActionArguments[parameter.Name]).MemberId));
 
                         if(attempt != null)
                             attemptsToCheck.Add(attempt);
                     }
 
-                    else if(parameter.ParameterType == typeof(CommonAPI_AttemptId_DTO))
+                    else if(parameter.ParameterType == typeof(CommonAPI_AttemptIdDTO))
                     {
                         var attempt = await attemptRepository.GetAttemptById(
-                            ObjectId.Parse(((CommonAPI_AttemptId_DTO)context.ActionArguments[parameter.Name]).AttemptId));
+                            ObjectId.Parse(((CommonAPI_AttemptIdDTO)context.ActionArguments[parameter.Name]).AttemptId));
 
                         if(attempt != null)
                             attemptsToCheck.Add(attempt);
                     }
 
-                    else if(parameter.ParameterType == typeof(CommonAPI_TestId_DTO))
+                    else if(parameter.ParameterType == typeof(CommonAPI_TestIdDTO))
                         (await attemptRepository.GetAttemptsByTestId(
-                            ObjectId.Parse(((CommonAPI_TestId_DTO)context.ActionArguments[parameter.Name]).TestId)))
+                            ObjectId.Parse(((CommonAPI_TestIdDTO)context.ActionArguments[parameter.Name]).TestId)))
                                 .Select(attempt =>
                                     attemptsToCheck.Add(attempt));
 

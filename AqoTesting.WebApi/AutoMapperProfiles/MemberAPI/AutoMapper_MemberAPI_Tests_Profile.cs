@@ -4,14 +4,14 @@ using AutoMapper;
 
 namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
 {
-    public class AutoMapper_MemberAPI_Tests_Profile : Profile
+    public class AutoMapper_MemberAPI_TestsProfile : Profile
     {
-        public AutoMapper_MemberAPI_Tests_Profile()
+        public AutoMapper_MemberAPI_TestsProfile()
         {
             #region DB -> API
-            CreateMap<TestsDB_Document_DTO, MemberAPI_TestDocument_DTO>();
-            CreateMap<TestsDB_Rank_DTO, MemberAPI_TestRank_DTO>();
-            CreateMap<TestsDB_Test_DTO, MemberAPI_GetTest_DTO>();
+            CreateMap<TestsDB_DocumentDTO, MemberAPI_TestDocumentDTO>();
+            CreateMap<TestsDB_RankDTO, MemberAPI_TestRankDTO>();
+            CreateMap<TestsDB_TestDTO, MemberAPI_GetTestDTO>();
             #endregion
 
             #region API -> DB

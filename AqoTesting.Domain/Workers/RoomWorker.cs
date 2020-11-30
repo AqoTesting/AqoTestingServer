@@ -11,45 +11,45 @@ namespace AqoTesting.Domain.Workers
     public static class RoomWorker
     {
         #region IO
-        public static async Task<RoomsDB_Room_DTO> GetRoomById(ObjectId roomId)
+        public static async Task<RoomsDB_RoomDTO> GetRoomById(ObjectId roomId)
         {
-            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var filter = Builders<RoomsDB_RoomDTO>.Filter.Eq("Id", roomId);
             var room = await MongoController.RoomCollection.Find(filter).SingleOrDefaultAsync();
             return room;
         }
 
-        public static async Task<RoomsDB_Room_DTO> GetRoomByDomain(string domain)
+        public static async Task<RoomsDB_RoomDTO> GetRoomByDomain(string domain)
         {
-            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Domain", domain);
+            var filter = Builders<RoomsDB_RoomDTO>.Filter.Eq("Domain", domain);
             var room = await MongoController.RoomCollection.Find(filter).SingleOrDefaultAsync();
             return room;
         }
 
-        public static async Task<RoomsDB_Room_DTO[]> GetRoomsByUserId(ObjectId userId)
+        public static async Task<RoomsDB_RoomDTO[]> GetRoomsByUserId(ObjectId userId)
         {
-            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("UserId", userId);
+            var filter = Builders<RoomsDB_RoomDTO>.Filter.Eq("UserId", userId);
             var rooms = await MongoController.RoomCollection.Find(filter).ToListAsync();
 
             return rooms.ToArray();
         }
 
-        public static async Task<ObjectId> InsertRoom(RoomsDB_Room_DTO room)
+        public static async Task<ObjectId> InsertRoom(RoomsDB_RoomDTO room)
         {
             await MongoController.RoomCollection.InsertOneAsync(room);
             return room.Id;
         }
 
-        public static async Task<bool> ReplaceRoom(RoomsDB_Room_DTO updatedRoom)
+        public static async Task<bool> ReplaceRoom(RoomsDB_RoomDTO updatedRoom)
         {
-            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", updatedRoom.Id);
+            var filter = Builders<RoomsDB_RoomDTO>.Filter.Eq("Id", updatedRoom.Id);
             return (await MongoController.RoomCollection.ReplaceOneAsync(filter, updatedRoom)).MatchedCount == 1;
         }
 
-        public static async Task<bool> UpdateInDB(this RoomsDB_Room_DTO room) => await ReplaceRoom(room);
+        public static async Task<bool> UpdateInDB(this RoomsDB_RoomDTO room) => await ReplaceRoom(room);
  
         public static async Task<bool> DeleteRoomById(ObjectId roomId)
         {
-            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
+            var filter = Builders<RoomsDB_RoomDTO>.Filter.Eq("Id", roomId);
             var isDeleteSuccessful = (await MongoController.RoomCollection.DeleteOneAsync(filter)).DeletedCount == 1;
             return isDeleteSuccessful;
         }
@@ -58,17 +58,17 @@ namespace AqoTesting.Domain.Workers
         #region Properties
         public static async Task<bool> SetProperty(ObjectId roomId, string propertyName, object newPropertyValue)
         {
-            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
-            var update = Builders<RoomsDB_Room_DTO>.Update.Set(propertyName, newPropertyValue);
+            var filter = Builders<RoomsDB_RoomDTO>.Filter.Eq("Id", roomId);
+            var update = Builders<RoomsDB_RoomDTO>.Update.Set(propertyName, newPropertyValue);
 
             return (await MongoController.RoomCollection.UpdateOneAsync(filter, update)).MatchedCount == 1;
         }
 
         public static async Task<bool> SetProperties(ObjectId roomId, Dictionary<string, object> properties)
         {
-            var filter = Builders<RoomsDB_Room_DTO>.Filter.Eq("Id", roomId);
-            var updates = new List<UpdateDefinition<RoomsDB_Room_DTO>>();
-            var update = Builders<RoomsDB_Room_DTO>.Update;
+            var filter = Builders<RoomsDB_RoomDTO>.Filter.Eq("Id", roomId);
+            var updates = new List<UpdateDefinition<RoomsDB_RoomDTO>>();
+            var update = Builders<RoomsDB_RoomDTO>.Update;
             foreach (KeyValuePair<string, object> property in properties)
                 updates.Add(update.Set(property.Key, property.Value));
 

@@ -36,24 +36,24 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetMemberById(ObjectId memberId)
         {
             var member = await _memberRepository.GetMemberById(memberId);
-            var getMemberDTO = Mapper.Map<UserAPI_GetMember_DTO>(member);
+            var getMemberDTO = Mapper.Map<UserAPI_GetMemberDTO>(member);
 
             return (OperationErrorMessages.NoError, getMemberDTO);
         }
-        public async Task<(OperationErrorMessages, object)> UserAPI_GetMemberById(CommonAPI_MemberId_DTO memberIdDTO) =>
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetMemberById(CommonAPI_MemberIdDTO memberIdDTO) =>
             await this.UserAPI_GetMemberById(ObjectId.Parse(memberIdDTO.MemberId));
 
         public async Task<(OperationErrorMessages, object)> UserAPI_GetMembersByRoomId(ObjectId roomId)
         {
             var members = await _memberRepository.GetMembersByRoomId(roomId);
-            var getMembersItemDTOs = Mapper.Map<UserAPI_GetMembersItem_DTO[]>(members);
+            var getMembersItemDTOs = Mapper.Map<UserAPI_GetMembersItemDTO[]>(members);
 
             return (OperationErrorMessages.NoError, getMembersItemDTOs);
         }
-        public async Task<(OperationErrorMessages, object)> UserAPI_GetMembersByRoomId(CommonAPI_RoomId_DTO roomIdDTO) =>
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetMembersByRoomId(CommonAPI_RoomIdDTO roomIdDTO) =>
             await this.UserAPI_GetMembersByRoomId(ObjectId.Parse(roomIdDTO.RoomId));
 
-        public async Task<(OperationErrorMessages, object)> UserAPI_ManualMemberAdd(ObjectId roomId, UserAPI_PostMember_DTO postMemberDTO)
+        public async Task<(OperationErrorMessages, object)> UserAPI_ManualMemberAdd(ObjectId roomId, UserAPI_PostMemberDTO postMemberDTO)
         {
             var room = await _roomRepository.GetRoomById(roomId);
 
@@ -72,18 +72,18 @@ namespace AqoTesting.Core.Services
             if(alreadyExists != null)
                 return (OperationErrorMessages.FieldsAlreadyExists, null);
 
-            var newMember = Mapper.Map<MembersDB_Member_DTO>(postMemberDTO);
+            var newMember = Mapper.Map<MembersDB_MemberDTO>(postMemberDTO);
             newMember.IsApproved = !room.IsApproveManually;
             newMember.UserId = room.UserId;
             newMember.RoomId = roomId;
             newMember.FieldsHash = fieldsHash;
 
             var newMemberId = await _memberRepository.InsertMember(newMember);
-            var newMemberIdDTO = new CommonAPI_MemberId_DTO { MemberId = newMemberId.ToString() };
+            var newMemberIdDTO = new CommonAPI_MemberIdDTO { MemberId = newMemberId.ToString() };
 
             return (OperationErrorMessages.NoError, newMemberIdDTO);
         }
-        public async Task<(OperationErrorMessages, object)> UserAPI_ManualMemberAdd(CommonAPI_RoomId_DTO roomIdDTO, UserAPI_PostMember_DTO postMemberDTO) =>
+        public async Task<(OperationErrorMessages, object)> UserAPI_ManualMemberAdd(CommonAPI_RoomIdDTO roomIdDTO, UserAPI_PostMemberDTO postMemberDTO) =>
             await this.UserAPI_ManualMemberAdd(ObjectId.Parse(roomIdDTO.RoomId), postMemberDTO);
 
         public async Task<(OperationErrorMessages, object)> UserAPI_Unregister(ObjectId memberId)
@@ -96,7 +96,7 @@ namespace AqoTesting.Core.Services
 
             return (OperationErrorMessages.NoError, null);
         }
-        public async Task<(OperationErrorMessages, object)> UserAPI_Unregister(CommonAPI_MemberId_DTO memberIdDTO) =>
+        public async Task<(OperationErrorMessages, object)> UserAPI_Unregister(CommonAPI_MemberIdDTO memberIdDTO) =>
             await this.UserAPI_Unregister(ObjectId.Parse(memberIdDTO.MemberId));
 
         public async Task<(OperationErrorMessages, object)> UserAPI_Approve(ObjectId memberId)
@@ -107,7 +107,7 @@ namespace AqoTesting.Core.Services
 
             return (OperationErrorMessages.NoError, null);
         }
-        public async Task<(OperationErrorMessages, object)> UserAPI_Approve(CommonAPI_MemberId_DTO memberIdDTO) =>
+        public async Task<(OperationErrorMessages, object)> UserAPI_Approve(CommonAPI_MemberIdDTO memberIdDTO) =>
             await this.UserAPI_Approve(ObjectId.Parse(memberIdDTO.MemberId));
 
         public async Task<OperationErrorMessages> UserAPI_Delete(ObjectId memberId)
@@ -125,12 +125,12 @@ namespace AqoTesting.Core.Services
 
             return OperationErrorMessages.NoError;
         }
-        public async Task<OperationErrorMessages> UserAPI_Delete(CommonAPI_MemberId_DTO memberIdDTO) =>
+        public async Task<OperationErrorMessages> UserAPI_Delete(CommonAPI_MemberIdDTO memberIdDTO) =>
             await this.UserAPI_Delete(ObjectId.Parse(memberIdDTO.MemberId));
         #endregion
 
         #region Member API
-        public async Task<(OperationErrorMessages, object)> MemberAPI_SignIn(MemberAPI_SignIn_DTO signInDTO)
+        public async Task<(OperationErrorMessages, object)> MemberAPI_SignIn(MemberAPI_SignInDTO signInDTO)
         {
             var room = await _roomRepository.GetRoomById(ObjectId.Parse(signInDTO.RoomId));
             if(room == null)
@@ -142,14 +142,14 @@ namespace AqoTesting.Core.Services
                 return (OperationErrorMessages.WrongAuthData, null);
 
             var memberToken = _tokenGeneratorService.GenerateToken(member.Id, Role.Member, room.Id);
-            var memberTokenDTO = new CommonAPI_Token_DTO { Token = memberToken };
+            var memberTokenDTO = new CommonAPI_TokenDTO { Token = memberToken };
 
             await _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), AuthOptions.LIFETIME);
 
             return (OperationErrorMessages.NoError, memberTokenDTO);
         }
 
-        public async Task<(OperationErrorMessages, object)> MemberAPI_SignUp(MemberAPI_SignUp_DTO signUpDTO)
+        public async Task<(OperationErrorMessages, object)> MemberAPI_SignUp(MemberAPI_SignUpDTO signUpDTO)
         {
             var roomId = ObjectId.Parse(signUpDTO.RoomId);
 
@@ -181,7 +181,7 @@ namespace AqoTesting.Core.Services
                 if(member != null)
                     return (OperationErrorMessages.MemberAlreadyRegistered, null);
 
-                member = Mapper.Map<MembersDB_Member_DTO>(signUpDTO);
+                member = Mapper.Map<MembersDB_MemberDTO>(signUpDTO);
                 member.PasswordHash = Sha256.Compute(signUpDTO.Password);
                 member.UserId = room.UserId;
 
@@ -213,7 +213,7 @@ namespace AqoTesting.Core.Services
             }
 
             var memberToken = _tokenGeneratorService.GenerateToken(memberId, Role.Member, roomId);
-            var memberTokenDTO = new CommonAPI_Token_DTO { Token = memberToken };
+            var memberTokenDTO = new CommonAPI_TokenDTO { Token = memberToken };
 
             await _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), AuthOptions.LIFETIME);
 
@@ -226,11 +226,11 @@ namespace AqoTesting.Core.Services
             if(member == null)
                 return (OperationErrorMessages.MemberNotFound, null);
 
-            var getProfileDTO = Mapper.Map<MemberAPI_GetProfile_DTO>(member);
+            var getProfileDTO = Mapper.Map<MemberAPI_GetProfileDTO>(member);
 
             return (OperationErrorMessages.NoError, getProfileDTO);
         }
-        public async Task<(OperationErrorMessages, object)> MemberAPI_GetMemberById(CommonAPI_MemberId_DTO memberIdDTO) =>
+        public async Task<(OperationErrorMessages, object)> MemberAPI_GetMemberById(CommonAPI_MemberIdDTO memberIdDTO) =>
             await this.MemberAPI_GetMemberById(ObjectId.Parse(memberIdDTO.MemberId));
         #endregion
     }

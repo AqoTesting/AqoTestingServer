@@ -7,7 +7,7 @@ namespace AqoTesting.Core.Utils
 {
     public class AttemptConstructor
     {
-        public static Dictionary<string, TestsDB_Section_DTO> SelectSections(TestsDB_Test_DTO test)
+        public static Dictionary<string, TestsDB_SectionDTO> SelectSections(TestsDB_TestDTO test)
         {
             var random = new Random();
 
@@ -41,7 +41,7 @@ namespace AqoTesting.Core.Utils
             return test.Sections;
         }
 
-        private static Dictionary<string, TestsDB_Section_DTO> ShuffleSections(Dictionary<string, TestsDB_Section_DTO> sections)
+        private static Dictionary<string, TestsDB_SectionDTO> ShuffleSections(Dictionary<string, TestsDB_SectionDTO> sections)
         {
             var random = new Random();
 
@@ -56,7 +56,7 @@ namespace AqoTesting.Core.Utils
             return sectionsPairs.ToDictionary(x => x.Key, x => x.Value);
         }
 
-        private static Dictionary<string, TestsDB_Question_DTO> ShuffleQuestions(Dictionary<string, TestsDB_Question_DTO> questions)
+        private static Dictionary<string, TestsDB_QuestionDTO> ShuffleQuestions(Dictionary<string, TestsDB_QuestionDTO> questions)
         {
             var random = new Random();
 

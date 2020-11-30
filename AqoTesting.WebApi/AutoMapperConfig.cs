@@ -13,17 +13,17 @@ namespace AqoTesting.WebApi.Infrastructure
             {
                 cfg.AllowNullCollections = true;
 
-                cfg.AddProfile<AutoMapper_MemberAPI_Attempts_Profile>();
-                cfg.AddProfile<AutoMapper_MemberAPI_Members_Profile>();
-                cfg.AddProfile<AutoMapper_MemberAPI_Rooms_Profile>();
+                cfg.AddProfile<AutoMapper_MemberAPI_AttemptsProfile>();
+                cfg.AddProfile<AutoMapper_MemberAPI_MembersProfile>();
+                cfg.AddProfile<AutoMapper_MemberAPI_RoomsProfile>();
 
-                cfg.AddProfile<AutoMapper_UserAPI_Attempts_Profile>();
-                cfg.AddProfile<AutoMapper_UserAPI_Members_Profile>();
-                cfg.AddProfile<AutoMapper_UserAPI_Rooms_Profile>();
-                cfg.AddProfile<AutoMapper_UserAPI_Tests_Profile>();
-                cfg.AddProfile<AutoMapper_UserAPI_Users_Profile>();
+                cfg.AddProfile<AutoMapper_UserAPI_AttemptsProfile>();
+                cfg.AddProfile<AutoMapper_UserAPI_MembersProfile>();
+                cfg.AddProfile<AutoMapper_UserAPI_RoomsProfile>();
+                cfg.AddProfile<AutoMapper_UserAPI_TestsProfile>();
+                cfg.AddProfile<AutoMapper_UserAPI_UsersProfile>();
 
-                cfg.AddProfile<AutoMapper_CrossObjects_Profile>();
+                cfg.AddProfile<AutoMapper_CrossObjectsProfile>();
             });
         }
     }

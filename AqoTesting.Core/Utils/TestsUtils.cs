@@ -10,7 +10,7 @@ namespace AqoTesting.Core.Utils
 {
     public static class TestsUtils
     {
-        public static (bool, OperationErrorMessages, object) ValidateSections(Dictionary<string, UserAPI_PostTestSection_DTO> sections)
+        public static (bool, OperationErrorMessages, object) ValidateSections(Dictionary<string, UserAPI_PostTestSectionDTO> sections)
         {
             int correctsCount;
 
@@ -25,7 +25,7 @@ namespace AqoTesting.Core.Utils
                         continue;
 
                     if (question.Value.Text == null && question.Value.ImageUrl == null)
-                        return (false, OperationErrorMessages.EmptyQuestion, new CommonAPI_Error_DTO { ErrorSubject = new string[] { section.Key, question.Key } });
+                        return (false, OperationErrorMessages.EmptyQuestion, new CommonAPI_ErrorDTO { ErrorSubject = new string[] { section.Key, question.Key } });
 
                     switch (question.Value.Type)
                     {
@@ -33,34 +33,34 @@ namespace AqoTesting.Core.Utils
                             correctsCount = 0;
                             foreach (var option in question.Value.Options)
                                 if (option.Text == null && option.ImageUrl == null)
-                                    return (false, OperationErrorMessages.EmptyOption, new CommonAPI_Error_DTO { ErrorSubject = new object[] { section.Key, question.Key, option } });
+                                    return (false, OperationErrorMessages.EmptyOption, new CommonAPI_ErrorDTO { ErrorSubject = new object[] { section.Key, question.Key, option } });
 
                                 else if (option.IsCorrect)
                                     correctsCount++;
 
                             if (correctsCount != 1)
-                                return (false, OperationErrorMessages.SingleChoiceWrongCorrectsCount, new CommonAPI_Error_DTO { ErrorSubject = new string[] { section.Key, question.Key } });
+                                return (false, OperationErrorMessages.SingleChoiceWrongCorrectsCount, new CommonAPI_ErrorDTO { ErrorSubject = new string[] { section.Key, question.Key } });
 
                             break;
 
                         case QuestionTypes.MultipleChoice:
                             foreach (var option in question.Value.Options)
                                 if (option.Text == null && option.ImageUrl == null)
-                                    return (false, OperationErrorMessages.EmptyOption, new CommonAPI_Error_DTO { ErrorSubject = new object[] { section.Key, question.Key, option } });
+                                    return (false, OperationErrorMessages.EmptyOption, new CommonAPI_ErrorDTO { ErrorSubject = new object[] { section.Key, question.Key, option } });
 
                             break;
 
                         case QuestionTypes.Matching:
                             foreach (var option in question.Value.Options)
                                 if (option.LeftText == null && option.LeftImageUrl == null || option.RightText == null && option.RightImageUrl == null)
-                                    return (false, OperationErrorMessages.EmptyOption, new CommonAPI_Error_DTO { ErrorSubject = new object[] { section.Key, question.Key, option } });
+                                    return (false, OperationErrorMessages.EmptyOption, new CommonAPI_ErrorDTO { ErrorSubject = new object[] { section.Key, question.Key, option } });
 
                             break;
 
                         case QuestionTypes.Sequence:
                             foreach (var option in question.Value.Options)
                                 if (option.Text == null && option.ImageUrl == null)
-                                    return (false, OperationErrorMessages.EmptyOption, new CommonAPI_Error_DTO { ErrorSubject = new object[] { section.Key, question.Key, option } });
+                                    return (false, OperationErrorMessages.EmptyOption, new CommonAPI_ErrorDTO { ErrorSubject = new object[] { section.Key, question.Key, option } });
 
                             break;
                     }
@@ -70,13 +70,13 @@ namespace AqoTesting.Core.Utils
             return (true, OperationErrorMessages.NoError, null);
         }
 
-        public static (bool, OperationErrorMessages, object) MergeSections(Dictionary<string, TestsDB_Section_DTO> dbSections, Dictionary<string, UserAPI_PostTestSection_DTO> updateSections)
+        public static (bool, OperationErrorMessages, object) MergeSections(Dictionary<string, TestsDB_SectionDTO> dbSections, Dictionary<string, UserAPI_PostTestSectionDTO> updateSections)
         {
             foreach (var updateSection in updateSections)
             {
                 if (updateSection.Value.Deleted)
                     if (!dbSections.ContainsKey(updateSection.Key))
-                        return (false, OperationErrorMessages.SectionNotFound, new CommonAPI_Error_DTO { ErrorSubject = updateSection.Key });
+                        return (false, OperationErrorMessages.SectionNotFound, new CommonAPI_ErrorDTO { ErrorSubject = updateSection.Key });
                     else
                         dbSections.Remove(updateSection.Key);
 
@@ -85,9 +85,9 @@ namespace AqoTesting.Core.Utils
                     foreach (var updateQuestion in updateSection.Value.Questions)
                         if (updateQuestion.Value.Deleted)
                             if (!dbSections.ContainsKey(updateSection.Key))
-                                return (false, OperationErrorMessages.SectionNotFound, new CommonAPI_Error_DTO { ErrorSubject = updateSection.Key });
+                                return (false, OperationErrorMessages.SectionNotFound, new CommonAPI_ErrorDTO { ErrorSubject = updateSection.Key });
                             else if (!dbSections[updateSection.Key].Questions.ContainsKey(updateQuestion.Key))
-                                return (false, OperationErrorMessages.QuestionNotFound, new CommonAPI_Error_DTO { ErrorSubject = new string[] { updateSection.Key, updateQuestion.Key } });
+                                return (false, OperationErrorMessages.QuestionNotFound, new CommonAPI_ErrorDTO { ErrorSubject = new string[] { updateSection.Key, updateQuestion.Key } });
 
                             else
                             {
@@ -99,7 +99,7 @@ namespace AqoTesting.Core.Utils
                     {
                         var oldQuestions = dbSections[updateSection.Key].Questions.ToDictionary(x => x.Key, x => x.Value);
 
-                        dbSections[updateSection.Key] = Mapper.Map<TestsDB_Section_DTO>(updateSection.Value);
+                        dbSections[updateSection.Key] = Mapper.Map<TestsDB_SectionDTO>(updateSection.Value);
 
                         foreach(var question in dbSections[updateSection.Key].Questions)
                         {
@@ -111,10 +111,10 @@ namespace AqoTesting.Core.Utils
                         dbSections[updateSection.Key].Questions = oldQuestions;
                     }
                     else
-                        dbSections.Add(updateSection.Key, Mapper.Map<TestsDB_Section_DTO>(updateSection.Value));
+                        dbSections.Add(updateSection.Key, Mapper.Map<TestsDB_SectionDTO>(updateSection.Value));
 
                     if (dbSections[updateSection.Key].Questions.Count > 0 && dbSections[updateSection.Key].Questions.Count < dbSections[updateSection.Key].AttemptQuestionsNumber)
-                        return (false, OperationErrorMessages.NotEnoughQuestions, new CommonAPI_Error_DTO { ErrorSubject = updateSection.Key });
+                        return (false, OperationErrorMessages.NotEnoughQuestions, new CommonAPI_ErrorDTO { ErrorSubject = updateSection.Key });
                 }                
             }
 

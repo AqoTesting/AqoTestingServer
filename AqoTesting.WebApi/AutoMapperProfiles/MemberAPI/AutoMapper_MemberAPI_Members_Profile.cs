@@ -7,16 +7,16 @@ using MongoDB.Bson;
 
 namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
 {
-    public class AutoMapper_MemberAPI_Members_Profile : Profile
+    public class AutoMapper_MemberAPI_MembersProfile : Profile
     {
-        public AutoMapper_MemberAPI_Members_Profile()
+        public AutoMapper_MemberAPI_MembersProfile()
         {
             #region DB -> API
-            CreateMap<MembersDB_Member_DTO, UserAPI_GetMembersItem_DTO>();
+            CreateMap<MembersDB_MemberDTO, UserAPI_GetMembersItemDTO>();
             #endregion
 
             #region API -> DB
-            CreateMap<MemberAPI_SignUp_DTO, MembersDB_Member_DTO>()
+            CreateMap<MemberAPI_SignUpDTO, MembersDB_MemberDTO>()
                 .ForMember(x => x.PasswordHash,
                     x => x.MapFrom(m =>
                         Sha256.Compute(m.Password)))

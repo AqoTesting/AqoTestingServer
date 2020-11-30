@@ -14,19 +14,19 @@ namespace AqoTesting.Core.Repositories
         {
             _redisCache = cache;
         }
-        public async Task<UsersDB_User_DTO> GetUserById(ObjectId userId) =>
+        public async Task<UsersDB_UserDTO> GetUserById(ObjectId userId) =>
             await _redisCache.Get($"User:{userId}", async () => await UserWorker.GetUserById(userId));
 
-        public async Task<UsersDB_User_DTO> GetUserByAuthData(string login, byte[] passwordHash) =>
+        public async Task<UsersDB_UserDTO> GetUserByAuthData(string login, byte[] passwordHash) =>
             await UserWorker.GetUserByAuthData(login, passwordHash);
 
-        public async Task<UsersDB_User_DTO> GetUserByLogin(string login) =>
+        public async Task<UsersDB_UserDTO> GetUserByLogin(string login) =>
             await UserWorker.GetUserByLogin(login);
 
-        public async Task<UsersDB_User_DTO> GetUserByEmail(string email) =>
+        public async Task<UsersDB_UserDTO> GetUserByEmail(string email) =>
             await UserWorker.GetUserByEmail(email);
 
-        public async Task<ObjectId> InsertUser(UsersDB_User_DTO user) =>
+        public async Task<ObjectId> InsertUser(UsersDB_UserDTO user) =>
             await UserWorker.InsertUser(user);
 
         public async Task<bool> SetProperty(ObjectId userId, string propertyName, object newPropertyValue)

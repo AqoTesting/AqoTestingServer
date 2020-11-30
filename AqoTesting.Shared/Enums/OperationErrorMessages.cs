@@ -102,7 +102,7 @@
         AttemptAccessError = 601,
 
         // MemberAPI Answer
-        // В MemberAPI_CommonTestAnswer_DTO, поля, нужные для конкретного типа вопроса не переданы (null)
+        // В MemberAPI_CommonTestAnswerDTO, поля, нужные для конкретного типа вопроса не переданы (null)
         AnswerNotPassed = 602,
         // SelectedOption больше или равно количетсву опций
         SelectedOptionOutOfRange = 603,

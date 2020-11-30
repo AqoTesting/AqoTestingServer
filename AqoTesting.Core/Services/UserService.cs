@@ -20,35 +20,35 @@ namespace AqoTesting.Core.Services
             _userRepository = userRespository;
         }
 
-        public async Task<UserAPI_GetProfile_DTO> GetUserById(ObjectId userId)
+        public async Task<UserAPI_GetProfileDTO> GetUserById(ObjectId userId)
         {
             var user = await _userRepository.GetUserById(userId);
             if(user == null)
                 throw new ResultException(OperationErrorMessages.UserNotFound);
 
-            var responseUser = Mapper.Map<UserAPI_GetProfile_DTO>(user);
+            var responseUser = Mapper.Map<UserAPI_GetProfileDTO>(user);
 
             return responseUser;
         }
-        public async Task<UserAPI_GetProfile_DTO> GetUserById(CommonAPI_UserId_DTO userIdDTO) =>
+        public async Task<UserAPI_GetProfileDTO> GetUserById(CommonAPI_UserIdDTO userIdDTO) =>
             await GetUserById(ObjectId.Parse(userIdDTO.UserId));
 
-        public async Task<UsersDB_User_DTO> GetUserByAuthData(UserAPI_SignIn_DTO authData)
+        public async Task<UsersDB_UserDTO> GetUserByAuthData(UserAPI_SignInDTO authData)
         {
             var user = await _userRepository.GetUserByAuthData(authData.Login, Sha256.Compute(authData.Password));
 
             return user;
         }
 
-        public async Task<UsersDB_User_DTO> GetUserByLogin(string login) =>
+        public async Task<UsersDB_UserDTO> GetUserByLogin(string login) =>
             await _userRepository.GetUserByLogin(login);
 
-        public async Task<UsersDB_User_DTO> GetUserByEmail(string email) =>
+        public async Task<UsersDB_UserDTO> GetUserByEmail(string email) =>
             await _userRepository.GetUserByEmail(email);
 
-        public async Task<UsersDB_User_DTO> InsertUser(UserAPI_SignUp_DTO signUpUserDTO)
+        public async Task<UsersDB_UserDTO> InsertUser(UserAPI_SignUpDTO signUpUserDTO)
         {
-            var newUser = Mapper.Map<UsersDB_User_DTO>(signUpUserDTO);
+            var newUser = Mapper.Map<UsersDB_UserDTO>(signUpUserDTO);
 
             var newUserId = await _userRepository.InsertUser(newUser);
 

@@ -6,16 +6,16 @@ using System;
 
 namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
 {
-    public class AutoMapper_UserAPI_Users_Profile : Profile
+    public class AutoMapper_UserAPI_UsersProfile : Profile
     {
-        public AutoMapper_UserAPI_Users_Profile()
+        public AutoMapper_UserAPI_UsersProfile()
         {
             #region DB -> API
-            CreateMap<UsersDB_User_DTO, UserAPI_GetProfile_DTO>();
+            CreateMap<UsersDB_UserDTO, UserAPI_GetProfileDTO>();
             #endregion
 
             #region API -> DB
-            CreateMap<UserAPI_SignUp_DTO, UsersDB_User_DTO>()
+            CreateMap<UserAPI_SignUpDTO, UsersDB_UserDTO>()
                 .ForMember(x => x.PasswordHash,
                     x => x.MapFrom(m => Sha256.Compute(m.Password)))
                 .ForMember(x => x.RegistrationDate,

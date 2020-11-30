@@ -8,12 +8,12 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface IUserService
     {
-        Task<UserAPI_GetProfile_DTO> GetUserById(ObjectId userId);
-        Task<UserAPI_GetProfile_DTO> GetUserById(CommonAPI_UserId_DTO userIdDTO);
-        Task<UsersDB_User_DTO> GetUserByAuthData(UserAPI_SignIn_DTO authData);
-        Task<UsersDB_User_DTO> GetUserByLogin(string login);
-        Task<UsersDB_User_DTO> GetUserByEmail(string email);
+        Task<UserAPI_GetProfileDTO> GetUserById(ObjectId userId);
+        Task<UserAPI_GetProfileDTO> GetUserById(CommonAPI_UserIdDTO userIdDTO);
+        Task<UsersDB_UserDTO> GetUserByAuthData(UserAPI_SignInDTO authData);
+        Task<UsersDB_UserDTO> GetUserByLogin(string login);
+        Task<UsersDB_UserDTO> GetUserByEmail(string email);
 
-        Task<UsersDB_User_DTO> InsertUser(UserAPI_SignUp_DTO signUpUserDTO);
+        Task<UsersDB_UserDTO> InsertUser(UserAPI_SignUpDTO signUpUserDTO);
     }
 }

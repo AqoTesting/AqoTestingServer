@@ -2,7 +2,7 @@
 
 namespace AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers
 {
-    public class CommonAPI_TestSectionId_DTO
+    public class CommonAPI_TestSectionIdDTO
     {
         [Required]
         public string SectionId { get; set; }

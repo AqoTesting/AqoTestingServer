@@ -2,7 +2,7 @@
 
 namespace AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers
 {
-    public class CommonAPI_RoomDomain_DTO
+    public class CommonAPI_RoomDomainDTO
     {
         [Required]
         [StringLength(63, MinimumLength = 1)]

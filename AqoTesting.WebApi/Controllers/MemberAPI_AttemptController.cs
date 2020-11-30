@@ -27,7 +27,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_CheckAttemptsTime]
         [MemberAPI_AttemptAccess]
         [HttpGet("/member/attempt/{AttemptId}")]
-        public async Task<IActionResult> GetAttempt([FromRoute] CommonAPI_AttemptId_DTO attemptIdDTO)
+        public async Task<IActionResult> GetAttempt([FromRoute] CommonAPI_AttemptIdDTO attemptIdDTO)
         {
             var (errorCode, response) = await _attemptService.MemberAPI_GetAttempt(attemptIdDTO);
 
@@ -50,7 +50,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_CheckAttemptsTime]
         [MemberAPI_TestAccess]
         [HttpGet("/member/test/{TestId}/attempts")]
-        public async Task<IActionResult> GetAttemptsByTestId([FromRoute] CommonAPI_TestId_DTO testIdDTO)
+        public async Task<IActionResult> GetAttemptsByTestId([FromRoute] CommonAPI_TestIdDTO testIdDTO)
         {
             var (errorCode, response) = await _attemptService.MemberAPI_GetAttemptsByTestId(testIdDTO);
 
@@ -86,7 +86,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_CheckAttemptsTime]
         [MemberAPI_HasActiveAttempt]
         [HttpPatch("/member/attempt/active/section/{SectionId}/question/{QuestionId}/answer")]
-        public async Task<IActionResult> Answer([FromRoute] CommonAPI_TestSectionId_DTO sectionIdDTO, [FromRoute] CommonAPI_TestQuestionId_DTO questionIdDTO, [FromBody] MemberAPI_CommonTestAnswer_DTO answerDTO)
+        public async Task<IActionResult> Answer([FromRoute] CommonAPI_TestSectionIdDTO sectionIdDTO, [FromRoute] CommonAPI_TestQuestionIdDTO questionIdDTO, [FromBody] MemberAPI_CommonTestAnswerDTO answerDTO)
         {
             var (errorCode, response) = await _attemptService.MemberAPI_Answer(sectionIdDTO, questionIdDTO, answerDTO);
 

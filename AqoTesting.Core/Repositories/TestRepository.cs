@@ -15,17 +15,17 @@ namespace AqoTesting.Core.Repositories
             _redisCache = cache;
         }
 
-        public async Task<TestsDB_Test_DTO> GetTestById(ObjectId testId) =>
+        public async Task<TestsDB_TestDTO> GetTestById(ObjectId testId) =>
             //await _redisCache.Get($"Test:{testId}", async () => await TestWorker.GetTestById(testId));
             await TestWorker.GetTestById(testId);
 
-        public async Task<TestsDB_Test_DTO[]> GetTestsByRoomId(ObjectId roomId) =>
+        public async Task<TestsDB_TestDTO[]> GetTestsByRoomId(ObjectId roomId) =>
             await TestWorker.GetTestsByRoomId(roomId);
 
-        public async Task<ObjectId> InsertTest(TestsDB_Test_DTO newTest) =>
+        public async Task<ObjectId> InsertTest(TestsDB_TestDTO newTest) =>
             await TestWorker.InsertTest(newTest);
 
-        public async Task ReplaceTest(TestsDB_Test_DTO updatedTest)
+        public async Task ReplaceTest(TestsDB_TestDTO updatedTest)
         {
             await TestWorker.Replace(updatedTest);
             await _redisCache.Del($"Test:{updatedTest.Id}");

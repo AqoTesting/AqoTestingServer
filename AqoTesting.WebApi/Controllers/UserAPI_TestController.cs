@@ -24,7 +24,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_RoomAccess]
         [HttpGet("/user/room/{RoomId}/tests")]
-        public async Task<IActionResult> GetTests([FromRoute] CommonAPI_RoomId_DTO roomIdDTO)
+        public async Task<IActionResult> GetTests([FromRoute] CommonAPI_RoomIdDTO roomIdDTO)
         {
             var (errorCode, response) = await _testService.UserAPI_GetTestsByRoomId(roomIdDTO);
 
@@ -34,7 +34,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_TestAccess]
         [HttpGet("/user/test/{TestId}")]
-        public async Task<IActionResult> GetTest([FromRoute] CommonAPI_TestId_DTO testIdDTO)
+        public async Task<IActionResult> GetTest([FromRoute] CommonAPI_TestIdDTO testIdDTO)
         {
             var (errorCode, response) = await _testService.UserAPI_GetTestById(testIdDTO);
 
@@ -44,7 +44,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_RoomAccess]
         [HttpPost("/user/room/{RoomId}/test")]
-        public async Task<IActionResult> CreateTest([FromRoute] CommonAPI_RoomId_DTO roomIdDTO, [FromBody] UserAPI_PostTest_DTO postTestDTO)
+        public async Task<IActionResult> CreateTest([FromRoute] CommonAPI_RoomIdDTO roomIdDTO, [FromBody] UserAPI_PostTestDTO postTestDTO)
         {
             var (errorCorde, response) = await _testService.UserAPI_CreateTest(roomIdDTO, postTestDTO);
 
@@ -54,7 +54,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_TestAccess]
         [HttpPut("/user/test/{TestId}")]
-        public async Task<IActionResult> EditTest([FromRoute] CommonAPI_TestId_DTO testIdDTO, [FromBody] UserAPI_PostTest_DTO postTestDTO)
+        public async Task<IActionResult> EditTest([FromRoute] CommonAPI_TestIdDTO testIdDTO, [FromBody] UserAPI_PostTestDTO postTestDTO)
         {
             var (errorCorde, response) = await _testService.UserAPI_EditTest(testIdDTO, postTestDTO);
 
@@ -64,7 +64,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_TestAccess]
         [HttpPatch("/user/test/{TestId}/sections")]
-        public async Task<IActionResult> EditSections([FromRoute] CommonAPI_TestId_DTO testIdDTO, [FromBody] UserAPI_PostTestSections_DTO postSectionDTOs)
+        public async Task<IActionResult> EditSections([FromRoute] CommonAPI_TestIdDTO testIdDTO, [FromBody] UserAPI_PostTestSectionsDTO postSectionDTOs)
         {
             var (errorCode, response) = await _testService.UserAPI_EditSections(testIdDTO, postSectionDTOs);
 
@@ -74,7 +74,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_TestAccess]
         [HttpDelete("/user/test/{TestId}")]
-        public async Task<IActionResult> DeleteTest([FromRoute] CommonAPI_TestId_DTO testIdDTO)
+        public async Task<IActionResult> DeleteTest([FromRoute] CommonAPI_TestIdDTO testIdDTO)
         {
             var (errorCode, response) = await _testService.UserAPI_DeleteTest(testIdDTO);
 

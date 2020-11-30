@@ -24,7 +24,7 @@ namespace AqoTesting.WebApi.Controllers
         [UserAPI_AttemptAccess]
         [CommonAPI_CheckAttemptsTime]
         [HttpGet("/user/attempt/{AttemptId}")]
-        public async Task<IActionResult> GetAttempt([FromRoute] CommonAPI_AttemptId_DTO attemptIdDTO)
+        public async Task<IActionResult> GetAttempt([FromRoute] CommonAPI_AttemptIdDTO attemptIdDTO)
         {
             var (errorCode, response) = await _attemptService.UserAPI_GetAttempt(attemptIdDTO);
 
@@ -35,7 +35,7 @@ namespace AqoTesting.WebApi.Controllers
         [UserAPI_TestAccess]
         [CommonAPI_CheckAttemptsTime]
         [HttpGet("/user/test/{TestId}/attempts")]
-        public async Task<IActionResult> GetAttemptsByTestId([FromRoute] CommonAPI_TestId_DTO testIdDTO)
+        public async Task<IActionResult> GetAttemptsByTestId([FromRoute] CommonAPI_TestIdDTO testIdDTO)
         {
             var (errorCode, response) = await _attemptService.UserAPI_GetAttemptsByTestId(testIdDTO);
 
@@ -46,7 +46,7 @@ namespace AqoTesting.WebApi.Controllers
         [UserAPI_TestAccess]
         [CommonAPI_CheckAttemptsTime]
         [HttpGet("/user/member/{MemberId}/attempts")]
-        public async Task<IActionResult> GetAttemptsByMemberId([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
+        public async Task<IActionResult> GetAttemptsByMemberId([FromRoute] CommonAPI_MemberIdDTO memberIdDTO)
         {
             var (errorCode, response) = await _attemptService.UserAPI_GetAttemptsByMemberId(memberIdDTO);
 
@@ -57,7 +57,7 @@ namespace AqoTesting.WebApi.Controllers
         [UserAPI_AttemptAccess]
         [CommonAPI_CheckAttemptsTime]
         [HttpPatch("/user/attempt/{AttemptId}/ignore")]
-        public async Task<IActionResult> DeleteAttempt([FromRoute] CommonAPI_AttemptId_DTO attemptIdDTO, [FromBody] CommonAPI_BooleanValue_DTO booleanValueDTO)
+        public async Task<IActionResult> DeleteAttempt([FromRoute] CommonAPI_AttemptIdDTO attemptIdDTO, [FromBody] CommonAPI_BooleanValueDTO booleanValueDTO)
         {
             var (errorCode, response) = await _attemptService.UserAPI_SetAttemptIgnore(attemptIdDTO, booleanValueDTO);
 
@@ -68,7 +68,7 @@ namespace AqoTesting.WebApi.Controllers
         [UserAPI_AttemptAccess]
         [CommonAPI_CheckAttemptsTime]
         [HttpDelete("/user/attempt/{AttemptId}")]
-        public async Task<IActionResult> DeleteAttempt([FromRoute] CommonAPI_AttemptId_DTO attemptIdDTO)
+        public async Task<IActionResult> DeleteAttempt([FromRoute] CommonAPI_AttemptIdDTO attemptIdDTO)
         {
             var (errorCode, response) = await _attemptService.UserAPI_DeleteAttempt(attemptIdDTO);
 

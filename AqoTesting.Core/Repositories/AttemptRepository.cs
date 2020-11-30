@@ -10,7 +10,7 @@ namespace AqoTesting.Core.Repositories
 {
     public class AttemptRepository : IAttemptRepository
     {
-        Dictionary<ObjectId, AttemptsDB_Attempt_DTO> _internalByIdCache;
+        Dictionary<ObjectId, AttemptsDB_AttemptDTO> _internalByIdCache;
         Dictionary<ObjectId, ObjectId?> _internalActiveByMemberIdCache;
         Dictionary<ObjectId, ObjectId[]> _internalByTestIdCache;
         Dictionary<ObjectId, ObjectId[]> _internalByMemberIdCache;
@@ -23,16 +23,16 @@ namespace AqoTesting.Core.Repositories
             _workContext = workContext;
             _redisCache = cache;
 
-            _internalByIdCache = new Dictionary<ObjectId, AttemptsDB_Attempt_DTO>();
+            _internalByIdCache = new Dictionary<ObjectId, AttemptsDB_AttemptDTO>();
             _internalActiveByMemberIdCache = new Dictionary<ObjectId, ObjectId?>();
             _internalByTestIdCache = new Dictionary<ObjectId, ObjectId[]>();
             _internalByMemberIdCache = new Dictionary<ObjectId, ObjectId[]>();
             _internalByTestIdAndMemberIdCache = new Dictionary<(ObjectId, ObjectId), ObjectId[]>();
         }
 
-        public async Task<AttemptsDB_Attempt_DTO> GetAttemptById(ObjectId attemptId)
+        public async Task<AttemptsDB_AttemptDTO> GetAttemptById(ObjectId attemptId)
         {
-            AttemptsDB_Attempt_DTO attempt;
+            AttemptsDB_AttemptDTO attempt;
 
             if(_internalByIdCache.ContainsKey(attemptId))
                 attempt = _internalByIdCache[attemptId];
@@ -46,9 +46,9 @@ namespace AqoTesting.Core.Repositories
             return attempt;
         }
 
-        public async Task<AttemptsDB_Attempt_DTO> GetActiveAttemptByMemberId(ObjectId memberId)
+        public async Task<AttemptsDB_AttemptDTO> GetActiveAttemptByMemberId(ObjectId memberId)
         {
-            AttemptsDB_Attempt_DTO attempt;
+            AttemptsDB_AttemptDTO attempt;
 
             if(!_internalActiveByMemberIdCache.ContainsKey(memberId) || _internalActiveByMemberIdCache[memberId] != null && !_internalByIdCache.ContainsKey(_internalActiveByMemberIdCache[memberId].Value))
             {
@@ -72,9 +72,9 @@ namespace AqoTesting.Core.Repositories
         }
             
 
-        public async Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByTestId(ObjectId testId)
+        public async Task<AttemptsDB_AttemptDTO[]> GetAttemptsByTestId(ObjectId testId)
         {
-            AttemptsDB_Attempt_DTO[] attempts = new AttemptsDB_Attempt_DTO[0];
+            AttemptsDB_AttemptDTO[] attempts = new AttemptsDB_AttemptDTO[0];
 
             var cached = _internalByTestIdCache.ContainsKey(testId);
 
@@ -101,9 +101,9 @@ namespace AqoTesting.Core.Repositories
             return attempts;
         }
 
-        public async Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByMemberId(ObjectId memberId)
+        public async Task<AttemptsDB_AttemptDTO[]> GetAttemptsByMemberId(ObjectId memberId)
         {
-            AttemptsDB_Attempt_DTO[] attempts = new AttemptsDB_Attempt_DTO[0];
+            AttemptsDB_AttemptDTO[] attempts = new AttemptsDB_AttemptDTO[0];
 
             var cached = _internalByMemberIdCache.ContainsKey(memberId);
 
@@ -131,9 +131,9 @@ namespace AqoTesting.Core.Repositories
         }
         
 
-        public async Task<AttemptsDB_Attempt_DTO[]> GetAttemptsByTestIdAndMemberId (ObjectId testId, ObjectId memberId)
+        public async Task<AttemptsDB_AttemptDTO[]> GetAttemptsByTestIdAndMemberId (ObjectId testId, ObjectId memberId)
         {
-            AttemptsDB_Attempt_DTO[] attempts = new AttemptsDB_Attempt_DTO[0];
+            AttemptsDB_AttemptDTO[] attempts = new AttemptsDB_AttemptDTO[0];
 
             var cached = _internalByTestIdAndMemberIdCache.ContainsKey((testId, memberId));
 
@@ -160,7 +160,7 @@ namespace AqoTesting.Core.Repositories
             return attempts;
         }
 
-        public async Task<ObjectId> InsertAttempt(AttemptsDB_Attempt_DTO newAttempt)
+        public async Task<ObjectId> InsertAttempt(AttemptsDB_AttemptDTO newAttempt)
         {
             _internalActiveByMemberIdCache = new Dictionary<ObjectId, ObjectId?>();
             _internalByTestIdCache = new Dictionary<ObjectId, ObjectId[]>();

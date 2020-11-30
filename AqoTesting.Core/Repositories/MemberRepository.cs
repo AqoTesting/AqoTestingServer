@@ -15,10 +15,10 @@ namespace AqoTesting.Core.Repositories
             _redisCache = cache;
         }
 
-        public async Task<MembersDB_Member_DTO> GetMemberById(ObjectId memberId) =>
-            await _redisCache.Get<MembersDB_Member_DTO>($"Member:{memberId}", async () => await MemberWorker.GetMemberById(memberId));
+        public async Task<MembersDB_MemberDTO> GetMemberById(ObjectId memberId) =>
+            await _redisCache.Get<MembersDB_MemberDTO>($"Member:{memberId}", async () => await MemberWorker.GetMemberById(memberId));
 
-        public async Task<MembersDB_Member_DTO> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash) =>
+        public async Task<MembersDB_MemberDTO> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash) =>
             await Task.Run(() => MemberWorker.GetMemberByAuthData(roomId, login, passwordHash));
 
         public async Task<bool> CheckLoginTaken(ObjectId roomId, string login) =>
@@ -26,19 +26,19 @@ namespace AqoTesting.Core.Repositories
         public async Task<bool> CheckEmailTaken(ObjectId roomId, string email) =>
             await Task.Run(() => MemberWorker.CheckMemberInRoomByEmail(roomId, email));
 
-        public async Task<MembersDB_Member_DTO[]> GetMembersByIds(ObjectId[] memberIds) =>
+        public async Task<MembersDB_MemberDTO[]> GetMembersByIds(ObjectId[] memberIds) =>
             await Task.Run(() => MemberWorker.GetMembersByIds(memberIds));
 
-        public async Task<MembersDB_Member_DTO[]> GetMembersByRoomId(ObjectId roomId) =>
+        public async Task<MembersDB_MemberDTO[]> GetMembersByRoomId(ObjectId roomId) =>
             await Task.Run(() => MemberWorker.GetMembersByRoomId(roomId));
 
-        public async Task<MembersDB_Member_DTO> GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash) =>
+        public async Task<MembersDB_MemberDTO> GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash) =>
             await Task.Run(() => MemberWorker.GetMemberByFieldsHash(roomId, fieldsHash));
 
-        public async Task<ObjectId> InsertMember(MembersDB_Member_DTO newMember) =>
+        public async Task<ObjectId> InsertMember(MembersDB_MemberDTO newMember) =>
             await Task.Run(() => MemberWorker.InsertMember(newMember));
 
-        public async Task ReplaceMember(MembersDB_Member_DTO member)
+        public async Task ReplaceMember(MembersDB_MemberDTO member)
         {
             await _redisCache.Del($"Member:{member.Id}");
 

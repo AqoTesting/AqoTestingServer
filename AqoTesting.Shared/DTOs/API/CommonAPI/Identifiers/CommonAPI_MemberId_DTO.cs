@@ -2,7 +2,7 @@
 
 namespace AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers
 {
-    public class CommonAPI_MemberId_DTO
+    public class CommonAPI_MemberIdDTO
     {
         [Required]
         [StringLength(24, MinimumLength = 24)]

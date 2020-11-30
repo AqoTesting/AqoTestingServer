@@ -23,7 +23,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_RoomAccess]
         [HttpGet("/user/room/{RoomId}/members")]
-        public async Task<IActionResult> GetMembersByRoomId([FromRoute] CommonAPI_RoomId_DTO roomIdDTO)
+        public async Task<IActionResult> GetMembersByRoomId([FromRoute] CommonAPI_RoomIdDTO roomIdDTO)
         {
             var (errorCode, members) = await _memberService.UserAPI_GetMembersByRoomId(roomIdDTO);
 
@@ -33,7 +33,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_RoomAccess]
         [HttpPost("/user/room/{RoomId}/member")]
-        public async Task<IActionResult> AddMember([FromRoute] CommonAPI_RoomId_DTO roomIdDTO, [FromBody] UserAPI_PostMember_DTO addMemberDTO)
+        public async Task<IActionResult> AddMember([FromRoute] CommonAPI_RoomIdDTO roomIdDTO, [FromBody] UserAPI_PostMemberDTO addMemberDTO)
         {
             var (errorCode, response) = await _memberService.UserAPI_ManualMemberAdd(roomIdDTO, addMemberDTO);
 
@@ -43,7 +43,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_MemberAccess]
         [HttpDelete("/user/member/{MemberId}")]
-        public async Task<IActionResult> KickMember([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
+        public async Task<IActionResult> KickMember([FromRoute] CommonAPI_MemberIdDTO memberIdDTO)
         {
             await _memberService.UserAPI_Delete(memberIdDTO);
 
@@ -53,7 +53,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_MemberAccess]
         [HttpPatch("/user/member/{MemberId}/unregister")]
-        public async Task<IActionResult> Unregister([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
+        public async Task<IActionResult> Unregister([FromRoute] CommonAPI_MemberIdDTO memberIdDTO)
         {
             var (errorCode, response) = await _memberService.UserAPI_Unregister(memberIdDTO);
 
@@ -63,7 +63,7 @@ namespace AqoTesting.WebApi.Controllers
         [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_MemberAccess]
         [HttpPatch("/user/member/{MemberId}/approve")]
-        public async Task<IActionResult> Approve([FromRoute] CommonAPI_MemberId_DTO memberIdDTO)
+        public async Task<IActionResult> Approve([FromRoute] CommonAPI_MemberIdDTO memberIdDTO)
         {
             var (errorCode, response) = await _memberService.UserAPI_Approve(memberIdDTO);
 

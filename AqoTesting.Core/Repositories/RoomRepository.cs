@@ -9,7 +9,7 @@ namespace AqoTesting.Core.Repositories
 {
     public class RoomRepository : IRoomRepository
     {
-        Dictionary<ObjectId, RoomsDB_Room_DTO> _internalByIdCache;
+        Dictionary<ObjectId, RoomsDB_RoomDTO> _internalByIdCache;
         Dictionary<string, ObjectId?> _internalByDomainCache;
 
         ICacheRepository _redisCache;
@@ -17,13 +17,13 @@ namespace AqoTesting.Core.Repositories
         {
             _redisCache = cache;
 
-            _internalByIdCache = new Dictionary<ObjectId, RoomsDB_Room_DTO>();
+            _internalByIdCache = new Dictionary<ObjectId, RoomsDB_RoomDTO>();
             _internalByDomainCache = new Dictionary<string, ObjectId?>();
         }
 
-        public async Task<RoomsDB_Room_DTO> GetRoomById(ObjectId roomId)
+        public async Task<RoomsDB_RoomDTO> GetRoomById(ObjectId roomId)
         {
-            RoomsDB_Room_DTO room;
+            RoomsDB_RoomDTO room;
 
             if(_internalByIdCache.ContainsKey(roomId))
                 room = _internalByIdCache[roomId];
@@ -38,9 +38,9 @@ namespace AqoTesting.Core.Repositories
             return room;
         }
 
-        public async Task<RoomsDB_Room_DTO> GetRoomByDomain(string roomDomain)
+        public async Task<RoomsDB_RoomDTO> GetRoomByDomain(string roomDomain)
         {
-            RoomsDB_Room_DTO room;
+            RoomsDB_RoomDTO room;
 
             if(!_internalByDomainCache.ContainsKey(roomDomain) || _internalByDomainCache[roomDomain] != null && !_internalByIdCache.ContainsKey(_internalByDomainCache[roomDomain].Value))
             {
@@ -62,13 +62,13 @@ namespace AqoTesting.Core.Repositories
             return room;
         }
 
-        public async Task<RoomsDB_Room_DTO[]> GetRoomsByUserId(ObjectId userId) =>
+        public async Task<RoomsDB_RoomDTO[]> GetRoomsByUserId(ObjectId userId) =>
             await RoomWorker.GetRoomsByUserId(userId);
 
-        public async Task<ObjectId> InsertRoom(RoomsDB_Room_DTO newRoom) =>
+        public async Task<ObjectId> InsertRoom(RoomsDB_RoomDTO newRoom) =>
             await RoomWorker.InsertRoom(newRoom);
 
-        public async Task ReplaceRoom(RoomsDB_Room_DTO update)
+        public async Task ReplaceRoom(RoomsDB_RoomDTO update)
         {
             await _redisCache.Del($"Room:{update.Id}");
             _internalByIdCache.Remove(update.Id);
