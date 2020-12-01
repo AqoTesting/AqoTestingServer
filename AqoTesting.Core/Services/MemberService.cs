@@ -7,6 +7,7 @@ using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Infrastructure;
 using AqoTesting.Shared.Interfaces;
 using AutoMapper;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
@@ -22,7 +23,9 @@ namespace AqoTesting.Core.Services
         ITokenRepository _tokenRepository;
         ICacheRepository _cacheRepository;
 
-        public MemberService(IRoomRepository roomRespository, IAttemptRepository attemptRepository, IMemberRepository memberRepository, ITokenGeneratorService tokenGeneratorService, ITokenRepository tokenRepository, ICacheRepository cacheRepository)
+        readonly IOptions<AuthOptionsConfig> _config;
+
+        public MemberService(IRoomRepository roomRespository, IAttemptRepository attemptRepository, IMemberRepository memberRepository, ITokenGeneratorService tokenGeneratorService, ITokenRepository tokenRepository, ICacheRepository cacheRepository, IOptions<AuthOptionsConfig> config)
         {
             _memberRepository = memberRepository;
             _attemptRepository = attemptRepository;
@@ -30,6 +33,7 @@ namespace AqoTesting.Core.Services
             _tokenGeneratorService = tokenGeneratorService;
             _tokenRepository = tokenRepository;
             _cacheRepository = cacheRepository;
+            _config = config;
         }
 
         #region User API
@@ -154,7 +158,7 @@ namespace AqoTesting.Core.Services
             var memberToken = _tokenGeneratorService.GenerateToken(member.Id, Role.Member, room.Id);
             var memberTokenDTO = new CommonAPI_TokenDTO { Token = memberToken };
 
-            await _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), AuthOptions.LIFETIME);
+            await _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), _config.Value.LifeTime);
 
             return (OperationErrorMessages.NoError, memberTokenDTO);
         }
@@ -225,7 +229,7 @@ namespace AqoTesting.Core.Services
             var memberToken = _tokenGeneratorService.GenerateToken(memberId, Role.Member, roomId);
             var memberTokenDTO = new CommonAPI_TokenDTO { Token = memberToken };
 
-            await _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), AuthOptions.LIFETIME);
+            await _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), _config.Value.LifeTime);
 
             return (OperationErrorMessages.NoError, memberTokenDTO);
         }

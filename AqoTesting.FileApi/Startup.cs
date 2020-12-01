@@ -1,22 +1,15 @@
+using AqoTesting.Shared.Attributes;
+using AqoTesting.Shared.Infrastructure;
 using AqoTesting.Shared.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using AqoTesting.Core.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using AqoTesting.Shared.Infrastructure;
-using AqoTesting.Core.Repositories;
-using AqoTesting.WebApi.Infrastructure;
-using MongoDB.Bson.Serialization;
-using System;
-using MongoDB.Bson.Serialization.Serializers;
-using AqoTesting.WebApi.Attributes.CommonAPI;
-using AqoTesting.Domain.Controllers;
 
-namespace AqoTestingServer
+namespace AqoTesting.FileApi
 {
     public class Startup
     {
@@ -35,39 +28,10 @@ namespace AqoTestingServer
             services.Configure<AuthOptionsConfig>(Configuration.GetSection("AuthOptions"));
             services.Configure<RedisConnectionConfig>(Configuration.GetSection("RedisConnection"));
 
-            services.AddScoped<IWorkContext, WorkContext>();
-            services.AddScoped<DefaultJwtBearerEvents>();
-
-            // Load services
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRoomService, RoomService>();
-            services.AddScoped<ITestService, TestService>();
-            services.AddScoped<IMemberService, MemberService>();
-            services.AddScoped<IAttemptService, AttemptService>();
-
-            services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
-
-            // Load repositories
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IRoomRepository, RoomRepository>();
-            services.AddScoped<ITestRepository, TestRepository>();
-            services.AddScoped<IMemberRepository, MemberRepository>();
-            services.AddScoped<IAttemptRepository, AttemptRepository>();
-
             services.AddSingleton<ICacheRepository, CacheRepository>();
             services.AddSingleton<ITokenRepository, TokenRepository>();
 
             services.AddCors();
-
-            var mongoConnection = Configuration.GetSection("MongoConnection").Get<MongoConnectionConfig>();
-            MongoController.ConnectToDB(
-                mongoConnection.Username,
-                mongoConnection.Password,
-                mongoConnection.Host,
-                mongoConnection.Port,
-                mongoConnection.DefaultAuthDb,
-                mongoConnection.Options
-            );
 
             var authOptions = Configuration.GetSection("AuthOptions").Get<AuthOptionsConfig>();
 
@@ -99,21 +63,21 @@ namespace AqoTestingServer
 
             services.AddMvc(options =>
             {
-                options.Filters.Add(typeof(CommonAPI_ValidateModelAttribute));
+                options.Filters.Add(typeof(ValidateModelAttribute));
 
                 options.EnableEndpointRouting = false;
             });
 
-            AutoMapperConfig.Initialize();
+            //AutoMapperConfig.Initialize();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ICacheRepository cacheRepository)
         {
-            BsonSerializer.RegisterSerializer(typeof(DateTime), DateTimeSerializer.LocalInstance);
-
-            if (env.IsDevelopment())
+            if(env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
+            }
 
             //app.UseHttpsRedirection();
 
@@ -122,6 +86,8 @@ namespace AqoTestingServer
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthorization();
+
+            cacheRepository.Connect();
 
             app.UseMvc();
         }

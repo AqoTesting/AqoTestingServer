@@ -10,15 +10,15 @@ namespace AqoTesting.Core.Repositories
 {
     public class CacheRepository : ICacheRepository
     {
-        private readonly IOptions<RedisConnectionConfig> _config;
+        private readonly RedisConnectionConfig _config;
         private RedisDB Redis { get; set; }
 
         public CacheRepository(IOptions<RedisConnectionConfig> config)
         {
-            _config = config;
+            _config = config.Value;
 
-            Redis = new RedisDB(_config.Value.Db);
-            Redis.Host.AddWriteHost(_config.Value.Host, _config.Value.Port, _config.Value.Ssl).Password = _config.Value.Password;
+            Redis = new RedisDB(_config.Db);
+            Redis.Host.AddWriteHost(_config.Host, _config.Port, _config.Ssl).Password = _config.Password;
         }
 
         public async ValueTask<string> Set<T>(string key, T value, int seconds = 604800)

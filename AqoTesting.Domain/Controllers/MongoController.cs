@@ -4,12 +4,13 @@ using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.DTOs.DB.Users;
 using MongoDB.Driver;
+using System;
 
 namespace AqoTesting.Domain.Controllers
 {
     public static class MongoController
     {
-        public static string? leshaPidor;
+        public static string? tigranNatural;
         public static MongoClient? client;
         public static IMongoDatabase? mainDatabase;
         public static IMongoCollection<RoomsDB_RoomDTO>? RoomCollection;
@@ -21,19 +22,21 @@ namespace AqoTesting.Domain.Controllers
 
         public static MongoClient? ConnectToDB(string? username, string? password, string host, ushort? port, string? defaultauthdb, string? options)
         {
-            leshaPidor = "mongodb://" + (username != null ? $"{username}:{password}@" : "") +
-                host + (port != null ? $":{port}" : "") +
-                (defaultauthdb != null || options != null ? "/" : "") +
-                (defaultauthdb != null ? $"{defaultauthdb}" : "") +
-                (options != null ? $"?options" : "");
+            tigranNatural = "mongodb://" + username + (username != "" && password != "" ? ":" : "") + password +
+                host + (port != 0 ? $":{port}" : "") +
+                (defaultauthdb != "" || options != "" ? "/" : "") +
+                (defaultauthdb != "" ? $"{defaultauthdb}" : "") +
+                (options != "" ? $"?{options}" : "");
 
-            client = new MongoClient(leshaPidor);
+            client = new MongoClient(tigranNatural);
             if(client != null && defaultauthdb != null)
             {
                 if(defaultauthdb != null)
                     mainDatabase = client.GetDatabase(defaultauthdb);
                 PreInitCollections();
             }
+
+            Console.WriteLine("Connected to MongoDB");
 
             return client;
         }

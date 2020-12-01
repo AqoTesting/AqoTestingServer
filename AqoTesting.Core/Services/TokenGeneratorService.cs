@@ -1,6 +1,7 @@
 ﻿using AqoTesting.Shared.Enums;
 using AqoTesting.Shared.Infrastructure;
 using AqoTesting.Shared.Interfaces;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using System;
@@ -13,9 +14,11 @@ namespace AqoTesting.Core.Services
     public class TokenGeneratorService : ITokenGeneratorService
     {
         private readonly ITokenRepository _tokenRepository;
-        public TokenGeneratorService(ITokenRepository tokenRepository)
+        private readonly IOptions<AuthOptionsConfig> _authOptionsConfig;
+        public TokenGeneratorService(ITokenRepository tokenRepository, IOptions<AuthOptionsConfig> authOptionsConfig)
         {
             _tokenRepository = tokenRepository;
+            _authOptionsConfig = authOptionsConfig;
         }
         public string GenerateToken(ObjectId id, Role role)
         {
@@ -35,14 +38,14 @@ namespace AqoTesting.Core.Services
             var now = DateTime.UtcNow;
 
             var jwt = new JwtSecurityToken(
-                    issuer: AuthOptions.ISSUER,
-                    audience: AuthOptions.AUDIENCE,
+                    issuer: _authOptionsConfig.Value.Issuer,
+                    audience: _authOptionsConfig.Value.Audience,
                     notBefore: now,
                     claims: identity.Claims,
-                    expires: now.Add(TimeSpan.FromSeconds(AuthOptions.LIFETIME)),
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+                    expires: now.Add(TimeSpan.FromSeconds(_authOptionsConfig.Value.LifeTime)),
+                    signingCredentials: new SigningCredentials(_authOptionsConfig.Value.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
-            _tokenRepository.Add(role, id, jwt, AuthOptions.LIFETIME);
+            _tokenRepository.Add(role, id, jwt, _authOptionsConfig.Value.LifeTime);
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }

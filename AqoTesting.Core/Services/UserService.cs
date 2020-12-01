@@ -2,59 +2,73 @@
 using AqoTesting.Shared.DTOs.DB.Users;
 using System.Threading.Tasks;
 using AqoTesting.Core.Utils;
-using AqoTesting.Shared.Models;
 using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
 using AutoMapper;
 using AqoTesting.Shared.DTOs.API.UserAPI.Account;
 using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
+using AqoTesting.Shared.DTOs.API.CommonAPI;
 
 namespace AqoTesting.Core.Services
 {
     public class UserService : ServiceBase, IUserService
     {
         IUserRepository _userRepository;
+        ITokenGeneratorService _tokenGeneratorService;
 
-        public UserService(IUserRepository userRespository)
+        public UserService(IUserRepository userRespository, ITokenGeneratorService tokenGeneratorService)
         {
             _userRepository = userRespository;
+            _tokenGeneratorService = tokenGeneratorService;
         }
 
-        public async Task<UserAPI_GetProfileDTO> GetUserById(ObjectId userId)
-        {
-            var user = await _userRepository.GetUserById(userId);
-            if(user == null)
-                throw new ResultException(OperationErrorMessages.UserNotFound);
+        UsersDB_UserDTO user;
 
-            var responseUser = Mapper.Map<UserAPI_GetProfileDTO>(user);
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetUserById(ObjectId userId) =>
+            (user = await _userRepository.GetUserById(userId)) == null ?
+                (OperationErrorMessages.UserNotFound, null) :
 
-            return responseUser;
-        }
-        public async Task<UserAPI_GetProfileDTO> GetUserById(CommonAPI_UserIdDTO userIdDTO) =>
-            await GetUserById(ObjectId.Parse(userIdDTO.UserId));
+            (OperationErrorMessages.NoError,
+            Mapper.Map<UserAPI_GetProfileDTO>(user) );
 
-        public async Task<UsersDB_UserDTO> GetUserByAuthData(UserAPI_SignInDTO authData)
-        {
-            var user = await _userRepository.GetUserByAuthData(authData.Login, Sha256.Compute(authData.Password));
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetUserById(CommonAPI_UserIdDTO userIdDTO) =>
+            await UserAPI_GetUserById(ObjectId.Parse(userIdDTO.UserId));
 
-            return user;
-        }
+        public async Task<(OperationErrorMessages, object)> UserAPI_CheckRegisteredByLogin(string login) =>
+            (OperationErrorMessages.NoError,
+            new CommonAPI_BooleanValueDTO {
+                BooleanValue =
+                    await _userRepository.GetUserByLogin(login) != null });
 
-        public async Task<UsersDB_UserDTO> GetUserByLogin(string login) =>
-            await _userRepository.GetUserByLogin(login);
+        public async Task<(OperationErrorMessages, object)> UserAPI_CheckRegisteredByEmail(string email) =>
+            (OperationErrorMessages.NoError,
+            new CommonAPI_BooleanValueDTO {
+                BooleanValue = await _userRepository.GetUserByEmail(email) != null } );
 
-        public async Task<UsersDB_UserDTO> GetUserByEmail(string email) =>
-            await _userRepository.GetUserByEmail(email);
+        public async Task<(OperationErrorMessages, object)> UserAPI_SignUp(UserAPI_SignUpDTO signUpDTO) =>
+            await _userRepository.GetUserByLogin(signUpDTO.Login) != null ?
+                (OperationErrorMessages.LoginAlreadyTaken, null) :
 
-        public async Task<UsersDB_UserDTO> InsertUser(UserAPI_SignUpDTO signUpUserDTO)
-        {
-            var newUser = Mapper.Map<UsersDB_UserDTO>(signUpUserDTO);
+            await _userRepository.GetUserByEmail(signUpDTO.Email) != null ?
+                (OperationErrorMessages.EmailAlreadyTaken, null) :
 
-            var newUserId = await _userRepository.InsertUser(newUser);
+            (OperationErrorMessages.NoError,
+            new CommonAPI_TokenDTO {
+                Token = _tokenGeneratorService.GenerateToken(
+                    await _userRepository.InsertUser(
+                        Mapper.Map<UsersDB_UserDTO>(signUpDTO) ),
+                    Role.User )});
 
-            newUser.Id = newUserId;
+        public async Task<(OperationErrorMessages, object)> UserAPI_SignIn(UserAPI_SignInDTO signInDTO) =>
+            (user = await _userRepository.GetUserByAuthData(
+                signInDTO.Login,
+                Sha256.Compute(signInDTO.Password) )
+            ) == null ?
+                (OperationErrorMessages.WrongAuthData, null) :
 
-            return newUser;
-        }
+            (OperationErrorMessages.NoError,
+            new CommonAPI_TokenDTO { Token = _tokenGeneratorService.GenerateToken(
+                user.Id,
+                Role.User) });
     }
 }

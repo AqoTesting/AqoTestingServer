@@ -15,62 +15,45 @@ namespace AqoTesting.WebApi.Controllers
 
         IUserService _userService;
         IWorkContext _workContext;
-        ITokenGeneratorService _tokenGeneratorService;
 
-        public UserAPI_AccountController(IUserService userService, IWorkContext workContext, ITokenGeneratorService tokenGeneratorService)
+        public UserAPI_AccountController(IUserService userService, IWorkContext workContext)
         {
             _userService = userService;
             _workContext = workContext;
-            _tokenGeneratorService = tokenGeneratorService;
         }
 
         [HttpPost("/user/signin")]
-        public async Task<IActionResult> SignIn([FromBody] UserAPI_SignInDTO authData)
+        public async Task<IActionResult> SignIn([FromBody] UserAPI_SignInDTO signInDTO)
         {
-            var user = await _userService.GetUserByAuthData(authData);
-            if(user == null)
-                return this.ResultResponse<object>(OperationErrorMessages.WrongAuthData);
+            var (errorCode, response) = await _userService.UserAPI_SignIn(signInDTO);
 
-            var userToken = _tokenGeneratorService.GenerateToken(user.Id, Role.User);
-            var responseUserToken = new CommonAPI_TokenDTO { Token = userToken };
-
-            return this.ResultResponse(OperationErrorMessages.NoError, responseUserToken);
+            return this.ResultResponse(errorCode, response);
         }
 
         [HttpPost("/user/signup")]
-        public async Task<IActionResult> SignUp([FromBody] UserAPI_SignUpDTO signUpUserDTO)
+        public async Task<IActionResult> SignUp([FromBody] UserAPI_SignUpDTO signUpDTO)
         {
-            var loginAlreadyTaken = await _userService.GetUserByLogin(signUpUserDTO.Login);
-            if(loginAlreadyTaken != null)
-                return this.ResultResponse<object>(OperationErrorMessages.LoginAlreadyTaken);
-
-            var emailAlreadyTaken = await _userService.GetUserByEmail(signUpUserDTO.Email);
-            if(emailAlreadyTaken != null)
-                return this.ResultResponse<object>(OperationErrorMessages.EmailAlreadyTaken);
-
-            var newUser = await _userService.InsertUser(signUpUserDTO);
-            var newUserToken = _tokenGeneratorService.GenerateToken(newUser.Id, Role.User);
-            var reponseNewUserToken = new CommonAPI_TokenDTO { Token = newUserToken };
-
-            return this.ResultResponse(OperationErrorMessages.NoError, reponseNewUserToken);
+            var (errorCode, respone) = await _userService.UserAPI_SignUp(signUpDTO);
+            
+            return this.ResultResponse(errorCode, respone);
         }
 
         [CommonAPI_Auth(Role = Role.User)]
         [HttpGet("/user")]
         public async Task<IActionResult> GetProfile()
         {
-            var user = await _userService.GetUserById(_workContext.UserId.Value);
+            var (errorCode, respone) = await _userService.UserAPI_GetUserById(_workContext.UserId.Value);
 
-            return this.ResultResponse(OperationErrorMessages.NoError, user);
+            return this.ResultResponse(errorCode, respone);
         }
 
         [CommonAPI_Auth(Role = Role.User)]
         [HttpGet("/user/{UserId}")]
         public async Task<IActionResult> GetUser([FromRoute] CommonAPI_UserIdDTO userIdDTO)
         {
-            var user = await _userService.GetUserById(userIdDTO);
+            var (errorCode, respone) = await _userService.UserAPI_GetUserById(userIdDTO);
 
-            return this.ResultResponse(OperationErrorMessages.NoError, user);
+            return this.ResultResponse(errorCode, respone);
         }
     }
 }
