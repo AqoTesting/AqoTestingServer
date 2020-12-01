@@ -120,15 +120,19 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> MemberAPI_GetAttemptsByMemberId(CommonAPI_MemberIdDTO memberIdDTO) =>
             await this.MemberAPI_GetAttemptsByMemberId(ObjectId.Parse(memberIdDTO.MemberId));
 
-        public async Task<(OperationErrorMessages, object)> MemberAPI_GetAttemptsByTestId(ObjectId testId)
+        public async Task<(OperationErrorMessages, object)> GetAttemptsByTestIdAndMemberId(ObjectId testId, ObjectId memberId)
         {
-            var attempts = await _attemptRepository.GetAttemptsByTestId(testId);
+            var attempts = await _attemptRepository.GetAttemptsByTestIdAndMemberId(testId, memberId);
             var getAttemptItemDTOs = Mapper.Map<MemberAPI_GetAttemptsItemDTO[]>(attempts);
 
             return (OperationErrorMessages.NoError, getAttemptItemDTOs);
         }
-        public async Task<(OperationErrorMessages, object)> MemberAPI_GetAttemptsByTestId(CommonAPI_TestIdDTO testIdDTO) =>
-            await this.MemberAPI_GetAttemptsByTestId(ObjectId.Parse(testIdDTO.TestId));
+        public async Task<(OperationErrorMessages, object)> GetAttemptsByTestIdAndMemberId(CommonAPI_TestIdDTO testIdDTO, ObjectId memberId) =>
+            await this.GetAttemptsByTestIdAndMemberId(ObjectId.Parse(testIdDTO.TestId), memberId);
+        public async Task<(OperationErrorMessages, object)> GetAttemptsByTestIdAndMemberId(ObjectId testId, CommonAPI_MemberIdDTO memberIdDTO) =>
+            await this.GetAttemptsByTestIdAndMemberId(testId, ObjectId.Parse(memberIdDTO.MemberId));
+        public async Task<(OperationErrorMessages, object)> GetAttemptsByTestIdAndMemberId(CommonAPI_TestIdDTO testIdDTO, CommonAPI_MemberIdDTO memberIdDTO) =>
+            await this.GetAttemptsByTestIdAndMemberId(ObjectId.Parse(testIdDTO.TestId), ObjectId.Parse(memberIdDTO.MemberId));
 
         public async Task<(OperationErrorMessages, object)> MemberAPI_Answer(CommonAPI_TestSectionIdDTO sectionIdDTO, CommonAPI_TestQuestionIdDTO questionIdDTO, MemberAPI_CommonTestAnswerDTO commonAnswerDTO)
         {

@@ -52,7 +52,7 @@ namespace AqoTesting.WebApi.Controllers
         [HttpGet("/member/test/{TestId}/attempts")]
         public async Task<IActionResult> GetAttemptsByTestId([FromRoute] CommonAPI_TestIdDTO testIdDTO)
         {
-            var (errorCode, response) = await _attemptService.MemberAPI_GetAttemptsByTestId(testIdDTO);
+            var (errorCode, response) = await _attemptService.GetAttemptsByTestIdAndMemberId(testIdDTO, _workContext.MemberId.Value);
 
             return this.ResultResponse(errorCode, response);
         }
