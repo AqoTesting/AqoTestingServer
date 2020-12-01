@@ -102,16 +102,14 @@
         AttemptAccessError = 601,
 
         // MemberAPI Answer
-        // В MemberAPI_CommonTestAnswerDTO, поля, нужные для конкретного типа вопроса не переданы (null)
-        AnswerNotPassed = 602,
         // SelectedOption больше или равно количетсву опций
-        SelectedOptionOutOfRange = 603,
+        SelectedOptionOutOfRange = 602,
         // Количество переданных id опций не равно количеству опций в вопросе
-        WrongOptionsCount = 604,
+        WrongOptionsCount = 603,
         // Переданы одинаковые id опций
-        NonUniqueOption = 605,
+        NonUniqueOption = 604,
         // Время на прохождение кончилось, а мембер попытался ответить, возвращается один раз, после этого попытка становится неактивной
-        TimeIsUp = 606,
+        TimeIsUp = 605,
         #endregion
     }
 }
