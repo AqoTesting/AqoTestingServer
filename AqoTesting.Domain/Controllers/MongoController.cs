@@ -10,7 +10,7 @@ namespace AqoTesting.Domain.Controllers
 {
     public static class MongoController
     {
-        public static string? tigranNatural;
+        public static string? connectionString;
         public static MongoClient? client;
         public static IMongoDatabase? mainDatabase;
         public static IMongoCollection<RoomsDB_RoomDTO>? RoomCollection;
@@ -22,13 +22,13 @@ namespace AqoTesting.Domain.Controllers
 
         public static MongoClient? ConnectToDB(string? username, string? password, string host, ushort? port, string? defaultauthdb, string? options)
         {
-            tigranNatural = "mongodb://" + username + (username != "" && password != "" ? ":" : "") + password +
+            connectionString = "mongodb://" + username + (username != "" && password != "" ? ":" : "") + password +
                 host + (port != 0 ? $":{port}" : "") +
                 (defaultauthdb != "" || options != "" ? "/" : "") +
                 (defaultauthdb != "" ? $"{defaultauthdb}" : "") +
                 (options != "" ? $"?{options}" : "");
 
-            client = new MongoClient(tigranNatural);
+            client = new MongoClient(connectionString);
             if(client != null && defaultauthdb != null)
             {
                 if(defaultauthdb != null)
