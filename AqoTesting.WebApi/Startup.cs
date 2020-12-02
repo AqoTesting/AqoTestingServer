@@ -34,6 +34,7 @@ namespace AqoTestingServer
 
             services.Configure<AuthOptionsConfig>(Configuration.GetSection("AuthOptions"));
             services.Configure<RedisConnectionConfig>(Configuration.GetSection("RedisConnection"));
+            services.Configure<InternalApiConfig>(Configuration.GetSection("InternalApi"));
 
             services.AddScoped<IWorkContext, WorkContext>();
             services.AddScoped<DefaultJwtBearerEvents>();
@@ -44,6 +45,7 @@ namespace AqoTestingServer
             services.AddScoped<ITestService, TestService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IAttemptService, AttemptService>();
+            services.AddScoped<IValidationService, ValidationService>();
 
             services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
 

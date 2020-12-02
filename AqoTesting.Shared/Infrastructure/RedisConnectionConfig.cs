@@ -1,4 +1,5 @@
-﻿namespace AqoTesting.Shared.Infrastructure
+﻿#pragma warning disable CS8618
+namespace AqoTesting.Shared.Infrastructure
 {
     public class RedisConnectionConfig
     {

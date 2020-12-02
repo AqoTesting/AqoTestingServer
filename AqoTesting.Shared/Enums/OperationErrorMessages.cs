@@ -111,5 +111,10 @@
         // Время на прохождение кончилось, а мембер попытался ответить, возвращается один раз, после этого попытка становится неактивной
         TimeIsUp = 605,
         #endregion
+
+        // 1000
+        #region InternalApi
+        InternalApiWrongAccessKey = 1000,
+        #endregion
     }
 }
