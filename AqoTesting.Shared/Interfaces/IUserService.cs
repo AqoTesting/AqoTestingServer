@@ -11,9 +11,6 @@ namespace AqoTesting.Shared.Interfaces
         Task<(OperationErrorMessages, object)> UserAPI_GetUserById(ObjectId userId);
         Task<(OperationErrorMessages, object)> UserAPI_GetUserById(CommonAPI_UserIdDTO userIdDTO);
 
-        Task<(OperationErrorMessages, object)> UserAPI_CheckRegisteredByLogin(string login);
-        Task<(OperationErrorMessages, object)> UserAPI_CheckRegisteredByEmail(string email);
-
         Task<(OperationErrorMessages, object)> UserAPI_SignUp(UserAPI_SignUpDTO signUpDTO);
         Task<(OperationErrorMessages, object)> UserAPI_SignIn(UserAPI_SignInDTO signInDTO);
     }

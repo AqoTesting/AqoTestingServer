@@ -180,8 +180,7 @@ namespace AqoTesting.Core.Services
             var loginTaken = await _memberRepository.CheckLoginTaken(roomId ,signUpDTO.Login);
             if(loginTaken)
                 return (OperationErrorMessages.LoginAlreadyTaken, null);
-            var emailTaken = await _memberRepository.CheckEmailTaken(roomId, signUpDTO.Email);
-            if(emailTaken)
+            if(await _memberRepository.CheckEmailTaken(roomId, signUpDTO.Email))
                 return (OperationErrorMessages.EmailAlreadyTaken, null);
 
             // Check fields hash exists

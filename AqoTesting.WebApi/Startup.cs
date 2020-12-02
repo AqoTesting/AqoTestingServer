@@ -66,8 +66,7 @@ namespace AqoTestingServer
                 mongoConnection.Host,
                 mongoConnection.Port,
                 mongoConnection.DefaultAuthDb,
-                mongoConnection.Options
-            );
+                mongoConnection.Options );
 
             var authOptions = Configuration.GetSection("AuthOptions").Get<AuthOptionsConfig>();
 
@@ -90,7 +89,7 @@ namespace AqoTestingServer
                         ValidateLifetime = true,
 
                         // установка ключа безопасности
-                        IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
+                        IssuerSigningKey = authOptions.SymmetricSecurityKey,
                         // валидация ключа безопасности
                         ValidateIssuerSigningKey = true,
                     };

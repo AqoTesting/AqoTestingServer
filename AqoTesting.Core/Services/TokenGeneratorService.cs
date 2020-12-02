@@ -43,7 +43,7 @@ namespace AqoTesting.Core.Services
                     notBefore: now,
                     claims: identity.Claims,
                     expires: now.Add(TimeSpan.FromSeconds(_authOptionsConfig.Value.LifeTime)),
-                    signingCredentials: new SigningCredentials(_authOptionsConfig.Value.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+                    signingCredentials: new SigningCredentials(_authOptionsConfig.Value.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256));
 
             _tokenRepository.Add(role, id, jwt, _authOptionsConfig.Value.LifeTime);
 

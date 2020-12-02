@@ -5,18 +5,28 @@ namespace AqoTesting.Shared.DTOs.API.MemberAPI.Account
 {
     public class MemberAPI_SignUpDTO
     {
+        private string? _login;
+        private string? _email;
+
         [Required]
         [StringLength(32, MinimumLength = 1)]
-        public string? Login { get; set; }
+        [RegularExpression(@"^[A-z0-9_]+$")]
+        public string? Login {
+            get => _login;
+            set => _login = value?.ToLower();
+        }
 
         [Required]
         [StringLength(128, MinimumLength = 6)]
         public string? Password { get; set; }
 
         [Required]
-        [EmailAddress]
         [StringLength(320, MinimumLength = 6)]
-        public string? Email { get; set; }
+        [EmailAddress]
+        public string? Email {
+            get => _email;
+            set => _email = value?.ToLower();
+        }
 
         [Required]
         [StringLength(24, MinimumLength = 24)]

@@ -7,7 +7,6 @@ using MongoDB.Bson;
 using AutoMapper;
 using AqoTesting.Shared.DTOs.API.UserAPI.Account;
 using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
-using AqoTesting.Shared.DTOs.API.CommonAPI;
 
 namespace AqoTesting.Core.Services
 {
@@ -33,17 +32,6 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_GetUserById(CommonAPI_UserIdDTO userIdDTO) =>
             await UserAPI_GetUserById(ObjectId.Parse(userIdDTO.UserId));
-
-        public async Task<(OperationErrorMessages, object)> UserAPI_CheckRegisteredByLogin(string login) =>
-            (OperationErrorMessages.NoError,
-            new CommonAPI_BooleanValueDTO {
-                BooleanValue =
-                    await _userRepository.GetUserByLogin(login) != null });
-
-        public async Task<(OperationErrorMessages, object)> UserAPI_CheckRegisteredByEmail(string email) =>
-            (OperationErrorMessages.NoError,
-            new CommonAPI_BooleanValueDTO {
-                BooleanValue = await _userRepository.GetUserByEmail(email) != null } );
 
         public async Task<(OperationErrorMessages, object)> UserAPI_SignUp(UserAPI_SignUpDTO signUpDTO) =>
             await _userRepository.GetUserByLogin(signUpDTO.Login) != null ?

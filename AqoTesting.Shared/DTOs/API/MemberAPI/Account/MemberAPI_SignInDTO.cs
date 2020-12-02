@@ -4,9 +4,15 @@ namespace AqoTesting.Shared.DTOs.API.MemberAPI.Account
 {
     public class MemberAPI_SignInDTO
     {
+        private string? _login;
+
         [Required]
         [StringLength(320, MinimumLength = 1)]
-        public string? Login { get; set; }
+        [RegularExpression(@"^[A-z0-9_@\.\-]+$")]
+        public string? Login {
+            get => _login;
+            set => _login = value?.ToLower();
+        }
 
         [Required]
         [StringLength(128, MinimumLength = 6)]
