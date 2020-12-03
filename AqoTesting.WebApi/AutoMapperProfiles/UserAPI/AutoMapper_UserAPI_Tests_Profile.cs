@@ -32,6 +32,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
                     return commonOptionDTOs;
                 });
             CreateMap<TestsDB_PositionalOption, UserAPI_TestCommonOptionDTO>();
+            CreateMap<TestsDB_FillInOption, UserAPI_TestCommonOptionDTO>();
 
             CreateMap<TestsDB_QuestionDTO, UserAPI_GetTestQuestionDTO>()
                 .ForMember(x => x.Options,
@@ -47,6 +48,10 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
                         m.Type == QuestionTypes.Sequence ?
                             Mapper.Map<UserAPI_TestCommonOptionDTO[]>(
                                 BsonSerializer.Deserialize<TestsDB_SequenceOptionsContainer>(m.Options, null).Sequence) :
+
+                        m.Type == QuestionTypes.FillIn ?
+                            Mapper.Map<UserAPI_TestCommonOptionDTO[]>(
+                                BsonSerializer.Deserialize<TestsDB_FillInOptionsContainer>(m.Options, null).Options) :
 
                         new UserAPI_TestCommonOptionDTO[0]));
             CreateMap<KeyValuePair<string, TestsDB_QuestionDTO>, KeyValuePair<string, UserAPI_GetTestQuestionDTO>>()
@@ -104,6 +109,11 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
                             new TestsDB_SequenceOptionsContainer
                             {
                                 Sequence = Mapper.Map<TestsDB_PositionalOption[]>(m.Options)
+                            }.ToBsonDocument(null, null, default) :
+
+                        m.Type == QuestionTypes.FillIn ?
+                            new TestsDB_FillInOptionsContainer { 
+                                Options = Mapper.Map<TestsDB_FillInOption[]>(m.Options)
                             }.ToBsonDocument(null, null, default) :
 
                         new BsonDocument()));

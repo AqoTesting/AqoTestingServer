@@ -2,7 +2,7 @@
 using AqoTesting.Shared.DTOs.API.MemberAPI.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts.Options;
-using AqoTesting.Shared.DTOs.DB.Attempts.OptionsData;
+using AqoTesting.Shared.DTOs.DB.Attempts.OptionsContainers;
 using AqoTesting.Shared.Enums;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -129,10 +129,35 @@ namespace AqoTesting.Core.Utils
                             return (false, OperationErrorMessages.NonUniqueOption, new CommonAPI_ErrorDTO { ErrorSubject = sequence[i] });
                     }
 
-                    var temptOptions = new AttemptsDB_PositionalOption[optionsCount];
                     for (var i = 0; i < optionsCount; i++)
-                        temptOptions[i] = optionsContainer.Sequence[sequence[i]];
-                    optionsContainer.Sequence = temptOptions;
+                        optionsContainer.Sequence[i] = optionsContainer.Sequence[sequence[i]];
+
+                    question.Options = optionsContainer.ToBsonDocument();
+                }
+            }
+            else if(question.Type == QuestionTypes.FillIn)
+            {
+                var fills = testAnswerDTO.Fills;
+                if(fills != null)
+                {
+                    var optionsContainer = BsonSerializer.Deserialize<AttemptsDB_FillInOptionsContainer>(question.Options);
+                    var options = optionsContainer.Options;
+                    var blanksCount = optionsContainer.Options
+                        .Where(option =>
+                            option.IsBlank
+                        ).ToArray()
+                            .Length;
+
+                    if(fills.Length != blanksCount)
+                        return (false, OperationErrorMessages.WrongOptionsCount, null);
+
+                    var j = 0;
+                    for(var i = 0; i < optionsContainer.Options.Length; i++)
+                        if(optionsContainer.Options[i].IsBlank)
+                        {
+                            optionsContainer.Options[i].Text = fills[j];
+                            j++;
+                        }
 
                     question.Options = optionsContainer.ToBsonDocument();
                 }
@@ -161,52 +186,62 @@ namespace AqoTesting.Core.Utils
                     if((float)question.Value.BlurTime / question.Value.TotalTime >= 0.5)
                         penalPoints += question.Value.Cost;
 
+                    var correct = true;
+
                     if(question.Value.Type == QuestionTypes.SingleChoice || question.Value.Type == QuestionTypes.MultipleChoice)
                     {
                         var options = BsonSerializer.Deserialize<AttemptsDB_ChoiceOptionsContainer>(question.Value.Options).Options;
 
-                        var correct = true;
                         foreach(var option in options)
                             if(option.Chosen != option.IsCorrect)
                             {
                                 correct = false;
                                 break;
                             }
-
-                        if(correct)
-                            correctPoints += question.Value.Cost;
                     }
                     else if(question.Value.Type == QuestionTypes.Matching)
                     {
                         var sequences = BsonSerializer.Deserialize<AttemptsDB_MatchingOptionsContainer>(question.Value.Options);
                         var (leftSequence, rightSequence) = (sequences.LeftSequence, sequences.RightSequence);
 
-                        var correct = true;
                         for(var i = 0; i < sequences.LeftSequence.Length; i++)
                             if(leftSequence[i].CorrectIndex != rightSequence[i].CorrectIndex)
                             {
                                 correct = false;
                                 break;
                             }
-
-                        if(correct)
-                            correctPoints += question.Value.Cost;
                     }
                     else if(question.Value.Type == QuestionTypes.Sequence)
                     {
                         var sequence = BsonSerializer.Deserialize<AttemptsDB_SequenceOptionsContainer>(question.Value.Options).Sequence;
 
-                        var correct = true;
                         for(var i = 0; i < sequence.Length; i++)
                             if(sequence[i].CorrectIndex != i)
                             {
                                 correct = false;
                                 break;
                             }
-
-                        if(correct)
-                            correctPoints += question.Value.Cost;
                     }
+                    else if(question.Value.Type == QuestionTypes.FillIn)
+                    {
+                        var options = BsonSerializer.Deserialize<AttemptsDB_FillInOptionsContainer>(question.Value.Options).Options;
+
+                        foreach(var option in options)
+                            if(
+                                option.IsBlank && (
+                                    option.Text == null ||
+                                    !option.CorrectTexts.Contains(
+                                        option.Text
+                                            .ToLower()
+                                            .Replace("ё", "е") )))
+                            {
+                                correct = false;
+                                break;
+                            }
+                    }
+
+                    if(correct)
+                        correctPoints += question.Value.Cost;
                 }
 
             var correctRatio = (float)correctPoints / maxPoints;

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AqoTesting.Shared.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
 {
@@ -26,5 +27,9 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
         [StringLength(2048)]
         [Url]
         public string? LeftImageUrl { get; set; }
+        public bool IsBlank { get; set; }
+
+        [ArrayStringLength(512, MinimumLength = 1)]
+        public string[]? CorrectTexts { get; set; }
     }
 }

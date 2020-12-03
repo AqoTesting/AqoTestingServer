@@ -5,6 +5,7 @@
         SingleChoice = 0,
         MultipleChoice = 1,
         Matching = 2,
-        Sequence = 3
+        Sequence = 3,
+        FillIn = 4,
     }
 }

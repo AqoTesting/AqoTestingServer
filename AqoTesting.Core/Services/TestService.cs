@@ -90,7 +90,7 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_EditSections(ObjectId testId, UserAPI_PostTestSectionsDTO postSectionsDTO)
         {
-            var (valid, errorCode, response) = TestsUtils.ValidateSections(postSectionsDTO.Sections);
+            var (valid, errorCode, response) = TestUtils.ValidateSections(postSectionsDTO.Sections);
             if (!valid)
                 return (errorCode, response);
 
@@ -99,7 +99,7 @@ namespace AqoTesting.Core.Services
                 return (OperationErrorMessages.TestNotFound, null);
 
             bool merged;
-            (merged, errorCode, response) = TestsUtils.MergeSections(test.Sections, postSectionsDTO.Sections);
+            (merged, errorCode, response) = TestUtils.MergeSections(test.Sections, postSectionsDTO.Sections);
             if (!merged)
                 return (errorCode, response);
 
@@ -168,7 +168,7 @@ namespace AqoTesting.Core.Services
 
             var attempts = (await _attemptRepository.GetAttemptsByTestIdAndMemberId(testId, memberId));
 
-            if (attempts.Count() >= test.AttemptsNumber)
+            if (attempts.Where(attempt => !attempt.Ignore).Count() >= test.AttemptsNumber)
                 return (OperationErrorMessages.NoAttemptsLeft, null);
 
             var newAttempt = Mapper.Map<AttemptsDB_AttemptDTO>(test);

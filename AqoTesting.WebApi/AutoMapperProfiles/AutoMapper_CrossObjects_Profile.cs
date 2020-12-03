@@ -1,7 +1,7 @@
 ﻿using AqoTesting.Core.Utils;
 using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts.Options;
-using AqoTesting.Shared.DTOs.DB.Attempts.OptionsData;
+using AqoTesting.Shared.DTOs.DB.Attempts.OptionsContainers;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.DTOs.DB.Tests.Options;
 using AqoTesting.Shared.DTOs.DB.Tests.OptionsContainers;
@@ -55,11 +55,18 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
                                 }.ToBsonDocument();
 
                             case QuestionTypes.Sequence:
-                                var sequenceOptionsContainer = BsonSerializer.Deserialize<TestsDB_SequenceOptionsContainer>(m.Options, null);
-                                
                                 return new AttemptsDB_SequenceOptionsContainer {
                                     Sequence = AttemptConstructor.ShuffleArray(
-                                        Mapper.Map<AttemptsDB_PositionalOption[]>(sequenceOptionsContainer.Sequence))
+                                        Mapper.Map<AttemptsDB_PositionalOption[]>(
+                                            BsonSerializer.Deserialize<TestsDB_SequenceOptionsContainer>(m.Options, null)
+                                                .Sequence ))
+                                }.ToBsonDocument();
+
+                            case QuestionTypes.FillIn:
+                                return new AttemptsDB_FillInOptionsContainer {
+                                    Options = Mapper.Map<AttemptsDB_FillInOption[]>(
+                                        BsonSerializer.Deserialize<TestsDB_FillInOptionsContainer>(m.Options, null)
+                                            .Options )
                                 }.ToBsonDocument();
 
                             default:

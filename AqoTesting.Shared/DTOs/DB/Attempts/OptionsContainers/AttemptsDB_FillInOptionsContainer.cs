@@ -2,8 +2,8 @@
 
 namespace AqoTesting.Shared.DTOs.DB.Attempts.OptionsContainers
 {
-    public class AttemptsDB_SequenceOptionsContainer
+    public class AttemptsDB_FillInOptionsContainer
     {
-        public AttemptsDB_PositionalOption[] Sequence { get; set; }
+        public AttemptsDB_FillInOption[] Options { get; set; }
     }
 }

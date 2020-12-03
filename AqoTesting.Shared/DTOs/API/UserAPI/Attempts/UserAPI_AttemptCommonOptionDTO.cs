@@ -11,5 +11,7 @@
         public string? LeftImageUrl { get; set; }
         public string? RightText { get; set; }
         public string? RightImageUrl { get; set; }
+        public bool IsBlank { get; set; }
+        public string[]? CorrectTexts { get; set; }
     }
 }

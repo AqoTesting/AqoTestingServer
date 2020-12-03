@@ -9,6 +9,7 @@ namespace AqoTesting.Shared.DTOs.API.MemberAPI.Attempts
         public int[]? Sequence { get; set; }
         public int[]? LeftSequence { get; set; }
         public int[]? RightSequence { get; set; }
+        public string[]? Fills { get; set; }
         
         [Required]
         [Range(0, int.MaxValue)]

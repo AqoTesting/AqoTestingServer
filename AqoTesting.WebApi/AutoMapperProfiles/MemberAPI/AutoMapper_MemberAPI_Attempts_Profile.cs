@@ -1,7 +1,7 @@
 ﻿using AqoTesting.Shared.DTOs.API.MemberAPI.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts.Options;
-using AqoTesting.Shared.DTOs.DB.Attempts.OptionsData;
+using AqoTesting.Shared.DTOs.DB.Attempts.OptionsContainers;
 using AqoTesting.Shared.Enums;
 using AutoMapper;
 using MongoDB.Bson.Serialization;
@@ -33,6 +33,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
                     return commonOptionDTOs;
                 });
             CreateMap<AttemptsDB_PositionalOption, MemberAPI_AttemptCommonOptionDTO>();
+            CreateMap<AttemptsDB_FillInOption, MemberAPI_AttemptCommonOptionDTO>();
 
             CreateMap<AttemptsDB_QuestionDTO, MemberAPI_GetAttemptQuestionDTO>()
                 .ForMember(x => x.Options,
@@ -48,6 +49,10 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
                         m.Type == QuestionTypes.Sequence ?
                             Mapper.Map<MemberAPI_AttemptCommonOptionDTO[]>(
                                 BsonSerializer.Deserialize<AttemptsDB_SequenceOptionsContainer>(m.Options, null).Sequence) :
+
+                        m.Type == QuestionTypes.FillIn ?
+                            Mapper.Map<MemberAPI_AttemptCommonOptionDTO[]>(
+                                BsonSerializer.Deserialize<AttemptsDB_FillInOptionsContainer>(m.Options, null).Options) :
 
                         new MemberAPI_AttemptCommonOptionDTO[0]));
             CreateMap<KeyValuePair<string, AttemptsDB_QuestionDTO>, KeyValuePair<string, MemberAPI_GetAttemptQuestionDTO>>()

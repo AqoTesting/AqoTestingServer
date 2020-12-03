@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace AqoTesting.Core.Utils
 {
-    public static class TestsUtils
+    public static class TestUtils
     {
         public static (bool, OperationErrorMessages, object) ValidateSections(Dictionary<string, UserAPI_PostTestSectionDTO> sections)
         {
@@ -60,6 +60,13 @@ namespace AqoTesting.Core.Utils
                         case QuestionTypes.Sequence:
                             foreach (var option in question.Value.Options)
                                 if (option.Text == null && option.ImageUrl == null)
+                                    return (false, OperationErrorMessages.EmptyOption, new CommonAPI_ErrorDTO { ErrorSubject = new object[] { section.Key, question.Key, option } });
+
+                            break;
+
+                        case QuestionTypes.FillIn:
+                            foreach(var option in question.Value.Options)
+                                if(option.IsBlank && option.CorrectTexts.Length == 0 || !option.IsBlank && option.Text == null)
                                     return (false, OperationErrorMessages.EmptyOption, new CommonAPI_ErrorDTO { ErrorSubject = new object[] { section.Key, question.Key, option } });
 
                             break;
