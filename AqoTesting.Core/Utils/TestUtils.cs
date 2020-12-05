@@ -24,7 +24,7 @@ namespace AqoTesting.Core.Utils
                     if (question.Value.Deleted)
                         continue;
 
-                    if (question.Value.Text == null && question.Value.ImageUrl == null)
+                    if (question.Value.Type != QuestionTypes.FillIn && question.Value.Text == null && question.Value.ImageUrl == null)
                         return (false, OperationErrorMessages.EmptyQuestion, new CommonAPI_ErrorDTO { ErrorSubject = new string[] { section.Key, question.Key } });
 
                     switch (question.Value.Type)
