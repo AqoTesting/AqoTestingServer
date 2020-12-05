@@ -66,7 +66,7 @@ namespace AqoTesting.Core.Utils
 
                         case QuestionTypes.FillIn:
                             foreach(var option in question.Value.Options)
-                                if(option.IsBlank && option.CorrectTexts.Length == 0 || !option.IsBlank && option.Text == null)
+                                if(option.IsBlank && (option.CorrectTexts == null || option.CorrectTexts.Length == 0) || !option.IsBlank && option.Text == null)
                                     return (false, OperationErrorMessages.EmptyOption, new CommonAPI_ErrorDTO { ErrorSubject = new object[] { section.Key, question.Key, option } });
 
                             break;
