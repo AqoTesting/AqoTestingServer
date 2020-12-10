@@ -42,6 +42,17 @@ namespace AqoTesting.WebApi.Controllers
         }
 
         [CommonAPI_Auth(Role = Role.User)]
+        [UserAPI_TestAccess]
+        [HttpGet("/user/test/{TestId}/info")]
+        public async Task<IActionResult> GetTestInfo([FromRoute] CommonAPI_TestIdDTO testIdDTO)
+        {
+            var (errorCode, response) = await _testService.UserAPI_GetTestInfoById(testIdDTO);
+
+            return this.ResultResponse(errorCode, response);
+        }
+
+
+        [CommonAPI_Auth(Role = Role.User)]
         [UserAPI_RoomAccess]
         [HttpPost("/user/room/{RoomId}/test")]
         public async Task<IActionResult> CreateTest([FromRoute] CommonAPI_RoomIdDTO roomIdDTO, [FromBody] UserAPI_PostTestDTO postTestDTO)

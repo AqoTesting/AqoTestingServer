@@ -52,6 +52,16 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetTestById(CommonAPI_TestIdDTO testIdDTO) =>
             await UserAPI_GetTestById(ObjectId.Parse(testIdDTO.TestId));
 
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetTestInfoById(ObjectId testId)
+        {
+            var test = await _testRepository.GetTestById(testId);
+            var getTestInfoDTO = Mapper.Map<UserAPI_GetTestInfoDTO>(test);
+
+            return (OperationErrorMessages.NoError, getTestInfoDTO);
+        }
+        public async Task<(OperationErrorMessages, object)> UserAPI_GetTestInfoById(CommonAPI_TestIdDTO testIdDTO) =>
+            await this.UserAPI_GetTestInfoById(ObjectId.Parse(testIdDTO.TestId));
+
         public async Task<(OperationErrorMessages, object)> UserAPI_CreateTest(ObjectId roomId, UserAPI_PostTestDTO postTestDTO)
         {
             var newTest = Mapper.Map<TestsDB_TestDTO>(postTestDTO);
@@ -71,7 +81,7 @@ namespace AqoTesting.Core.Services
         {
             var outdatedTest = await _testRepository.GetTestById(testId);
 
-            if (outdatedTest.Sections.Count > 0 && postTestDTO.AttemptSectionsNumber > outdatedTest.Sections.Count)
+            if(outdatedTest.Sections.Count > 0 && postTestDTO.AttemptSectionsNumber > outdatedTest.Sections.Count)
                 return (OperationErrorMessages.NotEnoughSections, null);
 
             var updatedTest = Mapper.Map<TestsDB_TestDTO>(postTestDTO);
@@ -91,21 +101,21 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_EditSections(ObjectId testId, UserAPI_PostTestSectionsDTO postSectionsDTO)
         {
             var (valid, errorCode, response) = TestUtils.ValidateSections(postSectionsDTO.Sections);
-            if (!valid)
+            if(!valid)
                 return (errorCode, response);
 
             var test = await _testRepository.GetTestById(testId);
-            if (test == null)
+            if(test == null)
                 return (OperationErrorMessages.TestNotFound, null);
 
             bool merged;
             (merged, errorCode, response) = TestUtils.MergeSections(test.Sections, postSectionsDTO.Sections);
-            if (!merged)
+            if(!merged)
                 return (errorCode, response);
 
-            var dbSections = (Dictionary<string, TestsDB_SectionDTO>) response;
+            var dbSections = (Dictionary<string, TestsDB_SectionDTO>)response;
 
-            if (dbSections.Count > 0 && dbSections.Count < test.AttemptSectionsNumber)
+            if(dbSections.Count > 0 && dbSections.Count < test.AttemptSectionsNumber)
                 return (OperationErrorMessages.NotEnoughSections, null);
 
             await _testRepository.SetProperty(testId, "Sections", dbSections);
@@ -118,7 +128,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_DeleteTest(ObjectId testId)
         {
             var deleted = await _testRepository.DeleteTest(testId);
-            if (!deleted)
+            if(!deleted)
                 return (OperationErrorMessages.TestNotFound, null);
 
             return (OperationErrorMessages.NoError, null);
@@ -132,7 +142,7 @@ namespace AqoTesting.Core.Services
         {
             var room = await _roomRepository.GetRoomById(roomId);
 
-            if (room == null)
+            if(room == null)
                 return (OperationErrorMessages.RoomNotFound, null);
 
             var tests = await _testRepository.GetTestsByRoomId(room.Id);
@@ -148,7 +158,7 @@ namespace AqoTesting.Core.Services
         {
             var test = await _testRepository.GetTestById(testId);
 
-            if (test == null)
+            if(test == null)
                 return (OperationErrorMessages.TestNotFound, null);
 
             var getTestDTO = Mapper.Map<MemberAPI_GetTestDTO>(test);
@@ -163,12 +173,12 @@ namespace AqoTesting.Core.Services
             var memberId = _workContext.MemberId.Value;
 
             var test = await _testRepository.GetTestById(testId);
-            if (!test.IsActive && (test.DeactivationDate == null || test.DeactivationDate < DateTime.Now || (test.ActivationDate != null && test.ActivationDate.Value > DateTime.Now)))
+            if(!test.IsActive && (test.DeactivationDate == null || test.DeactivationDate < DateTime.Now || (test.ActivationDate != null && test.ActivationDate.Value > DateTime.Now)))
                 return (OperationErrorMessages.TestIsNotActive, null);
 
             var attempts = (await _attemptRepository.GetAttemptsByTestIdAndMemberId(testId, memberId));
 
-            if (attempts.Where(attempt => !attempt.Ignore).Count() >= test.AttemptsNumber)
+            if(attempts.Where(attempt => !attempt.Ignore).Count() >= test.AttemptsNumber)
                 return (OperationErrorMessages.NoAttemptsLeft, null);
 
             var newAttempt = Mapper.Map<AttemptsDB_AttemptDTO>(test);

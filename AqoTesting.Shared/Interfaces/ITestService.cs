@@ -15,6 +15,10 @@ namespace AqoTesting.Shared.Interfaces
         Task<(OperationErrorMessages, object)> UserAPI_GetTestById(ObjectId testId);
         Task<(OperationErrorMessages, object)> UserAPI_GetTestById(CommonAPI_TestIdDTO testIdDTO);
 
+        Task<(OperationErrorMessages, object)> UserAPI_GetTestInfoById(ObjectId testId);
+        Task<(OperationErrorMessages, object)> UserAPI_GetTestInfoById(CommonAPI_TestIdDTO testIdDTO);
+
+        Task<(OperationErrorMessages, object)> UserAPI_CreateTest(ObjectId roomId, UserAPI_PostTestDTO postTestDTO);
         Task<(OperationErrorMessages, object)> UserAPI_CreateTest(CommonAPI_RoomIdDTO roomIdDTO, UserAPI_PostTestDTO postTestDTO);
 
         Task<(OperationErrorMessages, object)> UserAPI_EditTest(ObjectId testId, UserAPI_PostTestDTO postTestDTO);
