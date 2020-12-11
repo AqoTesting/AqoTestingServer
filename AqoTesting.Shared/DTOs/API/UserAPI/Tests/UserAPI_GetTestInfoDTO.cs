@@ -14,5 +14,8 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         public DateTime? ActivationDate { get; set; }
         public DateTime? DeactivationDate { get; set; }
         public bool Shuffle { get; set; }
+        public UserAPI_TestRankDTO[]? Ranks { get; set; }
+        public UserAPI_TestDocumentDTO[]? Documents { get; set; }
+        public int AttemptsNumber { get; set; }
     }
 }
