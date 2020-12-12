@@ -59,9 +59,10 @@ namespace AqoTesting.WebApi.Attributes.CommonAPI
 
                     else if(parameter.ParameterType == typeof(CommonAPI_TestIdDTO))
                         (await attemptRepository.GetAttemptsByTestId(
-                            ObjectId.Parse(((CommonAPI_TestIdDTO)context.ActionArguments[parameter.Name]).TestId)))
-                                .Select(attempt =>
-                                    attemptsToCheck.Add(attempt));
+                            ObjectId.Parse(((CommonAPI_TestIdDTO)context.ActionArguments[parameter.Name]).TestId)
+                        ) ).ToList()
+                            .ForEach(attempt =>
+                                attemptsToCheck.Add(attempt) );
 
                 if(attemptsToCheck.Count() > 0)
                 {
