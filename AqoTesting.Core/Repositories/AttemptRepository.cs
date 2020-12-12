@@ -83,10 +83,11 @@ namespace AqoTesting.Core.Repositories
 
             if(cached)
                 attempts = _internalByTestIdCache[testId]
-                    .Where(attemptId => _internalByIdCache.ContainsKey(attemptId))
-                        .Select(attemptId =>
-                            _internalByIdCache[attemptId])
-                                .ToArray();
+                    .Where(attemptId =>
+                        _internalByIdCache.ContainsKey(attemptId)
+                    ).Select(attemptId =>
+                        _internalByIdCache[attemptId]
+                    ).ToArray();
 
             if(!cached || attempts.Length != _internalByTestIdCache[testId].Length)
             {
@@ -112,10 +113,11 @@ namespace AqoTesting.Core.Repositories
 
             if(cached)
                 attempts = _internalByMemberIdCache[memberId]
-                    .Where(attemptId => _internalByIdCache.ContainsKey(attemptId))
-                        .Select(attemptId =>
-                            _internalByIdCache[attemptId])
-                                .ToArray();
+                    .Where(attemptId =>
+                        _internalByIdCache.ContainsKey(attemptId)
+                    ).Select(attemptId =>
+                        _internalByIdCache[attemptId]
+                    ).ToArray();
 
             if(!cached || attempts.Length != _internalByMemberIdCache[memberId].Length)
             {
@@ -142,10 +144,11 @@ namespace AqoTesting.Core.Repositories
 
             if(cached)
                 attempts = _internalByTestIdAndMemberIdCache[(testId, memberId)]
-                    .Where(attemptId => _internalByIdCache.ContainsKey(attemptId))
-                        .Select(attemptId =>
-                            _internalByIdCache[attemptId])
-                                .ToArray();
+                    .Where(attemptId =>
+                        _internalByIdCache.ContainsKey(attemptId)
+                    ).Select(attemptId =>
+                        _internalByIdCache[attemptId]
+                    ).ToArray();
 
             if(!cached || attempts.Length != _internalByTestIdAndMemberIdCache[(testId, memberId)].Length)
             {
@@ -171,10 +174,11 @@ namespace AqoTesting.Core.Repositories
 
             if(cached)
                 attempts = _internalByRoomIdCache[roomId]
-                    .Where(attemptId => _internalByIdCache.ContainsKey(attemptId))
-                        .Select(attemptId =>
-                            _internalByIdCache[attemptId])
-                                .ToArray();
+                    .Where(attemptId =>
+                        _internalByIdCache.ContainsKey(attemptId)
+                    ).Select(attemptId =>
+                        _internalByIdCache[attemptId]
+                    ).ToArray();
 
             if(!cached || attempts.Length != _internalByRoomIdCache[roomId].Length)
             {
@@ -245,6 +249,7 @@ namespace AqoTesting.Core.Repositories
         {
             var attempt = _internalByIdCache.ContainsKey(attemptId) ?
                 _internalByIdCache[attemptId] :
+
             await AttemptWorker.GetAttemptById(attemptId);
 
             if(attempt == null)
@@ -277,7 +282,7 @@ namespace AqoTesting.Core.Repositories
         {
             (await MemberWorker.GetMembersByRoomId(roomId))
                 .Select(async member =>
-                    await _redisCache.Del($"MemberActiveAttempt:{member.Id}"));
+                    await _redisCache.Del($"MemberActiveAttempt:{member.Id}") );
 
             if(_internalByRoomIdCache.ContainsKey(roomId))
                 _internalByRoomIdCache[roomId].Select(attemptId =>
