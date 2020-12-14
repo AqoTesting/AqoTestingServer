@@ -22,7 +22,7 @@ namespace AqoTesting.Domain.Controllers
 
         public static MongoClient? ConnectToDB(string? username, string? password, string host, ushort? port, string? defaultauthdb, string? options)
         {
-            connectionString = "mongodb://" + username + (username != "" && password != "" ? ":" : "") + password +
+            connectionString = "mongodb://" + (username != null ? $"{username + (password != null ? $":{password}" : "")}@" : "") +
                 host + (port != 0 ? $":{port}" : "") +
                 (defaultauthdb != "" || options != "" ? "/" : "") +
                 (defaultauthdb != "" ? $"{defaultauthdb}" : "") +
