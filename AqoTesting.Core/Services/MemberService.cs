@@ -9,6 +9,7 @@ using AqoTesting.Shared.Interfaces;
 using AutoMapper;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 
@@ -113,11 +114,17 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_Unregister(ObjectId memberId)
         {
-            var unregistered = await _memberRepository.SetProperty(memberId, "IsRegistered", false);
+            var unregistered = await _memberRepository.SetProperties(memberId, new Dictionary<string, object>()
+            {
+                ["IsRegistered"] = false,
+                ["Login"] = null,
+                ["Email"] = null,
+                ["PasswordHash"] = null
+            });
             if(!unregistered)
                 return (OperationErrorMessages.MemberIsNotRegistered, null);
 
-            await _cacheRepository.DelAll(await _cacheRepository.Keys($"Member:{memberId}*"));
+            await _cacheRepository.DelAll(await _cacheRepository.Keys($"Member:{memberId}:*"));
 
             return (OperationErrorMessages.NoError, null);
         }

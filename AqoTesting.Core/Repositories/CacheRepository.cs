@@ -50,6 +50,9 @@ namespace AqoTesting.Core.Repositories
             await Redis.Del(key);
 
         public async ValueTask<long> DelAll(string[] keys) =>
-            await Redis.Del(keys);
+            keys.Length > 0 ?
+                await Redis.Del(keys) :
+            
+            0;
     }
 }
