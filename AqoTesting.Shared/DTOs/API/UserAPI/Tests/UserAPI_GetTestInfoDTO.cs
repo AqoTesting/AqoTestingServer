@@ -12,6 +12,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests
         public string? Description { get; set; }
         public UserAPI_TestDocumentDTO[]? Documents { get; set; }
         public int AttemptsNumber { get; set; }
+        public int LastConsiderableAttemptsNumber { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? ActivationDate { get; set; }

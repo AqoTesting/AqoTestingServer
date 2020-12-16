@@ -15,7 +15,7 @@ namespace AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections
         [MaxLength(32)]
         public Dictionary<string, UserAPI_PostTestQuestionDTO>? Questions { get; set; } = new Dictionary<string, UserAPI_PostTestQuestionDTO>();
 
-        [Range(0, int.MaxValue)]
+        [PositiveOrZero]
         public int AttemptQuestionsNumber { get; set; } = 0;
 
         public bool Shuffle { get; set; } = false;

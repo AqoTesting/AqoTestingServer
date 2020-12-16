@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AqoTesting.Shared.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace AqoTesting.Shared.DTOs.API.MemberAPI.Attempts
 {
@@ -12,11 +13,11 @@ namespace AqoTesting.Shared.DTOs.API.MemberAPI.Attempts
         public string[]? Fills { get; set; }
         
         [Required]
-        [Range(0, int.MaxValue)]
+        [PositiveOrZero]
         public int? BlurTimeAddition { get; set; }
         
         [Required]
-        [Range(0, int.MaxValue)]
+        [PositiveOrZero]
         public int? TotalTimeAddition { get; set; }
     }
 }
