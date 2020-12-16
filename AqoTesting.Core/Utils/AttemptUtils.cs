@@ -172,15 +172,19 @@ namespace AqoTesting.Core.Utils
             return (true, OperationErrorMessages.NoError, sections);
         }
 
-        public static (int, int, int, float, float) CalculateScore(Dictionary<string, AttemptsDB_SectionDTO> sections)
+        public static (int, int, int, int, float, float) CalculateScore(Dictionary<string, AttemptsDB_SectionDTO> sections)
         {
+            var totalBlurTime = 0;
+
             var maxPoints = 0;
             var correctPoints = 0;
-            var penalPoints = 0;
+            var penalPoints = 0;            
 
             foreach(var section in sections)
                 foreach(var question in section.Value.Questions)
                 {
+                    totalBlurTime += question.Value.BlurTime;
+
                     maxPoints += question.Value.Cost;
 
                     if((float)question.Value.BlurTime / question.Value.TotalTime >= 0.5)
@@ -247,7 +251,7 @@ namespace AqoTesting.Core.Utils
             var correctRatio = (float)correctPoints / maxPoints;
             var penalRatio = (float)penalPoints / maxPoints;
 
-            return (maxPoints, correctPoints, penalPoints, correctRatio, penalRatio);
+            return (totalBlurTime, maxPoints, correctPoints, penalPoints, correctRatio, penalRatio);
         }
     }
 }

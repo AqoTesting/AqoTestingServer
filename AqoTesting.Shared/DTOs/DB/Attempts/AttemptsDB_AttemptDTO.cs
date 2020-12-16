@@ -27,6 +27,7 @@ namespace AqoTesting.Shared.DTOs.DB.Attempts
         public DateTime? EndDate { get; set; }
         public bool IsActive { get; set; }
         public bool Ignore { get; set; }
+        public int TotalBlurTime { get; set; }
         public int MaxPoints { get; set; }
         public int CorrectPoints { get; set; }
         public int PenalPoints { get; set; }

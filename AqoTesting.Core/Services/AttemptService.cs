@@ -180,7 +180,8 @@ namespace AqoTesting.Core.Services
             if(attempt.StartDate == attempt.EndDate || timeNow <= attempt.EndDate)
                 propertiesToUpdate.Add("EndDate", timeNow);
 
-            var (maxPoints, correctPoints, penalPoints, correctRatio, penalRatio) = AttemptUtils.CalculateScore(attempt.Sections);
+            var (totalBlurTime, maxPoints, correctPoints, penalPoints, correctRatio, penalRatio) = AttemptUtils.CalculateScore(attempt.Sections);
+            propertiesToUpdate.Add("TotalBlurTime", totalBlurTime);
             propertiesToUpdate.Add("MaxPoints", maxPoints);
             propertiesToUpdate.Add("CorrectPoints", correctPoints);
             propertiesToUpdate.Add("PenalPoints", penalPoints);
