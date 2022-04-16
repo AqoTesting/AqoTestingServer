@@ -57,7 +57,7 @@ namespace AqoTesting.WebApi.Controllers
         [UserAPI_AttemptAccess]
         [CommonAPI_CheckAttemptsTime]
         [HttpPatch("/user/attempt/{AttemptId}/ignore")]
-        public async Task<IActionResult> DeleteAttempt([FromRoute] CommonAPI_AttemptIdDTO attemptIdDTO, [FromBody] CommonAPI_BooleanValueDTO booleanValueDTO)
+        public async Task<IActionResult> SetAttemptIgnore([FromRoute] CommonAPI_AttemptIdDTO attemptIdDTO, [FromBody] CommonAPI_BooleanValueDTO booleanValueDTO)
         {
             var (errorCode, response) = await _attemptService.UserAPI_SetAttemptIgnore(attemptIdDTO, booleanValueDTO);
 
