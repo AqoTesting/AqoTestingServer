@@ -3,6 +3,7 @@ using AqoTesting.Shared.DTOs.DB.Members;
 using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.DTOs.DB.Users;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 
@@ -22,7 +23,7 @@ namespace AqoTesting.Domain.Controllers
 
         public static MongoClient? ConnectToDB(string? username, string? password, string host, ushort? port, string? defaultauthdb, string? options)
         {
-            connectionString = "mongodb://" + (username != null ? $"{username + (password != null ? $":{password}" : "")}@" : "") +
+            connectionString = "mongodb://" + (!string.IsNullOrEmpty(username) ? $"{username + (!string.IsNullOrEmpty(password) ? $":{password}" : "")}@" : "") +
                 host + (port != 0 ? $":{port}" : "") +
                 (defaultauthdb != "" || options != "" ? "/" : "") +
                 (defaultauthdb != "" ? $"{defaultauthdb}" : "") +
@@ -35,6 +36,8 @@ namespace AqoTesting.Domain.Controllers
                     mainDatabase = client.GetDatabase(defaultauthdb);
                 PreInitCollections();
             }
+
+            mainDatabase.RunCommandAsync((Command<BsonDocument>) "{ping:1}").Wait();
 
             Console.WriteLine("Connected to MongoDB");
 
