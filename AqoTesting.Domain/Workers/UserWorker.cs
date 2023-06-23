@@ -22,8 +22,12 @@ namespace AqoTesting.Domain.Workers
 
         public static async Task<UsersDB_UserDTO> GetUserByAuthData(string login, byte[] passwordHash)
         {
-            var loginFilter = Builders<UsersDB_UserDTO>.Filter.Eq("Email", login) | Builders<UsersDB_UserDTO>.Filter.Eq("Login", login);
+            var loginFilter = Builders<UsersDB_UserDTO>.Filter.Where(user =>
+                user.Login.ToLower() == login || user.Email.ToLower() == login );
+
             var passwordFilter = Builders<UsersDB_UserDTO>.Filter.Eq("PasswordHash", passwordHash);
+
+
             var filter = loginFilter & passwordFilter;
             var user = await MongoController.UserCollection.Find(filter).SingleOrDefaultAsync();
 
@@ -32,15 +36,15 @@ namespace AqoTesting.Domain.Workers
 
         public static async Task<UsersDB_UserDTO> GetUserByLogin(string login)
         {
-            var filter = Builders<UsersDB_UserDTO>.Filter.Eq("Login", login);
+            var filter = Builders<UsersDB_UserDTO>.Filter.Where(user => user.Login.ToLower() == login);
             var user = await MongoController.UserCollection.Find(filter).SingleOrDefaultAsync();
 
             return user;
         }
 
-        public static async Task<UsersDB_UserDTO> GetUserByEmail(string Email)
+        public static async Task<UsersDB_UserDTO> GetUserByEmail(string email)
         {
-            var filter = Builders<UsersDB_UserDTO>.Filter.Eq("Email", Email);
+            var filter = Builders<UsersDB_UserDTO>.Filter.Where(user => user.Email.ToLower() == email);
             var user = await MongoController.UserCollection.Find(filter).SingleOrDefaultAsync();
 
             return user;

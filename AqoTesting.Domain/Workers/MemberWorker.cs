@@ -15,7 +15,7 @@ namespace AqoTesting.Domain.Workers
         public static async Task<bool> CheckMemberInRoomByLogin(ObjectId roomId, string login)
         {
             var roomIdFilter = Builders<MembersDB_MemberDTO>.Filter.Eq("RoomId", roomId);
-            var loginFilter = Builders<MembersDB_MemberDTO>.Filter.Eq("Login", login);
+            var loginFilter = Builders<MembersDB_MemberDTO>.Filter.Where(member => member.Login.ToLower() == login);
             var filter = roomIdFilter & loginFilter;
             var member = await MongoController.MemberCollection.Find(filter).SingleOrDefaultAsync();
 
@@ -25,7 +25,7 @@ namespace AqoTesting.Domain.Workers
         public static async Task<bool> CheckMemberInRoomByEmail(ObjectId roomId, string email)
         {
             var roomIdFilter = Builders<MembersDB_MemberDTO>.Filter.Eq("RoomId", roomId);
-            var emailFilter = Builders<MembersDB_MemberDTO>.Filter.Eq("Email", email);
+            var emailFilter = Builders<MembersDB_MemberDTO>.Filter.Where(member => member.Email.ToLower() == email);
             var filter = roomIdFilter & emailFilter;
             var member = await MongoController.MemberCollection.Find(filter).SingleOrDefaultAsync();
 
@@ -60,10 +60,14 @@ namespace AqoTesting.Domain.Workers
         public static async Task<MembersDB_MemberDTO> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash)
         {
             var roomIdFilter = Builders<MembersDB_MemberDTO>.Filter.Eq("RoomId", roomId);
-            var loginFilter = Builders<MembersDB_MemberDTO>.Filter.Eq("Email", login) | Builders<MembersDB_MemberDTO>.Filter.Eq("Login", login);
-            var passwordFilter = Builders<MembersDB_MemberDTO>.Filter.Eq("PasswordHash", passwordHash);
-            var filter = roomIdFilter & loginFilter & passwordFilter;
 
+            var loginFilter = Builders<MembersDB_MemberDTO>.Filter.Where(member =>
+                member.Login.ToLower() == login || member.Email.ToLower() == login );
+
+            var passwordFilter = Builders<MembersDB_MemberDTO>.Filter.Eq("PasswordHash", passwordHash);
+
+
+            var filter = roomIdFilter & loginFilter & passwordFilter;
             var member = await MongoController.MemberCollection.Find(filter).SingleOrDefaultAsync();
 
             return member;
