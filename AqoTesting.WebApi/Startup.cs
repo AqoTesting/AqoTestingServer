@@ -33,7 +33,6 @@ namespace AqoTestingServer
             services.AddControllers();
 
             services.Configure<AuthOptionsConfig>(Configuration.GetSection("AuthOptions"));
-            services.Configure<RedisConnectionConfig>(Configuration.GetSection("RedisConnection"));
             services.Configure<InternalApiConfig>(Configuration.GetSection("InternalApi"));
 
             services.AddScoped<IWorkContext, WorkContext>();
@@ -56,7 +55,6 @@ namespace AqoTestingServer
             services.AddScoped<IMemberRepository, MemberRepository>();
             services.AddScoped<IAttemptRepository, AttemptRepository>();
 
-            services.AddSingleton<ICacheRepository, CacheRepository>();
             services.AddSingleton<ITokenRepository, TokenRepository>();
 
             services.AddCors();

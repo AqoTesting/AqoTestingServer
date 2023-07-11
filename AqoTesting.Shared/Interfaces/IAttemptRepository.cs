@@ -17,8 +17,8 @@ namespace AqoTesting.Shared.Interfaces
 
         Task<ObjectId> InsertAttempt(AttemptsDB_AttemptDTO newAttempt);
 
-        Task<bool> SetProperty(ObjectId attemptId, string propertyName, object newPropertyValue, ObjectId? memberId = null);
-        Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> properties, ObjectId? memberId = null);
+        Task<bool> SetProperty(ObjectId attemptId, string propertyName, object newPropertyValue);
+        Task<bool> SetProperties(ObjectId attemptId, Dictionary<string, object> properties);
 
         Task<bool> Delete(ObjectId attemptId);
         Task<long> DeleteAttemptsByMemberId(ObjectId memberId);

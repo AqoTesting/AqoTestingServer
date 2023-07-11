@@ -8,9 +8,9 @@ namespace AqoTesting.Shared.Interfaces
 {
     public interface ITokenRepository
     {
-        Task Add(Role role, ObjectId id, JwtSecurityToken jwt, int second);
-        Task<bool> Check(Role role, ObjectId id, SecurityToken token);
-        Task DelAll(Role role, ObjectId id);
-        Task Del(Role role, ObjectId id, SecurityToken token);
+        void Add(Role role, ObjectId accountId, JwtSecurityToken token, int expiresIn);
+        bool Check(Role role, ObjectId accountId, JwtSecurityToken token);
+        void RemoveAll(Role role, ObjectId accountId);
+        void Remove(Role role, ObjectId accountId, JwtSecurityToken token);
     }
 }

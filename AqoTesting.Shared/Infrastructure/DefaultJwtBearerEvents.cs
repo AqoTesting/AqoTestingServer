@@ -3,6 +3,7 @@ using AqoTesting.Shared.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MongoDB.Bson;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace AqoTesting.Shared.Infrastructure
                 context.Fail("Authentication failed");
             }
 
-            if (!await _tokenRepository.Check(role, id, context.SecurityToken))
+            if (!_tokenRepository.Check(role, id, (JwtSecurityToken) context.SecurityToken))
             {
                 context.Fail("Authentication failed");
             }

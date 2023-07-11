@@ -1,86 +1,63 @@
-﻿using AqoTesting.Domain.Workers;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AqoTesting.Shared.DTOs.DB.Members;
+using AqoTesting.Domain.Workers;
 using AqoTesting.Shared.Interfaces;
 using MongoDB.Bson;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace AqoTesting.Core.Repositories
 {
     public class MemberRepository : IMemberRepository
     {
-        ICacheRepository _redisCache;
-        public MemberRepository(ICacheRepository cache)
+        public MemberRepository()
         {
-            _redisCache = cache;
         }
 
         public async Task<MembersDB_MemberDTO> GetMemberById(ObjectId memberId) =>
-            await _redisCache.Get<MembersDB_MemberDTO>($"Member:{memberId}", async () => await MemberWorker.GetMemberById(memberId));
+            await MemberWorker.GetMemberById(memberId);
 
         public async Task<MembersDB_MemberDTO> GetMemberByAuthData(ObjectId roomId, string login, byte[] passwordHash) =>
-            await Task.Run(() => MemberWorker.GetMemberByAuthData(roomId, login, passwordHash));
+            await MemberWorker.GetMemberByAuthData(roomId, login, passwordHash);
+
 
         public async Task<bool> CheckLoginTaken(ObjectId roomId, string login) =>
-            await Task.Run(() => MemberWorker.CheckMemberInRoomByLogin(roomId, login));
+            await MemberWorker.CheckMemberInRoomByLogin(roomId, login);
         public async Task<bool> CheckEmailTaken(ObjectId roomId, string email) =>
-            await Task.Run(() => MemberWorker.CheckMemberInRoomByEmail(roomId, email));
+            await MemberWorker.CheckMemberInRoomByEmail(roomId, email);
+
 
         public async Task<MembersDB_MemberDTO[]> GetMembersByIds(ObjectId[] memberIds) =>
-            await Task.Run(() => MemberWorker.GetMembersByIds(memberIds));
+            await MemberWorker.GetMembersByIds(memberIds);
 
         public async Task<MembersDB_MemberDTO[]> GetMembersByRoomId(ObjectId roomId) =>
-            await Task.Run(() => MemberWorker.GetMembersByRoomId(roomId));
+            await MemberWorker.GetMembersByRoomId(roomId);
 
         public async Task<MembersDB_MemberDTO> GetMemberByFieldsHash(ObjectId roomId, byte[] fieldsHash) =>
-            await Task.Run(() => MemberWorker.GetMemberByFieldsHash(roomId, fieldsHash));
+            await MemberWorker.GetMemberByFieldsHash(roomId, fieldsHash);
+
 
         public async Task<ObjectId> InsertMember(MembersDB_MemberDTO newMember) =>
-            await Task.Run(() => MemberWorker.InsertMember(newMember));
+            await MemberWorker.InsertMember(newMember);
 
-        public async Task ReplaceMember(MembersDB_MemberDTO member)
-        {
-            await _redisCache.Del($"Member:{member.Id}");
+        public async Task ReplaceMember(MembersDB_MemberDTO member) =>
+            await MemberWorker.ReplaceMember(member);
 
-            await Task.Run(() => MemberWorker.ReplaceMember(member));
-        }
 
-        public async Task SetTags(ObjectId memberId, MembersDB_TagDTO[] newValue)
-        {
-            await _redisCache.Del($"Member:{memberId}");
+        public async Task SetTags(ObjectId memberId, MembersDB_TagDTO[] newValue) =>
             await MemberWorker.SetProperty(memberId, "Tags", newValue);
-        }
 
-        public async Task<bool> SetProperty(ObjectId memberId, string propertyName, object newPropertyValue)
-        {
-            await _redisCache.Del($"Member:{memberId}");
+        public async Task<bool> SetProperty(ObjectId memberId, string propertyName, object newPropertyValue) =>
+            await MemberWorker.SetProperty(memberId, propertyName, newPropertyValue);
 
-            return await MemberWorker.SetProperty(memberId, propertyName, newPropertyValue);
-        }
+        public async Task<bool> SetProperties(ObjectId memberId, Dictionary<string, object> properties) =>
+            await MemberWorker.SetProperties(memberId, properties);
 
-        public async Task<bool> SetProperties(ObjectId memberId, Dictionary<string, object> properties)
-        {
-            await _redisCache.Del($"Member:{memberId}");
 
-            return await MemberWorker.SetProperties(memberId, properties);
-        }
+        public async Task<bool> Delete(ObjectId memberId) =>
+            await MemberWorker.DeleteMember(memberId);
 
-        public async Task<bool> Delete(ObjectId memberId)
-        {
-            var response = await MemberWorker.DeleteMember(memberId);
-            await _redisCache.Del($"Member:{memberId}");
-
-            return response;
-        }
-
-        public async Task<long> DeleteMembersByRoomId(ObjectId roomId)
-        {
-            (await MemberWorker.GetMembersByRoomId(roomId))
-                .Select(async member =>
-                    await _redisCache.Del($"Member:{member.Id}"));
-
-            return await MemberWorker.DeleteMembersByRoomId(roomId);
-        }
+        public async Task<long> DeleteMembersByRoomId(ObjectId roomId) =>
+            await MemberWorker.DeleteMembersByRoomId(roomId);
     }
 }

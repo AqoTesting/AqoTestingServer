@@ -22,18 +22,16 @@ namespace AqoTesting.Core.Services
         IRoomRepository _roomRepository;
         ITokenGeneratorService _tokenGeneratorService;
         ITokenRepository _tokenRepository;
-        ICacheRepository _cacheRepository;
 
         readonly IOptions<AuthOptionsConfig> _config;
 
-        public MemberService(IRoomRepository roomRespository, IAttemptRepository attemptRepository, IMemberRepository memberRepository, ITokenGeneratorService tokenGeneratorService, ITokenRepository tokenRepository, ICacheRepository cacheRepository, IOptions<AuthOptionsConfig> config)
+        public MemberService(IRoomRepository roomRespository, IAttemptRepository attemptRepository, IMemberRepository memberRepository, ITokenGeneratorService tokenGeneratorService, ITokenRepository tokenRepository, IOptions<AuthOptionsConfig> config)
         {
             _memberRepository = memberRepository;
             _attemptRepository = attemptRepository;
             _roomRepository = roomRespository;
             _tokenGeneratorService = tokenGeneratorService;
             _tokenRepository = tokenRepository;
-            _cacheRepository = cacheRepository;
             _config = config;
         }
 
@@ -124,7 +122,7 @@ namespace AqoTesting.Core.Services
             if(!unregistered)
                 return (OperationErrorMessages.MemberIsNotRegistered, null);
 
-            await _cacheRepository.DelAll(await _cacheRepository.Keys($"Member:{memberId}:*"));
+            _tokenRepository.RemoveAll(Role.Member, memberId);
 
             return (OperationErrorMessages.NoError, null);
         }
@@ -138,7 +136,7 @@ namespace AqoTesting.Core.Services
             if(deleted)
             {
                 await _attemptRepository.DeleteAttemptsByMemberId(memberId);
-                await _tokenRepository.DelAll(Role.Member, memberId);
+                _tokenRepository.RemoveAll(Role.Member, memberId);
             }
 
             else
@@ -165,7 +163,7 @@ namespace AqoTesting.Core.Services
             var memberToken = _tokenGeneratorService.GenerateToken(member.Id, Role.Member, room.Id);
             var memberTokenDTO = new CommonAPI_TokenDTO { Token = memberToken };
 
-            await _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), _config.Value.LifeTime);
+            _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), _config.Value.LifeTime);
 
             return (OperationErrorMessages.NoError, memberTokenDTO);
         }
@@ -235,7 +233,7 @@ namespace AqoTesting.Core.Services
             var memberToken = _tokenGeneratorService.GenerateToken(memberId, Role.Member, roomId);
             var memberTokenDTO = new CommonAPI_TokenDTO { Token = memberToken };
 
-            await _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), _config.Value.LifeTime);
+            _tokenRepository.Add(Role.Member, member.Id, new JwtSecurityToken(memberToken), _config.Value.LifeTime);
 
             return (OperationErrorMessages.NoError, memberTokenDTO);
         }
