@@ -9,6 +9,6 @@ namespace AqoTesting.Shared.Infrastructure
 {
     public static class AutoMapperHolder
     {
-        public static Mapper Mapper { get; set; }
+        public static Mapper Mapper { get; set => field = (field == null) ? value : throw new ArgumentException("Mapper is already set", nameof(Mapper)); } = null!;
     }
 }
