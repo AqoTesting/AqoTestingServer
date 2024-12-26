@@ -7,6 +7,7 @@ using MongoDB.Bson;
 using AutoMapper;
 using AqoTesting.Shared.DTOs.API.UserAPI.Account;
 using AqoTesting.Shared.DTOs.API.CommonAPI.Identifiers;
+using AqoTesting.Shared.Infrastructure;
 
 namespace AqoTesting.Core.Services
 {
@@ -28,7 +29,7 @@ namespace AqoTesting.Core.Services
                 (OperationErrorMessages.UserNotFound, null) :
 
             (OperationErrorMessages.NoError,
-            Mapper.Map<UserAPI_GetProfileDTO>(user) );
+            AutoMapperHolder.Mapper.Map<UserAPI_GetProfileDTO>(user) );
 
         public async Task<(OperationErrorMessages, object)> UserAPI_GetUserById(CommonAPI_UserIdDTO userIdDTO) =>
             await UserAPI_GetUserById(ObjectId.Parse(userIdDTO.UserId));
@@ -44,7 +45,7 @@ namespace AqoTesting.Core.Services
             new CommonAPI_TokenDTO {
                 Token = _tokenGeneratorService.GenerateToken(
                     await _userRepository.InsertUser(
-                        Mapper.Map<UsersDB_UserDTO>(signUpDTO) ),
+                        AutoMapperHolder.Mapper.Map<UsersDB_UserDTO>(signUpDTO) ),
                     Role.User )});
 
         public async Task<(OperationErrorMessages, object)> UserAPI_SignIn(UserAPI_SignInDTO signInDTO) =>

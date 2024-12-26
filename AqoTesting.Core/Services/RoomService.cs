@@ -8,6 +8,7 @@ using AqoTesting.Shared.Interfaces;
 using AutoMapper;
 using MongoDB.Bson;
 using AqoTesting.Shared.DTOs.DB.Rooms;
+using AqoTesting.Shared.Infrastructure;
 
 namespace AqoTesting.Core.Services
 {
@@ -45,7 +46,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetRoomById(ObjectId roomId)
         {
             var room = await _roomRepository.GetRoomById(roomId);
-            var getRoomDTO = Mapper.Map<UserAPI_GetRoomDTO>(room);
+            var getRoomDTO = AutoMapperHolder.Mapper.Map<UserAPI_GetRoomDTO>(room);
 
             return (OperationErrorMessages.NoError, getRoomDTO);
         }
@@ -55,7 +56,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetRoomByDomain(string roomDomain)
         {
             var room = await _roomRepository.GetRoomByDomain(roomDomain);
-            var getRoomDTO = Mapper.Map<UserAPI_GetRoomDTO>(room);
+            var getRoomDTO = AutoMapperHolder.Mapper.Map<UserAPI_GetRoomDTO>(room);
 
             return (OperationErrorMessages.NoError, getRoomDTO);
         }
@@ -69,7 +70,7 @@ namespace AqoTesting.Core.Services
                 return (OperationErrorMessages.UserNotFound, null);
 
             var rooms = await _roomRepository.GetRoomsByUserId(userId);
-            var getRoomsItemDTOs = Mapper.Map<UserAPI_GetRoomsItemDTO[]>(rooms);
+            var getRoomsItemDTOs = AutoMapperHolder.Mapper.Map<UserAPI_GetRoomsItemDTO[]>(rooms);
 
             return(OperationErrorMessages.NoError,  getRoomsItemDTOs);
         }
@@ -82,7 +83,7 @@ namespace AqoTesting.Core.Services
             if(domainTaken != null)
                 return (OperationErrorMessages.DomainAlreadyTaken, null);
 
-            var newRoom = Mapper.Map<RoomsDB_RoomDTO>(postRoomDto);
+            var newRoom = AutoMapperHolder.Mapper.Map<RoomsDB_RoomDTO>(postRoomDto);
             newRoom.UserId = _workContext.UserId.Value;
 
             var newRoomId = await _roomRepository.InsertRoom(newRoom);
@@ -104,7 +105,7 @@ namespace AqoTesting.Core.Services
             }
 
 
-            var updatedRoom = Mapper.Map<RoomsDB_RoomDTO>(postRoomDTO);
+            var updatedRoom = AutoMapperHolder.Mapper.Map<RoomsDB_RoomDTO>(postRoomDTO);
 
             updatedRoom.Id = outdatedRoom.Id;
             updatedRoom.UserId = outdatedRoom.UserId;
@@ -118,7 +119,7 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_SetRoomTags(ObjectId roomId, UserAPI_RoomTagDTO[] postRoomTagDTOs)
         {
-            var tags = Mapper.Map<RoomsDB_TagDTO[]>(postRoomTagDTOs);
+            var tags = AutoMapperHolder.Mapper.Map<RoomsDB_TagDTO[]>(postRoomTagDTOs);
             await _roomRepository.SetTags(roomId, tags);
 
             return (OperationErrorMessages.NoError, null);
@@ -150,7 +151,7 @@ namespace AqoTesting.Core.Services
             if(room == null)
                 return (OperationErrorMessages.RoomNotFound, null);
 
-            var getRoomDTO = Mapper.Map<MemberAPI_GetRoomDTO>(room);
+            var getRoomDTO = AutoMapperHolder.Mapper.Map<MemberAPI_GetRoomDTO>(room);
 
             return (OperationErrorMessages.NoError, getRoomDTO);
         }
@@ -163,7 +164,7 @@ namespace AqoTesting.Core.Services
             if(room == null)
                 return (OperationErrorMessages.RoomNotFound, null);
 
-            var getRoomDTO = Mapper.Map<MemberAPI_GetRoomDTO>(room);
+            var getRoomDTO = AutoMapperHolder.Mapper.Map<MemberAPI_GetRoomDTO>(room);
 
             return (OperationErrorMessages.NoError, getRoomDTO);
         }

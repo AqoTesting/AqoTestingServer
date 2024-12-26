@@ -4,6 +4,7 @@ using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts.Options;
 using AqoTesting.Shared.DTOs.DB.Attempts.OptionsContainers;
 using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.Infrastructure;
 using AutoMapper;
 using MongoDB.Bson.Serialization;
 using System.Collections.Generic;
@@ -22,9 +23,9 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
 
             CreateMap<AttemptsDB_ChoiceOptionsContainer, UserAPI_AttemptCommonOptionDTO[]>()
                 .ConstructUsing(x =>
-                    Mapper.Map<UserAPI_AttemptCommonOptionDTO[]>(x.Options));
+                    AutoMapperHolder.Mapper.Map<UserAPI_AttemptCommonOptionDTO[]>(x.Options));
             CreateMap<AttemptsDB_MatchingOptionsContainer, UserAPI_AttemptCommonOptionDTO[]>()
-                .ConstructUsing(x =>
+                .ConstructUsing((x, y) =>
                 {
                     var optionsLength = x.LeftSequence.Length;
                     var sequence = new UserAPI_AttemptCommonOptionDTO[optionsLength];
@@ -40,25 +41,25 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
                 });
             CreateMap<AttemptsDB_SequenceOptionsContainer, UserAPI_AttemptCommonOptionDTO[]>()
                 .ConstructUsing(x =>
-                    Mapper.Map<UserAPI_AttemptCommonOptionDTO[]>(x.Sequence));
+                    AutoMapperHolder.Mapper.Map<UserAPI_AttemptCommonOptionDTO[]>(x.Sequence));
 
             CreateMap<AttemptsDB_QuestionDTO, UserAPI_GetAttemptQuestionDTO>()
                 .ForMember(x => x.Options,
                     x => x.MapFrom(m =>
                         m.Type == QuestionTypes.SingleChoice || m.Type == QuestionTypes.MultipleChoice ?
-                            Mapper.Map<UserAPI_AttemptCommonOptionDTO[]>(
+                            AutoMapperHolder.Mapper.Map<UserAPI_AttemptCommonOptionDTO[]>(
                                 BsonSerializer.Deserialize<AttemptsDB_ChoiceOptionsContainer>(m.Options, null)) :
 
                         m.Type == QuestionTypes.Matching ?
-                            Mapper.Map<UserAPI_AttemptCommonOptionDTO[]>(
+                            AutoMapperHolder.Mapper.Map<UserAPI_AttemptCommonOptionDTO[]>(
                                 BsonSerializer.Deserialize<AttemptsDB_MatchingOptionsContainer>(m.Options, null)) :
 
                         m.Type == QuestionTypes.Sequence ?
-                            Mapper.Map<UserAPI_AttemptCommonOptionDTO[]>(
+                            AutoMapperHolder.Mapper.Map<UserAPI_AttemptCommonOptionDTO[]>(
                                 BsonSerializer.Deserialize<AttemptsDB_SequenceOptionsContainer>(m.Options, null)) :
 
                         m.Type == QuestionTypes.FillIn ?
-                            Mapper.Map<UserAPI_AttemptCommonOptionDTO[]>(
+                            AutoMapperHolder.Mapper.Map<UserAPI_AttemptCommonOptionDTO[]>(
                                 BsonSerializer.Deserialize<AttemptsDB_FillInOptionsContainer>(m.Options, null).Options) :
 
                         new UserAPI_AttemptCommonOptionDTO[0]
@@ -66,20 +67,20 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
             CreateMap<KeyValuePair<string, AttemptsDB_QuestionDTO>, KeyValuePair<string, UserAPI_GetAttemptQuestionDTO>>()
                 .ConstructUsing(x => new KeyValuePair<string, UserAPI_GetAttemptQuestionDTO>(
                     x.Key,
-                    Mapper.Map<UserAPI_GetAttemptQuestionDTO>(x.Value)));
+                    AutoMapperHolder.Mapper.Map<UserAPI_GetAttemptQuestionDTO>(x.Value)));
 
             CreateMap<AttemptsDB_SectionDTO, UserAPI_GetAttemptSectionDTO>()
                 .ForMember(x => x.Questions,
                     x => x.MapFrom(m =>
-                        Mapper.Map<Dictionary<string, UserAPI_GetAttemptQuestionDTO>>(m.Questions)));
+                        AutoMapperHolder.Mapper.Map<Dictionary<string, UserAPI_GetAttemptQuestionDTO>>(m.Questions)));
             CreateMap<KeyValuePair<string, AttemptsDB_SectionDTO>, KeyValuePair<string, UserAPI_GetAttemptSectionDTO>>()
                 .ConstructUsing(x => new KeyValuePair<string, UserAPI_GetAttemptSectionDTO>(
                     x.Key,
-                    Mapper.Map<UserAPI_GetAttemptSectionDTO>(x.Value)));
+                    AutoMapperHolder.Mapper.Map<UserAPI_GetAttemptSectionDTO>(x.Value)));
 
             CreateMap<AttemptsDB_AttemptDTO, UserAPI_GetAttemptDTO>()
                 .ForMember(x => x.Sections,
-                    x => x.MapFrom(m => Mapper.Map<Dictionary<string, UserAPI_GetAttemptSectionDTO>>(m.Sections)));
+                    x => x.MapFrom(m => AutoMapperHolder.Mapper.Map<Dictionary<string, UserAPI_GetAttemptSectionDTO>>(m.Sections)));
             #endregion
 
             CreateMap<AttemptsDB_AttemptDTO, UserAPI_GetAttemptsItemDTO>();

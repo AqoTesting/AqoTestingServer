@@ -2,6 +2,7 @@
 using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.Infrastructure;
 using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,7 +107,7 @@ namespace AqoTesting.Core.Utils
                     {
                         var oldQuestions = dbSections[updateSection.Key].Questions.ToDictionary(x => x.Key, x => x.Value);
 
-                        dbSections[updateSection.Key] = Mapper.Map<TestsDB_SectionDTO>(updateSection.Value);
+                        dbSections[updateSection.Key] = AutoMapperHolder.Mapper.Map<TestsDB_SectionDTO>(updateSection.Value);
 
                         foreach(var question in dbSections[updateSection.Key].Questions)
                         {
@@ -118,7 +119,7 @@ namespace AqoTesting.Core.Utils
                         dbSections[updateSection.Key].Questions = oldQuestions;
                     }
                     else
-                        dbSections.Add(updateSection.Key, Mapper.Map<TestsDB_SectionDTO>(updateSection.Value));
+                        dbSections.Add(updateSection.Key, AutoMapperHolder.Mapper.Map<TestsDB_SectionDTO>(updateSection.Value));
 
                     if (dbSections[updateSection.Key].Questions.Count > 0 && dbSections[updateSection.Key].Questions.Count < dbSections[updateSection.Key].AttemptQuestionsNumber)
                         return (false, OperationErrorMessages.NotEnoughQuestions, new CommonAPI_ErrorDTO { ErrorSubject = updateSection.Key });

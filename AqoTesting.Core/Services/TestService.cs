@@ -10,6 +10,7 @@ using AqoTesting.Shared.DTOs.API.UserAPI.Tests.Sections;
 using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.DTOs.DB.Tests;
 using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.Infrastructure;
 using AqoTesting.Shared.Interfaces;
 using AutoMapper;
 using MongoDB.Bson;
@@ -35,7 +36,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetTestsByRoomId(ObjectId roomId)
         {
             var tests = await _testRepository.GetTestsByRoomId(roomId);
-            var getTestsItemDTOs = Mapper.Map<UserAPI_GetTestsItemDTO[]>(tests);
+            var getTestsItemDTOs = AutoMapperHolder.Mapper.Map<UserAPI_GetTestsItemDTO[]>(tests);
 
             return (OperationErrorMessages.NoError, getTestsItemDTOs);
         }
@@ -45,7 +46,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetTestById(ObjectId testId)
         {
             var test = await _testRepository.GetTestById(testId);
-            var getTestDTO = Mapper.Map<UserAPI_GetTestDTO>(test);
+            var getTestDTO = AutoMapperHolder.Mapper.Map<UserAPI_GetTestDTO>(test);
 
             return (OperationErrorMessages.NoError, getTestDTO);
         }
@@ -55,7 +56,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetTestInfoById(ObjectId testId)
         {
             var test = await _testRepository.GetTestById(testId);
-            var getTestInfoDTO = Mapper.Map<UserAPI_GetTestInfoDTO>(test);
+            var getTestInfoDTO = AutoMapperHolder.Mapper.Map<UserAPI_GetTestInfoDTO>(test);
 
             return (OperationErrorMessages.NoError, getTestInfoDTO);
         }
@@ -64,7 +65,7 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_CreateTest(ObjectId roomId, UserAPI_PostTestDTO postTestDTO)
         {
-            var newTest = Mapper.Map<TestsDB_TestDTO>(postTestDTO);
+            var newTest = AutoMapperHolder.Mapper.Map<TestsDB_TestDTO>(postTestDTO);
             newTest.UserId = _workContext.UserId.Value;
             newTest.RoomId = roomId;
             newTest.CreationDate = DateTime.UtcNow;
@@ -84,7 +85,7 @@ namespace AqoTesting.Core.Services
             if(outdatedTest.Sections.Count > 0 && postTestDTO.AttemptSectionsNumber > outdatedTest.Sections.Count)
                 return (OperationErrorMessages.NotEnoughSections, null);
 
-            var updatedTest = Mapper.Map<TestsDB_TestDTO>(postTestDTO);
+            var updatedTest = AutoMapperHolder.Mapper.Map<TestsDB_TestDTO>(postTestDTO);
             updatedTest.Id = outdatedTest.Id;
             updatedTest.UserId = outdatedTest.UserId;
             updatedTest.RoomId = outdatedTest.RoomId;
@@ -147,7 +148,7 @@ namespace AqoTesting.Core.Services
 
             var tests = await _testRepository.GetTestsByRoomId(room.Id);
 
-            var getTestsItemDTOs = Mapper.Map<MemberAPI_GetTestsItemDTO[]>(tests);
+            var getTestsItemDTOs = AutoMapperHolder.Mapper.Map<MemberAPI_GetTestsItemDTO[]>(tests);
 
             return (OperationErrorMessages.NoError, getTestsItemDTOs);
         }
@@ -161,7 +162,7 @@ namespace AqoTesting.Core.Services
             if(test == null)
                 return (OperationErrorMessages.TestNotFound, null);
 
-            var getTestDTO = Mapper.Map<MemberAPI_GetTestDTO>(test);
+            var getTestDTO = AutoMapperHolder.Mapper.Map<MemberAPI_GetTestDTO>(test);
 
             return (OperationErrorMessages.NoError, getTestDTO);
         }
@@ -181,7 +182,7 @@ namespace AqoTesting.Core.Services
             if(attempts.Where(attempt => !attempt.Ignore).Count() >= test.AttemptsNumber)
                 return (OperationErrorMessages.NoAttemptsLeft, null);
 
-            var newAttempt = Mapper.Map<AttemptsDB_AttemptDTO>(test);
+            var newAttempt = AutoMapperHolder.Mapper.Map<AttemptsDB_AttemptDTO>(test);
             newAttempt.StartDate = DateTime.Now;
             newAttempt.EndDate = newAttempt.StartDate.Value.AddSeconds(test.TimeLimit);
             newAttempt.MemberId = memberId;

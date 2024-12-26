@@ -39,7 +39,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetMemberById(ObjectId memberId)
         {
             var member = await _memberRepository.GetMemberById(memberId);
-            var getMemberDTO = Mapper.Map<UserAPI_GetMemberDTO>(member);
+            var getMemberDTO = AutoMapperHolder.Mapper.Map<UserAPI_GetMemberDTO>(member);
 
             return (OperationErrorMessages.NoError, getMemberDTO);
         }
@@ -49,7 +49,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetMembersByRoomId(ObjectId roomId)
         {
             var members = await _memberRepository.GetMembersByRoomId(roomId);
-            var getMembersItemDTOs = Mapper.Map<UserAPI_GetMembersItemDTO[]>(members);
+            var getMembersItemDTOs = AutoMapperHolder.Mapper.Map<UserAPI_GetMembersItemDTO[]>(members);
 
             return (OperationErrorMessages.NoError, getMembersItemDTOs);
         }
@@ -75,7 +75,7 @@ namespace AqoTesting.Core.Services
             if(alreadyExists != null)
                 return (OperationErrorMessages.FieldsAlreadyExists, null);
 
-            var newMember = Mapper.Map<MembersDB_MemberDTO>(postMemberDTO);
+            var newMember = AutoMapperHolder.Mapper.Map<MembersDB_MemberDTO>(postMemberDTO);
             newMember.IsApproved = !room.IsApproveManually;
             newMember.UserId = room.UserId;
             newMember.RoomId = roomId;
@@ -91,7 +91,7 @@ namespace AqoTesting.Core.Services
 
         public async Task<(OperationErrorMessages, object)> UserAPI_SetMemberTags(ObjectId memberId, UserAPI_MemberTagDTO[] memberTagsDTO)
         {
-            var tags = Mapper.Map<MembersDB_TagDTO[]>(memberTagsDTO);
+            var tags = AutoMapperHolder.Mapper.Map<MembersDB_TagDTO[]>(memberTagsDTO);
             await _memberRepository.SetTags(memberId, tags);
 
             return (OperationErrorMessages.NoError, null);
@@ -199,7 +199,7 @@ namespace AqoTesting.Core.Services
                 if(member != null)
                     return (OperationErrorMessages.MemberAlreadyRegistered, null);
 
-                member = Mapper.Map<MembersDB_MemberDTO>(signUpDTO);
+                member = AutoMapperHolder.Mapper.Map<MembersDB_MemberDTO>(signUpDTO);
                 member.PasswordHash = Sha256.Compute(signUpDTO.Password);
                 member.UserId = room.UserId;
 
@@ -244,7 +244,7 @@ namespace AqoTesting.Core.Services
             if(member == null)
                 return (OperationErrorMessages.MemberNotFound, null);
 
-            var getProfileDTO = Mapper.Map<MemberAPI_GetProfileDTO>(member);
+            var getProfileDTO = AutoMapperHolder.Mapper.Map<MemberAPI_GetProfileDTO>(member);
 
             return (OperationErrorMessages.NoError, getProfileDTO);
         }

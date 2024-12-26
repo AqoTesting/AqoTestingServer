@@ -1,4 +1,5 @@
-﻿using AqoTesting.WebApi.AutoMapperProfiles;
+﻿using AqoTesting.Shared.Infrastructure;
+using AqoTesting.WebApi.AutoMapperProfiles;
 using AqoTesting.WebApi.AutoMapperProfiles.MemberAPI;
 using AqoTesting.WebApi.AutoMapperProfiles.UserAPI;
 using AutoMapper;
@@ -9,7 +10,7 @@ namespace AqoTesting.WebApi.Infrastructure
     {
         public static void Initialize()
         {
-            Mapper.Initialize(cfg =>
+            AutoMapperHolder.Mapper = new Mapper(new MapperConfiguration(cfg =>
             {
                 cfg.AllowNullCollections = true;
 
@@ -24,7 +25,7 @@ namespace AqoTesting.WebApi.Infrastructure
                 cfg.AddProfile<AutoMapper_UserAPI_UsersProfile>();
 
                 cfg.AddProfile<AutoMapper_CrossObjectsProfile>();
-            });
+            }));
         }
     }
 }

@@ -2,11 +2,12 @@
 
   <PropertyGroup>
 	<TargetFramework>net9.0</TargetFramework>
+	<LangVersion>preview</LangVersion>
     <UserSecretsId>b6b5b3c2-2615-4f54-ac34-174b466d0d89</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="6.2.2" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.9" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

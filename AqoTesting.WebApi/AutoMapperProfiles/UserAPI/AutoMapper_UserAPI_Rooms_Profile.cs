@@ -1,6 +1,7 @@
 ﻿using AqoTesting.Shared.DTOs.API.UserAPI.Rooms;
 using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.Infrastructure;
 using AutoMapper;
 using MongoDB.Bson;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
             CreateMap<RoomsDB_RoomDTO, UserAPI_GetRoomDTO>()
                 .ForMember(x => x.Fields,
                     x => x.MapFrom(m =>
-                        Mapper.Map<UserAPI_RoomFieldDTO[]>(m.Fields)));
+                        AutoMapperHolder.Mapper.Map<UserAPI_RoomFieldDTO[]>(m.Fields)));
 
             CreateMap<RoomsDB_RoomDTO, UserAPI_GetRoomsItemDTO>();
             #endregion
@@ -46,9 +47,9 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
                 .ForMember(x => x.Data,
                     x => x.MapFrom(m =>
                         m.Type == FieldType.Input ?
-                            Mapper.Map<RoomsDB_InputFieldDTO>(m).ToBsonDocument(null, null, default) :
+                            AutoMapperHolder.Mapper.Map<RoomsDB_InputFieldDTO>(m).ToBsonDocument(null, null, default) :
                         m.Type == FieldType.Select ?
-                            Mapper.Map<RoomsDB_SelectFieldDTO>(m).ToBsonDocument(null, null, default) :
+                            AutoMapperHolder.Mapper.Map<RoomsDB_SelectFieldDTO>(m).ToBsonDocument(null, null, default) :
                         new BsonDocument()));
             #endregion
         }

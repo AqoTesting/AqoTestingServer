@@ -1,6 +1,7 @@
 ﻿using AqoTesting.Shared.DTOs.API.MemberAPI.Rooms;
 using AqoTesting.Shared.DTOs.DB.Rooms;
 using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.Infrastructure;
 using AutoMapper;
 using System.Linq;
 
@@ -31,7 +32,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
             CreateMap<RoomsDB_RoomDTO, MemberAPI_GetRoomDTO>()
                 .ForMember(x => x.Fields,
                     x => x.MapFrom(m =>
-                        Mapper.Map<MemberAPI_GetRoomFieldDTO[]>(m.Fields)
+                        AutoMapperHolder.Mapper.Map<MemberAPI_GetRoomFieldDTO[]>(m.Fields)
                     ));
             #endregion
 

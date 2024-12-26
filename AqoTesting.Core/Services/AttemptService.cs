@@ -5,6 +5,7 @@ using AqoTesting.Shared.DTOs.API.MemberAPI.Attempts;
 using AqoTesting.Shared.DTOs.API.UserAPI.Attempts;
 using AqoTesting.Shared.DTOs.DB.Attempts;
 using AqoTesting.Shared.Enums;
+using AqoTesting.Shared.Infrastructure;
 using AqoTesting.Shared.Interfaces;
 using AutoMapper;
 using MongoDB.Bson;
@@ -29,7 +30,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetAttempt(ObjectId attemptId)
         {
             var attempt = await _attemptRepository.GetAttemptById(attemptId);
-            var getAttemptDTO = Mapper.Map<UserAPI_GetAttemptDTO>(attempt);
+            var getAttemptDTO = AutoMapperHolder.Mapper.Map<UserAPI_GetAttemptDTO>(attempt);
 
             return (OperationErrorMessages.NoError, getAttemptDTO);
         }
@@ -39,7 +40,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByTestId(ObjectId testId)
         {
             var attempts = await _attemptRepository.GetAttemptsByTestId(testId);
-            var getAttemptDTO = Mapper.Map<UserAPI_GetAttemptsItemDTO[]>(attempts);
+            var getAttemptDTO = AutoMapperHolder.Mapper.Map<UserAPI_GetAttemptsItemDTO[]>(attempts);
 
             return (OperationErrorMessages.NoError, getAttemptDTO);
         }
@@ -49,7 +50,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> UserAPI_GetAttemptsByMemberId(ObjectId memberId)
         {
             var attempts = await _attemptRepository.GetAttemptsByMemberId(memberId);
-            var getAttemptDTO = Mapper.Map<UserAPI_GetAttemptsItemDTO[]>(attempts);
+            var getAttemptDTO = AutoMapperHolder.Mapper.Map<UserAPI_GetAttemptsItemDTO[]>(attempts);
 
             return (OperationErrorMessages.NoError, getAttemptDTO);
         }
@@ -86,7 +87,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> MemberAPI_GetAttempt(ObjectId attemptId)
         {
             var attempt = await _attemptRepository.GetAttemptById(attemptId);
-            var getAttemptDTO = Mapper.Map<MemberAPI_GetAttemptDTO>(attempt);
+            var getAttemptDTO = AutoMapperHolder.Mapper.Map<MemberAPI_GetAttemptDTO>(attempt);
 
             return (OperationErrorMessages.NoError, getAttemptDTO);
         }
@@ -97,7 +98,7 @@ namespace AqoTesting.Core.Services
         {
             var memberId = _workContext.MemberId.Value;
             var attempt = await _attemptRepository.GetActiveAttemptByMemberId(memberId);
-            var getAttemptDTO = Mapper.Map<MemberAPI_GetAttemptDTO>(attempt);
+            var getAttemptDTO = AutoMapperHolder.Mapper.Map<MemberAPI_GetAttemptDTO>(attempt);
 
             return (OperationErrorMessages.NoError, getAttemptDTO);
         }
@@ -105,7 +106,7 @@ namespace AqoTesting.Core.Services
         {
             var memberId = _workContext.MemberId.Value;
             var attempt = await _attemptRepository.GetActiveAttemptByMemberId(memberId);
-            var resumeInfoDTO = Mapper.Map<MemberAPI_ActiveAttemptResumeDataDTO>(attempt);
+            var resumeInfoDTO = AutoMapperHolder.Mapper.Map<MemberAPI_ActiveAttemptResumeDataDTO>(attempt);
 
             return (OperationErrorMessages.NoError, resumeInfoDTO);
         }
@@ -113,7 +114,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> MemberAPI_GetAttemptsByMemberId(ObjectId memberId)
         {
             var attempts = await _attemptRepository.GetAttemptsByMemberId(memberId);
-            var getAttemptItemDTOs = Mapper.Map<MemberAPI_GetAttemptsItemDTO[]>(attempts);
+            var getAttemptItemDTOs = AutoMapperHolder.Mapper.Map<MemberAPI_GetAttemptsItemDTO[]>(attempts);
 
             return (OperationErrorMessages.NoError, getAttemptItemDTOs);
         }
@@ -123,7 +124,7 @@ namespace AqoTesting.Core.Services
         public async Task<(OperationErrorMessages, object)> GetAttemptsByTestIdAndMemberId(ObjectId testId, ObjectId memberId)
         {
             var attempts = await _attemptRepository.GetAttemptsByTestIdAndMemberId(testId, memberId);
-            var getAttemptItemDTOs = Mapper.Map<MemberAPI_GetAttemptsItemDTO[]>(attempts);
+            var getAttemptItemDTOs = AutoMapperHolder.Mapper.Map<MemberAPI_GetAttemptsItemDTO[]>(attempts);
 
             return (OperationErrorMessages.NoError, getAttemptItemDTOs);
         }
