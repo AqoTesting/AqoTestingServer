@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30517.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AqoTesting.WebApi", "AqoTesting.WebApi\AqoTesting.WebApi.csproj", "{B97D8F9A-44A2-4E5E-857F-E78626BE5044}"
 EndProject
@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AqoTesting.Domain", "AqoTes
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AqoTesting.Shared", "AqoTesting.Shared\AqoTesting.Shared.csproj", "{8529824D-9DFF-4D62-B512-C6D4A641D692}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AqoTesting.FileApi", "AqoTesting.FileApi\AqoTesting.FileApi.csproj", "{4774B463-51A2-496B-A8C4-195A4146C56F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,10 +36,6 @@ Global
 		{8529824D-9DFF-4D62-B512-C6D4A641D692}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8529824D-9DFF-4D62-B512-C6D4A641D692}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8529824D-9DFF-4D62-B512-C6D4A641D692}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4774B463-51A2-496B-A8C4-195A4146C56F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4774B463-51A2-496B-A8C4-195A4146C56F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4774B463-51A2-496B-A8C4-195A4146C56F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4774B463-51A2-496B-A8C4-195A4146C56F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
