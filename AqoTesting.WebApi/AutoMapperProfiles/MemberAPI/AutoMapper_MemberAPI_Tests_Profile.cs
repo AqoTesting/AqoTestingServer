@@ -12,6 +12,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
             CreateMap<TestsDB_DocumentDTO, MemberAPI_TestDocumentDTO>();
             CreateMap<TestsDB_RankDTO, MemberAPI_TestRankDTO>();
             CreateMap<TestsDB_TestDTO, MemberAPI_GetTestDTO>();
+            CreateMap<TestsDB_TestDTO, MemberAPI_GetTestsItemDTO>();
             #endregion
 
             #region API -> DB

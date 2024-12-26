@@ -20,6 +20,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles
         {
             #region TestsDB_TestDTO -> AttemptsDB_AttemptDTO
             CreateMap<TestsDB_ChoiceOption, AttemptsDB_ChoiceOption>();
+            CreateMap<TestsDB_FillInOption, AttemptsDB_FillInOption>();
             CreateMap<TestsDB_PositionalOption[], AttemptsDB_PositionalOption[]>()
                 .ConstructUsing((x, y) => {
                     var attemptOptions = new AttemptsDB_PositionalOption[x.Length];

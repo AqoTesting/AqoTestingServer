@@ -12,10 +12,11 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.MemberAPI
         public AutoMapper_MemberAPI_MembersProfile()
         {
             #region DB -> API
-            CreateMap<MembersDB_MemberDTO, UserAPI_GetMembersItemDTO>();
+            CreateMap<MembersDB_MemberDTO, MemberAPI_GetProfileDTO>();
             #endregion
 
             #region API -> DB
+            CreateMap<UserAPI_MemberTagDTO, MembersDB_TagDTO>();
             CreateMap<MemberAPI_SignUpDTO, MembersDB_MemberDTO>()
                 .ForMember(x => x.PasswordHash,
                     x => x.MapFrom(m =>

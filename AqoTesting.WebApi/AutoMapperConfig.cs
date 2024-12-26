@@ -17,6 +17,7 @@ namespace AqoTesting.WebApi.Infrastructure
                 cfg.AddProfile<AutoMapper_MemberAPI_AttemptsProfile>();
                 cfg.AddProfile<AutoMapper_MemberAPI_MembersProfile>();
                 cfg.AddProfile<AutoMapper_MemberAPI_RoomsProfile>();
+                cfg.AddProfile<AutoMapper_MemberAPI_TestsProfile>();
 
                 cfg.AddProfile<AutoMapper_UserAPI_AttemptsProfile>();
                 cfg.AddProfile<AutoMapper_UserAPI_MembersProfile>();

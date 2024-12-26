@@ -9,7 +9,8 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
         public AutoMapper_UserAPI_MembersProfile()
         {
             #region DB -> API
-
+            CreateMap<MembersDB_MemberDTO, UserAPI_GetMemberDTO>();
+            CreateMap<MembersDB_MemberDTO, UserAPI_GetMembersItemDTO>();
             #endregion
 
             #region API -> DB

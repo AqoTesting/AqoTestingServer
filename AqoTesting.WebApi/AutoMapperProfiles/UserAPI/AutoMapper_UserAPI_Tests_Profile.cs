@@ -20,6 +20,8 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
             #region DB -> API
             #region TestsDB_TestDTO -> UserAPI_GetTestDTO
             CreateMap<TestsDB_ChoiceOption, UserAPI_TestCommonOptionDTO>();
+            CreateMap<TestsDB_RankDTO, UserAPI_TestRankDTO>();
+            CreateMap<TestsDB_TestDTO, UserAPI_GetTestInfoDTO>();
             CreateMap<TestsDB_MatchingOptionsContainer, UserAPI_TestCommonOptionDTO[]>()
                 .ConstructUsing((x, y) => {
                     var commonOptionDTOs = new UserAPI_TestCommonOptionDTO[x.LeftSequence.Length];
@@ -94,6 +96,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
                             ImageUrl = option.RightImageUrl
                         })));
             CreateMap<UserAPI_TestCommonOptionDTO, TestsDB_PositionalOption>();
+            CreateMap<UserAPI_TestCommonOptionDTO, TestsDB_FillInOption>();
             CreateMap<UserAPI_PostTestQuestionDTO, TestsDB_QuestionDTO>()
                 .ForMember(x => x.Options,
                     x => x.MapFrom(m =>

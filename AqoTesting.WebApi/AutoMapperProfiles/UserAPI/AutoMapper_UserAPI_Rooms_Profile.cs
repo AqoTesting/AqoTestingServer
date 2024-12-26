@@ -43,6 +43,8 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
             CreateMap<UserAPI_RoomFieldDTO, RoomsDB_InputFieldDTO>();
             CreateMap<UserAPI_RoomFieldDTO, RoomsDB_SelectFieldDTO>();
 
+            CreateMap<UserAPI_RoomTagDTO, RoomsDB_TagDTO>();
+
             CreateMap<UserAPI_RoomFieldDTO, RoomsDB_FieldDTO>()
                 .ForMember(x => x.Data,
                     x => x.MapFrom(m =>
