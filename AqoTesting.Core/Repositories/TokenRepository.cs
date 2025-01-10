@@ -37,7 +37,8 @@ namespace AqoTesting.Core.Repositories
 
             DateTime expiresAt = DateTime.UtcNow.AddSeconds(expiresIn);
 
-            tokenStorage.Add(token.EncodedPayload, expiresAt);
+            if (!tokenStorage.TryAdd(token.EncodedPayload, expiresAt))
+                tokenStorage[token.EncodedPayload] = expiresAt;
         }
 
         public bool Check(Role role, ObjectId accountId, JwtSecurityToken token)
