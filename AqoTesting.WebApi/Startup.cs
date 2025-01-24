@@ -15,6 +15,9 @@ using System;
 using MongoDB.Bson.Serialization.Serializers;
 using AqoTesting.WebApi.Attributes.CommonAPI;
 using AqoTesting.Domain.Controllers;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace AqoTestingServer
 {
@@ -122,7 +125,7 @@ namespace AqoTestingServer
 
             app.UseAuthorization();
 
-            app.UseMvc();
+            app.UseMvc();            
         }
     }
 }

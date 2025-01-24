@@ -79,6 +79,7 @@ namespace AqoTesting.WebApi.AutoMapperProfiles.UserAPI
 
             #region API -> DB
             #region UserAPI_PostSectionDTO -> TestsDB_SectionDTO
+            CreateMap<UserAPI_TestRankDTO, TestsDB_RankDTO>();
             CreateMap<UserAPI_TestCommonOptionDTO, TestsDB_ChoiceOption>();
             CreateMap<UserAPI_TestCommonOptionDTO[], TestsDB_MatchingOptionsContainer>()
                 .ForMember(x => x.LeftSequence,
