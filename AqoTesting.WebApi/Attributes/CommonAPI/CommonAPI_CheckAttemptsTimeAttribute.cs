@@ -69,7 +69,7 @@ namespace AqoTesting.WebApi.Attributes.CommonAPI
                     var attemptService = context.HttpContext.RequestServices.GetService<IAttemptService>();
 
                     foreach(var attempt in attemptsToCheck)
-                        if(attempt.StartDate != attempt.EndDate && DateTime.Now > attempt.EndDate)
+                        if(attempt.IsActive && attempt.StartDate != attempt.EndDate && DateTime.Now > attempt.EndDate)
                             await attemptService.CommonAPI_FinishAttempt(attempt);
                 }
             }
